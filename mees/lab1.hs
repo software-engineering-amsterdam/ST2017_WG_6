@@ -1,3 +1,3 @@
-> module Lab1 where
-> import Data.List
-> import Test.QuickCheck    
+module Lab1 where
+import Data.List
+import Test.QuickCheck    
