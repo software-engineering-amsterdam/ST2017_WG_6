@@ -154,6 +154,29 @@ isVisa n = n1 == 4 &&
 
 isAmericanExpress n = length(digs n) == 15 &&
                       n1 == 3 &&
-                      (n2 == 34 || n2 == 37) &&
+                      (n2 == 4 || n2 == 7) &&
                       luhn n
                       where (n1:n2:ns) = digs n
+
+-- SOURCE : http://www.getcreditcardnumbers.com/
+visaValid = [4532530353861276,
+             4539091191338186,
+             4532660285963153,
+             4485675506393284,
+             4716050923148342]
+
+masterValid = [5561182643231042,
+               5344239834935031,
+               5487320019367914,
+               5475210985327105,
+               5357091271641828]
+
+americaValid = [346676877003012,
+                348288126992371,
+                379346372653337,
+                372551003187871,
+                377701033813435]
+
+visa = map isVisa visaValid
+master = map isMaster masterValid
+america = map isAmericanExpress americaValid
