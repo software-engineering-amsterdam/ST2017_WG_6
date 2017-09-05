@@ -51,11 +51,44 @@ test2 = quickCheckResult (\n -> (n >= 0) --> (sub_eq_n2 n))
 -- # 0.5 hour(s)
 -- ##########
 
--- num_perms_eq :: Int -> Bool
--- num_perms_eq n = length(permutations[1..n]) == product[1..n]
-
 test3 = quickCheckResult (\n -> (n >= 0) -->
                          (length(permutations[1..n]) == product[1..n]))
+
+-- ##########
+-- # Lab 1 Exercise 4
+-- # 2 hour(s)
+-- ##########
+
+-- SOURCE : https://blackboard.uva.nl/webapps/blackboard/execute/content/file?cmd=view&content_id=_6832804_1&course_id=_212568_1&framesetWrapped=true
+-- 'reversal' Looks broken, for instance 100 gives 1 and minus integers are failing
+reversal :: Integer -> Integer
+reversal = read . reverse . show
+{--
+By defenition '-->' is only returns False if the first condition is True and
+the second function is False. Since reversal reverses wrong on negative Integers
+and Intergers ending on a zero, 1000 reverses in 1. But since all Integers
+ending with a zero are even numbers they can't be primes and primes can't be
+negative these are automatically returning True. That's why the test
+always passes which approves this statement.
+--}
+--check_reversal :: Integer -> Bool
+check_reversal = \n -> prime n --> (reversal(reversal n) == n)
+
+test4_reversal = quickCheck (check_reversal)
+
+
+prime :: Integer -> Bool
+prime n = n > 1 && all (\ x -> rem n x /= 0) xs
+  where xs = takeWhile (\ y -> y^2 <= n) primes
+
+primes :: [Integer]
+primes = 2 : filter prime [3..]
+
+primes_eq_reversal :: Integer -> [Integer]
+primes_eq_reversal n = takeWhile ( < n ) (filter (prime . reverseInt) primes)  
+
+-- prime_eq_reverse :: Integer -> Bool
+-- prime_eq_reverse n = (prime n) == (prime (reverseInt n))
 
 -- ##########
 -- # Lab 1 Exercise
