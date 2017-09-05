@@ -242,10 +242,8 @@ counterExamples = [x | x <- [0..], refute x == False]
 
     Start: 14:00
 --------------------------------------------------------------------------------------------------------------------------------------}
---    luhn :: Integer -> Bool
---
--- so far:
-luhn x = reverse (luhnDouble (integerToReverseIntList x) [] 1)
+luhn :: Integer -> Bool
+luhn x = (sum(luhnDouble (integerToReverseIntList x) [] 1)) `mod` 10 == 0
 
 integerToReverseIntList :: Integer -> [Int]
 integerToReverseIntList n = charListToIntList (show n) []
@@ -259,18 +257,15 @@ luhnDouble [] is i = is
 luhnDouble (x:xs) is i  | i `mod` 2 == 0 && (x*2) > 9 = luhnDouble xs (is++[(x*2) - 9]) (i+1)
                         | i `mod` 2 == 0 && (x*2) < 9 = luhnDouble xs (is++[(x*2)]) (i+1)
                         | otherwise = luhnDouble xs (is++[x]) (i+1)
-
-
-
-
-
 {-------------------------------------------------------------------------------------------------------------------------------------
-    Next, use luhn to write functions
-    for checking whether an input number is a valid American Express Card, Master Card, or Visa Card number.
-    Consult Wikipedia for the relevant properties.
+    Next, use luhn to write functions for checking whether an input number is a valid American Express Card, Master Card,
+    or Visa Card number. Consult Wikipedia for the relevant properties.
 --------------------------------------------------------------------------------------------------------------------------------------}
---    isAmericanExpress, isMaster, isVisa :: Integer -> Bool
+isAmericanExpress :: Integer -> Bool
+isAmericanExpress x = ((take 2 (reverse(integerToReverseIntList x))) == [3,7] || (take 2 (reverse(integerToReverseIntList x))) == [3,4]) && luhn x
 
+--isMaster :: Integer -> Bool
+--isVisa :: Integer -> Bool
 {-------------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------------}
