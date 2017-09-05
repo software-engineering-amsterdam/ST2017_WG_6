@@ -102,3 +102,16 @@ generate_n_head :: Int -> [a] -> [[a]]
 generate_n_head n l = (take n l) : generate_n_head n (tail l)
 
 sum_head_n = sum( head( filter (prime.sum) (generate_n_head 101 primes)))
+
+
+-- ##########
+-- # Lab 1 Exercise 6
+-- # 1 hour(s)
+-- ##########
+
+generate_n_primes :: Int-> [[Integer]]
+generate_n_primes n = (take n primes) : generate_n_primes (n + 1)
+
+inc n = n + 1
+
+sum_primes = product( head( filter (not.prime.inc.product) (generate_n_primes (1)))) + 1
