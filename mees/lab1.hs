@@ -115,3 +115,68 @@ generate_n_primes n = (take n primes) : generate_n_primes (n + 1)
 inc n = n + 1
 
 sum_primes = product( head( filter (not.prime.inc.product) (generate_n_primes (1)))) + 1
+
+
+-- ##########
+-- # Lab 1 Exercise 7
+-- # 2 hour(s)
+-- ##########
+
+-- SOURCE digs: https://stackoverflow.com/questions/3989240/int-int-convert
+digs 0 = []
+digs x = digs (x `div` 10) ++ [x `mod` 10]
+
+odds_index [] = []
+odds_index [x] = [x]
+odds_index (e1:e2:xs) = e1 : odds_index xs
+
+even_index [] = []
+even_index [x] = []
+even_index (e1:e2:xs) = (if e2 * 2 > 9 then 2 * e2 - 9 else  2*e2) 
+                        : even_index xs
+
+index_num n = sum (odds_index( n )) + sum (even_index( n )) 
+
+luhn :: Integer -> Bool
+luhn n = ((index_num (reverse (digs n))) `mod` 10)  == 0
+
+isAmericanExpress, isMaster, isVisa :: Integer -> Bool
+isMaster n = length(digs n) == 16 &&
+             n1 == 5 &&
+             elem n2 [1..5] &&
+             luhn n
+             where (n1:n2:ns) = digs n
+
+isVisa n = n1 == 4 &&
+           (len == 13 || len == 16 || len == 19) &&
+           luhn n
+           where (n1:ns) = digs n; len = length(digs n)
+
+isAmericanExpress n = length(digs n) == 15 &&
+                      n1 == 3 &&
+                      (n2 == 4 || n2 == 7) &&
+                      luhn n
+                      where (n1:n2:ns) = digs n
+
+-- SOURCE : http://www.getcreditcardnumbers.com/
+visaValid = [4532530353861276,
+             4539091191338186,
+             4532660285963153,
+             4485675506393284,
+             4716050923148342]
+
+masterValid = [5561182643231042,
+               5344239834935031,
+               5487320019367914,
+               5475210985327105,
+               5357091271641828]
+
+americaValid = [346676877003012,
+                348288126992371,
+                379346372653337,
+                372551003187871,
+                377701033813435]
+
+visa = map isVisa visaValid
+master = map isMaster masterValid
+america = map isAmericanExpress americaValid
