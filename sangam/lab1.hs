@@ -130,3 +130,32 @@ recursiveCounterExample x = if (not (counterExampleCheck (takePrimes x))) then t
 
 -- x is one since we want to start with the check at index 1
 testExc6 = recursiveCounterExample 1
+
+-- ********* Excercise 7 *********
+luhn :: Integer -> Bool
+luhn numbers = (sum . doubleEveryOtherDigit $ reverse $ intToArray numbers) `mod` 10 == 0
+
+-- This solution works as following
+-- let number be 145, the first run will be 145 mod 10 with the remainder 5. Next run will be x `div` 145 which is 14
+-- let number now be 14, 14 mod 10 is remainder 4. Next run will be x div 14 which is 1
+-- This will ultimatly result in [1]++[4]++[5]
+intToArray :: Integer -> [Integer]
+intToArray 0 = []
+intToArray x = intToArray (x `div` 10) ++ [x `mod` 10]
+
+-- use pattern matching to skip every first element
+doubleEveryOtherDigit :: [Integer] -> [Integer]
+doubleEveryOtherDigit [] = []
+doubleEveryOtherDigit [a] = [a]
+doubleEveryOtherDigit (x:y:xs) = x:toValidDigit (y*2): doubleEveryOtherDigit xs
+
+toValidDigit :: Integer -> Integer
+toValidDigit x = if(x <= 9) then x else (x-9)
+
+isValidCreditCardLength :: Integer -> [Int] -> Bool
+isValidCreditCardLength n xs = (length (intToArray n)) `elem` xs
+
+isAmericanExpress, isMaster, isVisa :: Integer -> Bool
+isAmericanExpress n = isValidCreditCardLength n [15] && luhn n
+isVisa n = isValidCreditCardLength n [16] && luhn n
+isMaster n = isValidCreditCardLength n [13, 16, 19] && luhn n
