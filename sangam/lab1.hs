@@ -3,7 +3,7 @@ import Data.List
 import Test.QuickCheck
 
 
---Excersise 1
+--Excercise 1
 -- 2 hours including setup
 
 -- Use implication operator
@@ -43,11 +43,72 @@ proofFactorial2 n = ((n * (n+1)) `div` 2) ^ 2
 testExc1b = quickCheck (\n ->  n >= 0 --> factorialPower3 n == proofFactorial2 n)
 
 
--- Excersise 2
+-- Excercise 2
 -- Used subsequences to generate a powerSet.
--- Currently this solution works until you hit test 44 on my machine.
+-- TODO Antwoord toevoegen op de vraag
 -- 1 hour
 testExc2 = quickCheck (\n -> powerSetProof n)
 
 powerSetProof :: [Int] -> Bool
 powerSetProof xs = length (subsequences xs) == (2^c) where c = length xs
+
+
+-- Excercise 3
+-- TODO Antwoord toevoegen op de vraag
+-- permutations is n * n-1 * .. * (n-i) > 0 where n is length of an array
+-- Or in other words it is the same as n * n + 1 * .. * (n+i) < length of array is reached and n > 0
+
+perms :: [Int] ->[[Int]]
+perms [] = [[]]
+perms (x:xs) = concat (map (insrt x) (perms xs)) where
+ insrt x [] = [[x]]
+ insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)
+
+permsLength :: Int -> Int
+permsLength 0 = 1
+permsLength n = n * permsLength (n-1)
+
+testExc3 = quickCheck (\n -> length (perms n) == permsLength (length n))
+
+-- Excersise 4
+
+prime :: Integer -> Bool
+prime n = n > 1 && all (\ x -> rem n x /= 0) xs
+  where xs = takeWhile (\ y -> y^2 <= n) primes
+
+primes :: [Integer]
+primes = 2 : filter prime [3..]
+
+-- Check if the function reversal reverses any prime number.
+-- For non prime numbers like -10 and 10000 the reversal will not work since the reversal of 10000 is 00001 and -10 is 10-.
+-- Therefore we only check if the reversal to all the prime numbers in 0..10000
+reversal :: Integer -> Integer
+reversal = read . reverse . show
+
+testExc4a :: Integer -> Bool
+testExc4a x = x == (reversal (reversal x))
+
+-- Get all prime pairs and check if the pairs are reversals of each other
+
+-- First solution I came up with
+-- primePairs :: [Integer] -> [Integer]
+-- primePairs xs = [x | x <- xs, (prime x) && (prime (reversal x))]
+
+primeReversalPairs :: [Integer]
+primeReversalPairs = takeWhile( < 10000) (filter (prime . reversal) primes)
+
+-- Excercise 5
+-- Check if the sum of 101 consecutive primes result in prime
+-- primes is an infinite array, we first check if index 0 till 100 so we take the first 101 of the infinite list.
+-- If the sum is not a prime we increment index to 1 till 101 and check again if the sum is a prime. etc.
+consPrimes :: [Integer] -> [Integer]
+consPrimes xs = take 101 xs
+
+sumPrimesIsPrime :: [Integer] -> Bool
+sumPrimesIsPrime xs =  prime(sum(xs))
+
+-- Check subset primes for prime. If the sum is a prime then return the sum else redo with tail (so exluding the first element)
+recusivePrimeSumCheck xs = if sumPrimesIsPrime (consPrimes(xs)) then sum(consPrimes(xs)) else recusivePrimeSumCheck (tail xs)
+
+-- TODO how to test? answer questions
+testExc5 = recusivePrimeSumCheck primes
