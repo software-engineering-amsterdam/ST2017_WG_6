@@ -16,6 +16,7 @@
 
 module Lab1 where
 import Data.List
+import Data.Char (ord, chr)
 import Test.QuickCheck
 
 
@@ -206,6 +207,8 @@ find101Prime i  | prime (sum101Primes i) = sum101Primes i
 ----'Do you have to test that your answer is correct? How could this be checked?'
      That would be wise though I'm not sure how.
      I compared my output with that of my teammates. Our approaches are different but the resulting prime number is the same.
+
+     Time spent: 20m
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 
@@ -224,5 +227,56 @@ counterExamples = [x | x <- [0..], refute x == False]
     What is the smallest counterexample?
     > take 1 counterExamples
     [7]
+    Time spent: 20m
+--------------------------------------------------------------------------------------------------------------------------------------}
+
+
+
+
+
+{-------------------------------------------------------------------------------------------------------------------------------------
+7.) Implement and test the Luhn Algorithm
+    The Luhn algorithm is a formula for validating credit card numbers.
+    Give an implementation in Haskell. The type declaration is given.
+    This function should check whether an input number satisfies the Luhn formula.
+
+    Start: 14:00
+--------------------------------------------------------------------------------------------------------------------------------------}
+--    luhn :: Integer -> Bool
+--
+-- so far:
+luhn x = reverse (luhnDouble (integerToReverseIntList x) [] 1)
+
+integerToReverseIntList :: Integer -> [Int]
+integerToReverseIntList n = charListToIntList (show n) []
+
+charListToIntList :: [Char] -> [Int] -> [Int]
+charListToIntList [] is = is
+charListToIntList (c:cs) is = charListToIntList cs is++[(read [c] :: Int)]
+
+luhnDouble :: [Int] -> [Int] -> Int -> [Int]
+luhnDouble [] is i = is
+luhnDouble (x:xs) is i  | i `mod` 2 == 0 && (x*2) > 9 = luhnDouble xs (is++[(x*2) - 9]) (i+1)
+                        | i `mod` 2 == 0 && (x*2) < 9 = luhnDouble xs (is++[(x*2)]) (i+1)
+                        | otherwise = luhnDouble xs (is++[x]) (i+1)
+
+
+
+
+
+{-------------------------------------------------------------------------------------------------------------------------------------
+    Next, use luhn to write functions
+    for checking whether an input number is a valid American Express Card, Master Card, or Visa Card number.
+    Consult Wikipedia for the relevant properties.
+--------------------------------------------------------------------------------------------------------------------------------------}
+--    isAmericanExpress, isMaster, isVisa :: Integer -> Bool
+
+{-------------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------------}
+
+
+{-------------------------------------------------------------------------------------------------------------------------------------
+    Finally, design and implement a test for correctness of your implementation.
 --------------------------------------------------------------------------------------------------------------------------------------}
 
