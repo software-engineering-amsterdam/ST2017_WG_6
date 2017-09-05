@@ -3,7 +3,7 @@ import Data.List
 import Test.QuickCheck
 
 
---Excercise 1
+-- ********* Excercise 1 *********
 -- 2 hours including setup
 
 -- Use implication operator
@@ -43,7 +43,7 @@ proofFactorial2 n = ((n * (n+1)) `div` 2) ^ 2
 testExc1b = quickCheck (\n ->  n >= 0 --> factorialPower3 n == proofFactorial2 n)
 
 
--- Excercise 2
+-- ********* Excercise 2 *********
 -- Used subsequences to generate a powerSet.
 -- TODO Antwoord toevoegen op de vraag
 -- 1 hour
@@ -53,11 +53,11 @@ powerSetProof :: [Int] -> Bool
 powerSetProof xs = length (subsequences xs) == (2^c) where c = length xs
 
 
--- Excercise 3
+-- ********* Excercise 3 *********
 -- TODO Antwoord toevoegen op de vraag
 -- permutations is n * n-1 * .. * (n-i) > 0 where n is length of an array
 -- Or in other words it is the same as n * n + 1 * .. * (n+i) < length of array is reached and n > 0
-
+-- 1 hour
 perms :: [Int] ->[[Int]]
 perms [] = [[]]
 perms (x:xs) = concat (map (insrt x) (perms xs)) where
@@ -70,8 +70,8 @@ permsLength n = n * permsLength (n-1)
 
 testExc3 = quickCheck (\n -> length (perms n) == permsLength (length n))
 
--- Excersise 4
-
+-- ********* Excersise 4 *********
+-- 1 hour
 prime :: Integer -> Bool
 prime n = n > 1 && all (\ x -> rem n x /= 0) xs
   where xs = takeWhile (\ y -> y^2 <= n) primes
@@ -97,7 +97,7 @@ testExc4a x = x == (reversal (reversal x))
 primeReversalPairs :: [Integer]
 primeReversalPairs = takeWhile( < 10000) (filter (prime . reversal) primes)
 
--- Excercise 5
+-- ********* Excercise 5 *********
 -- Check if the sum of 101 consecutive primes result in prime
 -- primes is an infinite array, we first check if index 0 till 100 so we take the first 101 of the infinite list.
 -- If the sum is not a prime we increment index to 1 till 101 and check again if the sum is a prime. etc.
@@ -112,3 +112,21 @@ recusivePrimeSumCheck xs = if sumPrimesIsPrime (consPrimes(xs)) then sum(consPri
 
 -- TODO how to test? answer questions
 testExc5 = recusivePrimeSumCheck primes
+
+
+-- ********* Excercise 6 *********
+-- We check starting from 2 if the product is a prime and keep adding the nextprime until the we find a counterexample
+-- TODO add answers to questions
+-- 1 hour
+counterExampleCheck :: [Integer] -> Bool
+counterExampleCheck xs = prime ((product xs) + 1)
+
+-- Take takes Int
+takePrimes :: Int -> [Integer]
+takePrimes x = take x primes
+
+recursiveCounterExample :: Int -> [Integer]
+recursiveCounterExample x = if (not (counterExampleCheck (takePrimes x))) then takePrimes x else recursiveCounterExample (x+1)
+
+-- x is one since we want to start with the check at index 1
+testExc6 = recursiveCounterExample 1
