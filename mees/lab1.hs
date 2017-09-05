@@ -85,12 +85,20 @@ primes :: [Integer]
 primes = 2 : filter prime [3..]
 
 primes_eq_reversal :: Integer -> [Integer]
-primes_eq_reversal n = takeWhile ( < n ) (filter (prime . reverseInt) primes)  
+primes_eq_reversal n = takeWhile ( < n ) (filter (prime . reversal) primes)  
 
 -- prime_eq_reverse :: Integer -> Bool
 -- prime_eq_reverse n = (prime n) == (prime (reverseInt n))
 
 -- ##########
--- # Lab 1 Exercise
--- # hour(s)
+-- # Lab 1 Exercise 5
+-- # 1,5 hour(s)
 -- ##########
+{--
+--}
+-- function l a = (filter (prime.sum))
+
+generate_n_head :: Int -> [a] -> [[a]]
+generate_n_head n l = (take n l) : generate_n_head n (tail l)
+
+sum_head_n = sum( head( filter (prime.sum) (generate_n_head 101 primes)))
