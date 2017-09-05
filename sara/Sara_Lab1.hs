@@ -154,11 +154,11 @@ prime :: Integer -> Bool
 prime n = n > 1 && all (\ x -> rem n x /= 0) xs
  where xs = takeWhile (\ y -> y^2 <= n) primes
 
-primes :: [Integer]
-primes = 2 : filter prime [3..10000]
+primes10k :: [Integer]
+primes10k = 2 : filter prime [3..10000]
 
 reversiblePrimes :: [Integer]
-reversiblePrimes = filter reversible primes
+reversiblePrimes = filter reversible primes10k
 
 reversible :: Integer -> Bool
 reversible n = prime (toInteger(reversal n))
@@ -186,3 +186,43 @@ testing it with (reversiblePrimes ++ [12]) returns False.
 
 Total time spent on ex4: 1h 30m
 --------------------------------------------------------------------------------------------------------------------------------------}
+
+
+{-------------------------------------------------------------------------------------------------------------------------------------
+5.) The number 101 is a prime, and it is also the sum of five consecutive primes, namely 13+17+19+23+29.
+    Find the smallest prime number that is a sum of 101 consecutive primes.
+--------------------------------------------------------------------------------------------------------------------------------------}
+--From Lecture 1 but starting from 2
+primes :: [Integer]
+primes = 2 : filter prime [2..]
+
+sum101Primes :: Int -> Integer
+sum101Primes i = sum(take 101(drop i(primes)))
+
+find101Prime :: Int -> Integer
+find101Prime i  | prime (sum101Primes i) = sum101Primes i
+                | otherwise = find101Prime (i+1)
+{-------------------------------------------------------------------------------------------------------------------------------------
+----'Do you have to test that your answer is correct? How could this be checked?'
+     That would be wise though I'm not sure how.
+     I compared my output with that of my teammates. Our approaches are different but the resulting prime number is the same.
+--------------------------------------------------------------------------------------------------------------------------------------}
+
+
+{-------------------------------------------------------------------------------------------------------------------------------------
+6.) Using Haskell to refute a conjecture.
+    Write a Haskell function that can be used to refute the following conjecture.
+    "If p1,...,pn is a list of consecutive primes starting from 2, then (p1×⋯×pn)+1 is also prime."
+    This can be refuted by means of a counterexample, so your Haskell program should generate counterexamples.
+--------------------------------------------------------------------------------------------------------------------------------------}
+refute :: Int -> Bool
+refute n = prime ((foldr (*) 1 (take n primes))+1)
+
+counterExamples :: [Int]
+counterExamples = [x | x <- [0..], refute x == False]
+{-------------------------------------------------------------------------------------------------------------------------------------
+    What is the smallest counterexample?
+    > take 1 counterExamples
+    [7]
+--------------------------------------------------------------------------------------------------------------------------------------}
+
