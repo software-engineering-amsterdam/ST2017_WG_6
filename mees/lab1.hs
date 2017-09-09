@@ -3,6 +3,23 @@ import Data.List
 import Test.QuickCheck
 
 
+-- ##########
+-- # Given
+-- ##########
+(-->) :: Bool -> Bool -> Bool
+p --> q = (not p) || q
+
+prime :: Integer -> Bool
+prime n = n > 1 && all (\ x -> rem n x /= 0) xs
+  where xs = takeWhile (\ y -> y^2 <= n) primes
+
+primes :: [Integer]
+primes = 2 : filter prime [3..]
+
+choose1 :: Int -> Int -> Int
+choose1 n 0 = 1
+choose1 0 k = 0
+choose1 n k = choose1 (n-1) (k-1) * n `div` k 
 
 -- ##########
 -- # Lab 1 Exercise 1 
@@ -16,13 +33,8 @@ fac2 n = n ^ 2 + fac2 (n - 1)
 proof2:: Int -> Int
 proof2 n = quot (n * (n + 1) * (2 * n + 1)) 6
 
-
 ex_1 :: Int -> Bool
 ex_1 n = fac2 n == proof2 n
-
-
-(-->) :: Bool -> Bool -> Bool
-p --> q = (not p) || q
 
 test11 = quickCheckResult (\n -> (n >= 0) --> (fac2 n == proof2 n))
 
@@ -33,8 +45,8 @@ fac3 n = n ^ 3 + fac3 (n - 1)
 proof3 :: Int -> Int
 proof3 n = (n * (n + 1) `div` (2)) ^ 2
 
-
 test12 = quickCheckResult (\n -> (n >= 0) --> (fac3 n == proof3 n))
+
 
 -- ##########
 -- # Lab 1 Exercise 2
@@ -46,6 +58,7 @@ sub_eq_n2 n = length(subsequences[1..n]) == 2 ^ n
 
 test2 = quickCheckResult (\n -> (n >= 0) --> (sub_eq_n2 n))
 
+
 -- ##########
 -- # Lab 1 Exercise 3
 -- # 0.5 hour(s)
@@ -53,6 +66,7 @@ test2 = quickCheckResult (\n -> (n >= 0) --> (sub_eq_n2 n))
 
 test3 = quickCheckResult (\n -> (n >= 0) -->
                          (length(permutations[1..n]) == product[1..n]))
+
 
 -- ##########
 -- # Lab 1 Exercise 4
@@ -75,14 +89,6 @@ always passes which approves this statement.
 check_reversal = \n -> prime n --> (reversal(reversal n) == n)
 
 test4_reversal = quickCheck (check_reversal)
-
-
-prime :: Integer -> Bool
-prime n = n > 1 && all (\ x -> rem n x /= 0) xs
-  where xs = takeWhile (\ y -> y^2 <= n) primes
-
-primes :: [Integer]
-primes = 2 : filter prime [3..]
 
 primes_eq_reversal :: Integer -> [Integer]
 primes_eq_reversal n = takeWhile ( < n ) (filter (prime . reversal) primes)  
@@ -132,7 +138,7 @@ odds_index (e1:e2:xs) = e1 : odds_index xs
 
 even_index [] = []
 even_index [x] = []
-even_index (e1:e2:xs) = (if e2 * 2 > 9 then 2 * e2 - 9 else  2*e2) 
+even_index (e1:e2:xs) = (if e2 * 2 > 9 then 2 * e2 - 9 else  2 *e2) 
                         : even_index xs
 
 index_num n = sum (odds_index( n )) + sum (even_index( n )) 
@@ -180,3 +186,14 @@ americaValid = [346676877003012,
 visa = map isVisa visaValid
 master = map isMaster masterValid
 america = map isAmericanExpress americaValid
+-- changing numbers: https://stackoverflow.com/questions/5852722/replace-individual-list-elements-in-haskell
+
+-- ##########
+-- # Lab 1 Exercise 8
+-- # hour(s)
+-- ##########
+
+data Boy = Matthew | Peter | Jack | Arnold | Carl 
+           deriving (Eq,Show)
+
+boys = [Matthew, Peter, Jack, Arnold, Carl]
