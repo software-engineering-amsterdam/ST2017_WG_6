@@ -133,7 +133,7 @@ primesEqReversal n = takeWhile ( < n ) (filter (prime . reversal) primes)
     heads) so it takes a full iteration to reach the last element.
     This isn't suitable for a QuickCheck test because this isn't about testing against random values, we're using
     the same subset of the set of all primes < 10000 each time. Also, by limiting the testset to primes we also don't have to
-    check for negative and exponentials of 10
+    check for negative and base 10
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 
