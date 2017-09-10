@@ -115,7 +115,8 @@ ending with a zero are even numbers they can't be primes and primes can't be
 negative these are automatically returning True. That's why the test
 always passes which approves this statement.
 --}
---check_reversal :: Integer -> Bool
+
+checkReversal :: Integer -> Bool
 checkReversal = \n -> prime n --> (reversal(reversal n) == n)
 
 test4Reversal = quickCheck (checkReversal)
@@ -185,65 +186,6 @@ test6 = head (filter (not.conjecture) (recursiveReturnSublist2 1 primes))
     > take 1 counterExamples
     [7]
 --------------------------------------------------------------------------------------------------------------------------------------}
-luhn :: Integer -> Bool
-luhn n = (sum (replaceDigits (intToList n)) `mod` 10) == 0
-
-replaceDigits :: [Integer] -> [Integer]
-replaceDigits [] = []
-replaceDigits [x] = [x]
-replaceDigits (x:y:zs) = x : modDigit y : replaceDigits zs
-
-modDigit :: Integer -> Integer
-modDigit y
-    | y < 5     = 2*y
-    | otherwise = (2*y) - 9
-
-intToList :: Integer -> [Integer]
-intToList n
-    | n < 10    = [n]
-    | otherwise = [n `mod` 10] ++ intToList (n `div` 10)
-
-
-isAmericanExpress, isMaster, isVisa :: Integer -> Bool
-isMaster n = length(intToList n) == 16 &&
-             n1 == 5 &&
-             elem n2 [1..5] &&
-             luhn n
-             where (n1:n2:ns) = intToList n
-
-isVisa n = n1 == 4 &&
-           (len == 13 || len == 16 || len == 19) &&
-           luhn n
-           where (n1:ns) = intToList n; len = length(intToList n)
-
-isAmericanExpress n = length(intToList n) == 15 &&
-                      n1 == 3 &&
-                      (n2 == 4 || n2 == 7) &&
-                      luhn n
-                      where (n1:n2:ns) = intToList n
-
--- SOURCE : http://www.getcreditcardnumbers.com/
-visaValid = [4532530353861276,
-             4539091191338186,
-             4532660285963153,
-             4485675506393284,
-             4716050923148342]
-
-masterValid = [5561182643231042,
-               5344239834935031,
-               5487320019367914,
-               5475210985327105,
-               5357091271641828]
-
-americaValid = [346676877003012,
-                348288126992371,
-                379346372653337,
-                372551003187871,
-                377701033813435]
-
-visa = map isVisa visaValid
-master = map isMaster masterValid
-america = map isAmericanExpress americaValid
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 7.) Implement and test the Luhn Algorithm
@@ -252,3 +194,116 @@ america = map isAmericanExpress americaValid
     This function should check whether an input number satisfies the Luhn formula.
 --------------------------------------------------------------------------------------------------------------------------------------}
 --    luhn :: Integer -> Bool
+-- SOURCE digs: https://stackoverflow.com/questions/3989240/int-int-convert
+digs :: Integer -> [Integer]
+digs 0 = []
+digs x = digs (x `div` 10) ++ [x `mod` 10]
+
+oddsIndex :: [a] -> [a]
+oddsIndex [] = []
+oddsIndex [x] = [x]
+oddsIndex (e1:e2:xs) = e1 : oddsIndex xs
+
+evenIndex [] = []
+evenIndex [x] = []
+evenIndex (e1:e2:xs) = (if e2 * 2 > 9 then 2 * e2 - 9 else  2 *e2)
+                        : evenIndex xs
+
+indexNum n = sum (oddsIndex( n )) + sum (evenIndex( n ))
+
+luhn :: Integer -> Bool
+luhn n = ((indexNum (reverse (digs n))) `mod` 10)  == 0
+
+isAmericanExpress, isMaster, isVisa :: Integer -> Bool
+isMaster n = length(digs n) == 16 &&
+             n1 == 5 &&
+             elem n2 [1..5] &&
+             luhn n
+             where (n1:n2:ns) = digs n
+
+isVisa n = n1 == 4 &&
+           (len == 13 || len == 16 || len == 19) &&
+           luhn n
+           where (n1:ns) = digs n; len = length(digs n)
+
+isAmericanExpress n = length(digs n) == 15 &&
+                      n1 == 3 &&
+                      (n2 == 4 || n2 == 7) &&
+                      luhn n
+                      where (n1:n2:ns) = digs n
+
+-- SOURCE : http://www.getcreditcardnumbers.com/
+visaValid, masterValid, americaValid :: [Integer]
+visaValid = [4532530353861276, -- validCases
+             4539091191338186,
+             4532660285963153,
+             4485675506393284,
+             4716050923148342,
+             346676877003012, -- inValidCases
+             348288126992371,
+             379346372653337,
+             372551003187871,
+             377701033813435]
+
+masterValid = [5561182643231042, -- validCases
+               5344239834935031,
+               5487320019367914,
+               5475210985327105,
+               5357091271641828,
+               4532530353861276, -- invalidCases
+               4539091191338186,
+               4532660285963153,
+               4485675506393284,
+               4716050923148342]
+
+americaValid = [346676877003012, -- validCases
+                348288126992371,
+                379346372653337,
+                372551003187871,
+                377701033813435,
+                5561182643231042, -- invalidCases
+                5344239834935031,
+                5487320019367914,
+                5475210985327105,
+                5357091271641828]
+
+test7Visa, test7Master, test7America :: Bool
+test7Visa = (map isVisa visaValid) == validAnswers
+test7Master = map isMaster masterValid == validAnswers
+test7America = map isAmericanExpress americaValid == validAnswers
+
+validAnswers :: [Bool]
+validAnswers = [True,True,True,True,True,False,False,False,False,False] -- test7Visa, test7Master and test7VAmerica should result in this list.
+-- changing numbers: https://stackoverflow.com/questions/5852722/replace-individual-list-elements-in-haskell
+
+{-------------------------------------------------------------------------------------------------------------------------------------
+8.) Use Haskell to write a function that computes who was the thief, and a function that computes which boys made honest declarations.
+    Here are some definitions to get you started.
+--------------------------------------------------------------------------------------------------------------------------------------}
+
+data Boy = Matthew | Peter | Jack | Arnold | Carl
+           deriving (Eq,Show)
+
+boys = [Matthew, Peter, Jack, Arnold, Carl]
+
+accuses :: Boy -> Boy -> Bool
+accuses x y | x == Matthew = ((y /= Carl) && (y/= Matthew))
+            | x == Peter = (y == Jack) || (y == Matthew)
+            | x == Jack = not ((accuses Matthew y) || (accuses Peter y))
+            | x == Arnold = ((accuses Peter y) /= (accuses Matthew y))
+            | x == Carl = not (accuses Arnold y)
+
+accusers :: Boy -> [Boy]
+accusers x = [y | y <- boys, accuses y x]
+
+-- Three people are honest and two aren't. Since all boys where
+-- caught in the crime, three (honest) of them will accuse the one
+-- who comitted the crime. So the boy who is accused by exactly three
+-- other boys actually comitted the crime. The boys who accused the
+-- guilty boy are the honest ones.
+guilty, honest :: [Boy]
+guilty = filter (\x -> length( accusers x) == 3) boys
+honest = accusers (head(guilty))
+
+printHonest = print honest
+printGuilty = print guilty
