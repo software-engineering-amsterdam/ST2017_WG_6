@@ -190,10 +190,45 @@ america = map isAmericanExpress americaValid
 
 -- ##########
 -- # Lab 1 Exercise 8
--- # hour(s)
+-- # 2 hour(s)
 -- ##########
 
 data Boy = Matthew | Peter | Jack | Arnold | Carl 
            deriving (Eq,Show)
 
 boys = [Matthew, Peter, Jack, Arnold, Carl]
+
+accuses :: Boy -> Boy -> Bool
+accuses x y | x == Matthew = ((y /= Carl) && (y/= Matthew))
+            | x == Peter = (y == Jack) || (y == Matthew)
+            | x == Jack = not ((accuses Matthew y) || (accuses Peter y))
+            | x == Arnold = ((accuses Peter y) /= (accuses Matthew y))
+            | x == Carl = not (accuses Arnold y)
+
+
+accusers :: Boy -> [Boy]
+accusers x = [y | y <- boys, accuses y x]
+
+
+-- Three people are honest and two aren't. Since all boys where
+-- caught in the crime, three (honest) of them will accuse the one 
+-- who comitted the crime. So the boy who is accused by exactly three
+-- other boys actually comitted the crime. The boys who accused the
+-- guilty boy are the honest ones.
+guilty :: [Boy]
+guilty = filter (\x -> length( accusers x) == 3) boys
+honest = accusers (head(guilty))
+
+print_honest = print honest
+print_guilty = print guilty
+
+-- ##########
+-- # Bonus: Euler 10
+-- # 0.75 hour(s)
+-- # Result -> sum_primes_below 2000000 : 142913828922
+-- ##########
+
+-- Might take a few secend in intepreted mode
+sum_primes_below x = foldl (+) 0 $ takeWhile (\n -> n < x) primes
+
+results_euler_10 = print (sum_primes_below 2000000)
