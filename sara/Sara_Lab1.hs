@@ -16,7 +16,6 @@
 
 module Lab1 where
 import Data.List
-import Data.Char (ord, chr)
 import Test.QuickCheck
 
 
@@ -240,7 +239,7 @@ counterExamples = [x | x <- [0..], refute x == False]
     Give an implementation in Haskell. The type declaration is given.
     This function should check whether an input number satisfies the Luhn formula.
 
-    Start: 14:00
+    Time spent luhn & amex: 2h
 --------------------------------------------------------------------------------------------------------------------------------------}
 luhn :: Integer -> Bool
 luhn x = (sum(luhnDouble (integerToReverseIntList x) [] 1)) `mod` 10 == 0
