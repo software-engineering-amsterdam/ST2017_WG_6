@@ -303,7 +303,7 @@ printHonest = print honest
 printGuilty = print guilty
 
 {-------------------------------------------------------------------------------------------------------------------------------------
- Bonus Euler 9.) 45 min
+ Bonus Euler 9.) 20 min
 --------------------------------------------------------------------------------------------------------------------------------------}
 -- Take head only because otherwise it will a.) keep searching after finding the triplet
 -- and b.) return a,b,c and also b,a,c which is unnecessary
