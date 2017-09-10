@@ -6,7 +6,7 @@ Remarks:        --
 Sources:        --
 -}
 
-module Lab1 where
+module Lab1Tim where
 import Data.List
 import Test.QuickCheck    
 
