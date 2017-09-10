@@ -323,10 +323,17 @@ sumPrimesBelow x = foldl (+) 0 $ takeWhile (\n -> n < x) primes
 resultsEuler10 = print (sumPrimesBelow 2000000)
 
 {-------------------------------------------------------------------------------------------------------------------------------------
- Bonus Euler 49.)
+ Bonus Euler 49.) 1 hour
 --------------------------------------------------------------------------------------------------------------------------------------}
-arithmeticSequence :: (Integer, Integer, Integer)
-arithmeticSequence =  head[(x,y,z)| x <- [1487], y <- [1000..9999], z <-[1000..9999],
-                        (y - x == z - y),
-                        (prime x && prime y && prime z),
-                        (elem [y] (permutations [x]) && elem [z] (permutations [x]))]
+primesBetween :: Integer -> Integer -> [Integer]
+primesBetween a b  =  filter prime [a .. b]
+
+euler49 :: [[Integer]]
+euler49 = [[x, y, z] | x <- primesBetween 1000 10000,
+                        y <- primesBetween (x+1) 10000,
+                        z <- [y + (y - x)],
+                        z < 10000,
+                        prime z,
+                        (digs y) `elem` (permutations(digs x)),
+                        (digs z) `elem` (permutations(digs x))
+                        ]
