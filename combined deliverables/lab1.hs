@@ -334,6 +334,7 @@ euler49 = [[x, y, z] | x <- primesBetween 1000 10000,
                         y <- primesBetween (x+1) 10000,
                         z <- [y + (y - x)],
                         z < 10000,
+                        x /= 1487,
                         prime z,
                         (digs y) `elem` (permutations(digs x)),
                         (digs z) `elem` (permutations(digs x))
