@@ -232,11 +232,11 @@ print_guilty = print guilty
 -- Might take a few seconds in intepreted mode
 sum_primes_below x = foldl (+) 0 $ takeWhile (\n -> n < x) primes
 
-results_euler_10 = print (sum_primes_below 2000000)
+result_euler_10 = print (sum_primes_below 2000000)
 
 -- ##########
 -- # Bonus: Euler 49
--- # hour(s)
+-- # 2,5 hour(s)
 -- # Result ->
 -- ##########
 
@@ -245,8 +245,15 @@ euler_49 = [[x, y, z] | x <- primes_between 1000 10000,
                         y <- primes_between (x+1) 10000,
                         z <- [y + (y - x)],
                         z < 10000,
+                        x /= 1487,
                         prime z,
                         (digs y) `elem` (permutations(digs x)),
                         (digs z) `elem` (permutations(digs x))
                         ]
 
+-- SOURCE: https://stackoverflow.com/questions/5289779/printing-elements-of-a-list-on-new-lines
+joiner :: [Integer] -> Integer
+joiner = read . concatMap show
+
+
+result_euler_49 = print (joiner (head euler_49))
