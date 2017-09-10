@@ -191,6 +191,7 @@ america = map isAmericanExpress americaValid
 -- ##########
 -- # Lab 1 Exercise 8
 -- # 2 hour(s)
+-- # Results : Jack
 -- ##########
 
 data Boy = Matthew | Peter | Jack | Arnold | Carl 
@@ -228,7 +229,24 @@ print_guilty = print guilty
 -- # Result -> sum_primes_below 2000000 : 142913828922
 -- ##########
 
--- Might take a few secend in intepreted mode
+-- Might take a few seconds in intepreted mode
 sum_primes_below x = foldl (+) 0 $ takeWhile (\n -> n < x) primes
 
 results_euler_10 = print (sum_primes_below 2000000)
+
+-- ##########
+-- # Bonus: Euler 49
+-- # hour(s)
+-- # Result ->
+-- ##########
+
+primes_between a b  =  filter prime [a .. b]
+euler_49 = [[x, y, z] | x <- primes_between 1000 10000,
+                        y <- primes_between (x+1) 10000,
+                        z <- [y + (y - x)],
+                        z < 10000,
+                        prime z,
+                        (digs y) `elem` (permutations(digs x)),
+                        (digs z) `elem` (permutations(digs x))
+                        ]
+
