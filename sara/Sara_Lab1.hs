@@ -274,3 +274,14 @@ isAmericanExpress x = ((take 2 (reverse(integerToReverseIntList x))) == [3,7] ||
     Finally, design and implement a test for correctness of your implementation.
 --------------------------------------------------------------------------------------------------------------------------------------}
 
+
+
+
+-- Euler 9 - took 20m
+-- Take 1 because otherwise it will a.) keep searching after finding the triplet
+-- and b.) return a,b,c and also b,a,c which is unnecessary
+-- Limit the lists to 500 to prevent infinite loop
+-- Finding the triplet takes a moment :)
+pythagoreanTripletSums1000 = take 1 [(x,y,z)|x<-[1..500], y<-[1..500], z<-[1..500], (x^2 + y^2 == z^2), x + y + z == 1000]
+
+
