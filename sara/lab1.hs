@@ -286,11 +286,12 @@ pythagoreanTripletSums1000 :: (Int, Int, Int)
 pythagoreanTripletSums1000 = head [(x,y,z)|x<-[1..500], y<-[1..500], z<-[1..500], (x^2 + y^2 == z^2), x + y + z == 1000]
 
 
----- Euler 49 - UNFINISHED, not working properly - so far 2h
+---- Euler 49 - took 2h
 --x+1 because we need an increment, otherwise it can be 3 duplicates
 arithmeticSequence :: [(Integer, Integer, Integer)] --(Integer, Integer, Integer)
 arithmeticSequence =  {-head-}[(x,y,z)|
     x <- (primesMinMax 1000 9999), y <- (primesMinMax (x+1) 9999), z <- [y + (y - x)],
+    prime z,
     (y - x) >= 1000,
     (x /= 1487 && y /= 4817),
     (elem (show y) (perms (show x)) && elem (show z) (perms (show x)))]
