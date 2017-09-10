@@ -23,6 +23,7 @@ primes = 2 : filter prime [3..]
 {-------------------------------------------------------------------------------------------------------------------------------------
 1.) Redo exercises 2 and 3 of Workshop 1 by writing QuickCheck tests for these statements.
     See the end of Lecture 1 for how this can be done.
+    1,5 hours
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 exercise2a :: Int -> Int
@@ -54,6 +55,7 @@ test12 = quickCheckResult (\n -> n >= 0 --> exercise3a n == exercise3b n)
     You can use subsequences :: [a] -> [[a]] for the list of all subsequences of a given list.
 
     'Prove by induction that if A is a finite set with |A|=n, then |P(A)|=2n.'
+    1,5 hours
 --------------------------------------------------------------------------------------------------------------------------------------}
 subEqn2 :: Int -> Bool
 subEqn2 n = length(subsequences[1..n]) == 2 ^ n
@@ -76,9 +78,10 @@ test2 = quickCheckResult (\n -> (n >= 0 && n < 20) --> (subEqn2 n))
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 3.) Redo exercise 5 of Workshop 1 by replacing sets by lists, and testing the property for integer lists of the form [1..n].
-----A permutation of a list is a reordering of the members of a list.
-----You can also use the Data.List function permutations.
-----Find a formula (closed form) for the number of permutations of a list of n distinct objects, and prove your guess by induction.
+    A permutation of a list is a reordering of the members of a list.
+    You can also use the Data.List function permutations.
+    Find a formula (closed form) for the number of permutations of a list of n distinct objects, and prove your guess by induction.
+    30 min
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 test3 = quickCheckResult (\n -> (n >= 0) -->
@@ -101,6 +104,7 @@ test3 = quickCheckResult (\n -> (n >= 0) -->
 {-------------------------------------------------------------------------------------------------------------------------------------
 4.) The natural number 13 has the property that it is prime and its reversal, the number 31, is also prime.
     Write a function that finds all primes < 10000 with this property.
+    2 hours
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 reversal :: Integer -> Integer
@@ -108,8 +112,8 @@ reversal = read . reverse . show
 {--
 By defenition '-->' is only returns False if the first condition is True and
 the second function is False. Since reversal reverses wrong on negative Integers
-and Intergers ending on a zero, 1000 reverses in 1. But since all Integers
-ending with a zero are even numbers they can't be primes and primes can't be
+and Intergers of base 10, 1000 reverses in 1. But since all Integers
+that are base 10 are even numbers they can't be primes and primes can't be
 negative these are automatically returning True. That's why the test
 always passes which approves this statement.
 --}
@@ -117,7 +121,7 @@ always passes which approves this statement.
 checkReversal :: Integer -> Bool
 checkReversal = \n -> prime n --> (reversal(reversal n) == n)
 
-test4Reversal = quickCheck (checkReversal)
+test4Reversal = quickCheckResult (checkReversal)
 
 primesEqReversal :: Integer -> [Integer]
 primesEqReversal n = takeWhile ( < n ) (filter (prime . reversal) primes)
@@ -133,14 +137,14 @@ primesEqReversal n = takeWhile ( < n ) (filter (prime . reversal) primes)
     list x the list, though Haskell's lists appear to be singly-linked and queue-like (because you can easily take
     heads) so it takes a full iteration to reach the last element.
     This isn't suitable for a QuickCheck test because this isn't about testing against random values, we're using
-    the same subset of the set of all primes < 10000 each time. Also, by limiting the testset to primes we don't have to
-    check for negative and base 10 numbers
+    the same subset of the set of all primes < 10000 each time.
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 5.) The number 101 is a prime, and it is also the sum of five consecutive primes, namely 13+17+19+23+29.
     Find the smallest prime number that is a sum of 101 consecutive primes.
+    1,5 hours
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 sublistPrimes :: [Integer] -> Bool
@@ -165,6 +169,7 @@ test5 = sum (head (filter sublistPrimes (recursiveReturnSublist 101 primes)))
     Write a Haskell function that can be used to refute the following conjecture.
     "If p1,...,pn is a list of consecutive primes starting from 2, then (p1×⋯×pn)+1 is also prime."
     This can be refuted by means of a counterexample, so your Haskell program should generate counterexamples.
+    1 hour
 --------------------------------------------------------------------------------------------------------------------------------------}
 recursiveReturnSublist2 :: Int -> [a] -> [[a]]
 recursiveReturnSublist2 n l = (take n l) : recursiveReturnSublist2 (n+1) l
@@ -180,6 +185,7 @@ test6 = head (filter (not.conjecture) (recursiveReturnSublist2 1 primes))
     The Luhn algorithm is a formula for validating credit card numbers.
     Give an implementation in Haskell. The type declaration is given.
     This function should check whether an input number satisfies the Luhn formula.
+    2 hours
 --------------------------------------------------------------------------------------------------------------------------------------}
 -- SOURCE digs: https://stackoverflow.com/questions/3989240/int-int-convert
 digs :: Integer -> [Integer]
@@ -266,6 +272,7 @@ validAnswers = [True,True,True,True,True,False,False,False,False,False] -- test7
 {-------------------------------------------------------------------------------------------------------------------------------------
 8.) Use Haskell to write a function that computes who was the thief, and a function that computes which boys made honest declarations.
     Here are some definitions to get you started.
+    2 hours
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 data Boy = Matthew | Peter | Jack | Arnold | Carl
@@ -296,7 +303,7 @@ printHonest = print honest
 printGuilty = print guilty
 
 {-------------------------------------------------------------------------------------------------------------------------------------
- Bonus Euler 9.)
+ Bonus Euler 9.) 45 min
 --------------------------------------------------------------------------------------------------------------------------------------}
 -- Take head only because otherwise it will a.) keep searching after finding the triplet
 -- and b.) return a,b,c and also b,a,c which is unnecessary
@@ -306,7 +313,7 @@ pythagoreanTripletSums1000 :: (Int, Int, Int)
 pythagoreanTripletSums1000 = head [(x,y,z)|x<-[1..500], y<-[1..500], z<-[1..500], (x^2 + y^2 == z^2), x + y + z == 1000]
 
 {-------------------------------------------------------------------------------------------------------------------------------------
- Bonus Euler 10.)
+ Bonus Euler 10.) 20min
  Result -> sum_primes_below 2000000 : 142913828922
 --------------------------------------------------------------------------------------------------------------------------------------}
 -- Might take a few secend in intepreted mode
