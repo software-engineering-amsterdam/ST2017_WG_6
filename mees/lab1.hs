@@ -224,9 +224,11 @@ print_guilty = print guilty
 
 -- ##########
 -- # Bonus: Euler 10
--- # hour(s)
+-- # 0.75 hour(s)
 -- # Result -> sum_primes_below 2000000 : 142913828922
 -- ##########
 
 -- Might take a few secend in intepreted mode
 sum_primes_below x = foldl (+) 0 $ takeWhile (\n -> n < x) primes
+
+results_euler_10 = print (sum_primes_below 2000000)
