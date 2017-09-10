@@ -344,4 +344,4 @@ joiner :: [Integer] -> Integer
 joiner = read . concatMap show
 
 
-result_euler_49 = print (joiner (head euler_49))
+resultEuler49 = print (joiner (head euler49))
