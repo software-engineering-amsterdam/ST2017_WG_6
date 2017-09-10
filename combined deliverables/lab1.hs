@@ -72,9 +72,7 @@ test2 = quickCheckResult (\n -> (n >= 0 && n < 20) --> (subEqn2 n))
 ----Are you checking a mathematical fact? Or are you testing whether subsequences satisfies a part of its specification?
 ----Or are you testing something else still?'
 
-    You are indeed testing both a mathematical fact and the specification of subsequence by using that fact.
-    You could say that you're also testing calculation speed when you don't limit QuickCheck's input values,
-    but then you would actually have to measure the time it takes and compare that to some expectation for it to make sense.
+  --TODO antwoord
 
  --------------------------------------------------------------------------------------------------------------------------------------}
 
@@ -91,12 +89,12 @@ test3 = quickCheckResult (\n -> (n >= 0) -->
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 ----'Is the property hard to test? If you find that it is, can you given a reason why?'
-    Yes, because generating permtations is O
+    Yes, the function like in Excercise 2 is grows exponential with n.
 
 ----Again, give your thoughts on the following issue: when you perform the test for exercise 5, what are you testing actually?
 ----Are you checking a mathematical fact? Or are you testing whether perms satisfies a part of its specification?
 ----Or are you testing something else still?
-
+    TODO antwoord
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 
@@ -134,15 +132,8 @@ primesEqReversal n = takeWhile ( < n ) (filter (prime . reversal) primes)
     list x the list, though Haskell's lists appear to be singly-linked and queue-like (because you can easily take
     heads) so it takes a full iteration to reach the last element.
     This isn't suitable for a QuickCheck test because this isn't about testing against random values, we're using
-    the same subset of the set of all primes < 10000 each time.
-
-    I could probably attempt a bit like a unittest?
---------------------------------------------------------------------------------------------------------------------------------------}
-
-{-------------------------------------------------------------------------------------------------------------------------------------
-Performance could probably be better, but testing this with reversiblePrimes returns True,
-testing it with (reversiblePrimes ++ [12]) returns False.
-
+    the same subset of the set of all primes < 10000 each time. Also, by limiting the testset to primes we also don't have to
+    check for negative and exponentials of 10
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 
@@ -161,8 +152,8 @@ test5 = sum (head (filter sublistPrimes (recursiveReturnSublist 101 primes)))
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 ----'Do you have to test that your answer is correct? How could this be checked?'
-     That would be wise though I'm not sure how.
-     I compared my output with that of my teammates. Our approaches are different but the resulting prime number is the same.
+  -- Normally you test all the functions that are created and have some kind of logic in them. In this case the function uses library functions
+  -- to calculate the smallest prime. We don't write tests for the library functions because we assume they work as intented.
 
 --------------------------------------------------------------------------------------------------------------------------------------}
 
@@ -179,13 +170,8 @@ recursiveReturnSublist2 n l = (take n l) : recursiveReturnSublist2 (n+1) l
 conjecture :: [Integer] -> Bool
 conjecture xs = prime ((product xs) + 1)
 
+-- Smallest counterexample according to the test is: product [2,3,5,7,11,13] + 1 == 30031 which is not a primenumber
 test6 = head (filter (not.conjecture) (recursiveReturnSublist2 1 primes))
-
-{-------------------------------------------------------------------------------------------------------------------------------------
-    What is the smallest counterexample?
-    > take 1 counterExamples
-    [7]
---------------------------------------------------------------------------------------------------------------------------------------}
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 7.) Implement and test the Luhn Algorithm
