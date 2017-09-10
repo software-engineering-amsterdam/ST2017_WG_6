@@ -47,7 +47,6 @@ cubes n = map (^3) [1..n]
 exercise3b :: Int -> Int
 exercise3b n = (n * (n + 1) `div` 2) ^2
 
--- QuickCheck test
 test12 = quickCheckResult (\n -> n >= 0 --> exercise3a n == exercise3b n)
 
 {-------------------------------------------------------------------------------------------------------------------------------------
@@ -63,16 +62,14 @@ test2 = quickCheckResult (\n -> (n >= 0 && n < 20) --> (subEqn2 n))
 {-------------------------------------------------------------------------------------------------------------------------------------
 ----'Is the property hard to test? If you find that it is, can you given a reason why?'
 
-    It's pretty simple, but it turned out that it'll take 'forever' if you don't limit QuickCheck's input value.
-    At a max of 20 it runs fine, at >30 it's significantly slow.
-    The funcion itself grows exponential with n.
-
+    Yes the property is hard to test because the funcion itself grows exponential with n.
 
 ----'Give your thoughts on the following issue: when you perform the test for exercise 4, what are you testing actually?
 ----Are you checking a mathematical fact? Or are you testing whether subsequences satisfies a part of its specification?
 ----Or are you testing something else still?'
 
-  --TODO antwoord
+    We are testing a specification. But only a small part. To test it correctly we would also need to check if the value of the result of
+    subsequences is also equal to its defenition. E.g. subsequences[1..3] should result in [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
 
  --------------------------------------------------------------------------------------------------------------------------------------}
 
@@ -94,7 +91,10 @@ test3 = quickCheckResult (\n -> (n >= 0) -->
 ----Again, give your thoughts on the following issue: when you perform the test for exercise 5, what are you testing actually?
 ----Are you checking a mathematical fact? Or are you testing whether perms satisfies a part of its specification?
 ----Or are you testing something else still?
-    TODO antwoord
+
+    Same answer as 2. We are testing a specification. But only a small part. To test it correctly we would also need to check if the value of the result of
+    permutations is also equal to its defenition. E.g. permutations[1..3] should result in [[1,2,3],[2,1,3],[3,2,1],[2,3,1],[3,1,2],[1,3,2]]
+
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 
@@ -127,13 +127,14 @@ primesEqReversal n = takeWhile ( < n ) (filter (prime . reversal) primes)
 
 {-------------------------------------------------------------------------------------------------------------------------------------
     'How would you test this function, by the way?'
+
     I would want to check whether every number with at least two digits that reversiblePrimes returns has a buddy.
     This could be done by checking for reversals in the list, or possibly even faster when iterating through the
     list x the list, though Haskell's lists appear to be singly-linked and queue-like (because you can easily take
     heads) so it takes a full iteration to reach the last element.
     This isn't suitable for a QuickCheck test because this isn't about testing against random values, we're using
-    the same subset of the set of all primes < 10000 each time. Also, by limiting the testset to primes we also don't have to
-    check for negative and base 10
+    the same subset of the set of all primes < 10000 each time. Also, by limiting the testset to primes we don't have to
+    check for negative and base 10 numbers
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 
@@ -151,9 +152,10 @@ recursiveReturnSublist n l = (take n l) : recursiveReturnSublist n (tail l)
 test5 = sum (head (filter sublistPrimes (recursiveReturnSublist 101 primes)))
 
 {-------------------------------------------------------------------------------------------------------------------------------------
-----'Do you have to test that your answer is correct? How could this be checked?'
-  -- Normally you test all the functions that are created and have some kind of logic in them. In this case the function uses library functions
-  -- to calculate the smallest prime. We don't write tests for the library functions because we assume they work as intented.
+    'Do you have to test that your answer is correct? How could this be checked?'
+
+     Normally you test all the functions that are created and have some kind of logic in them. In this case the function uses library functions
+     to calculate the smallest prime. We don't write tests for the library functions because we assume they work as intented.
 
 --------------------------------------------------------------------------------------------------------------------------------------}
 
@@ -179,7 +181,6 @@ test6 = head (filter (not.conjecture) (recursiveReturnSublist2 1 primes))
     Give an implementation in Haskell. The type declaration is given.
     This function should check whether an input number satisfies the Luhn formula.
 --------------------------------------------------------------------------------------------------------------------------------------}
---    luhn :: Integer -> Bool
 -- SOURCE digs: https://stackoverflow.com/questions/3989240/int-int-convert
 digs :: Integer -> [Integer]
 digs 0 = []
@@ -257,10 +258,10 @@ test7Visa, test7Master, test7America :: Bool
 test7Visa = (map isVisa visaValid) == validAnswers
 test7Master = map isMaster masterValid == validAnswers
 test7America = map isAmericanExpress americaValid == validAnswers
+-- changing numbers: https://stackoverflow.com/questions/5852722/replace-individual-list-elements-in-haskell
 
 validAnswers :: [Bool]
 validAnswers = [True,True,True,True,True,False,False,False,False,False] -- test7Visa, test7Master and test7VAmerica should result in this list.
--- changing numbers: https://stackoverflow.com/questions/5852722/replace-individual-list-elements-in-haskell
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 8.) Use Haskell to write a function that computes who was the thief, and a function that computes which boys made honest declarations.
@@ -293,3 +294,32 @@ honest = accusers (head(guilty))
 
 printHonest = print honest
 printGuilty = print guilty
+
+{-------------------------------------------------------------------------------------------------------------------------------------
+ Bonus Euler 9.)
+--------------------------------------------------------------------------------------------------------------------------------------}
+-- Take head only because otherwise it will a.) keep searching after finding the triplet
+-- and b.) return a,b,c and also b,a,c which is unnecessary
+-- Limit the lists to 500 to prevent infinite loop
+-- Finding the triplet takes a moment :)
+pythagoreanTripletSums1000 :: (Int, Int, Int)
+pythagoreanTripletSums1000 = head [(x,y,z)|x<-[1..500], y<-[1..500], z<-[1..500], (x^2 + y^2 == z^2), x + y + z == 1000]
+
+{-------------------------------------------------------------------------------------------------------------------------------------
+ Bonus Euler 10.)
+ Result -> sum_primes_below 2000000 : 142913828922
+--------------------------------------------------------------------------------------------------------------------------------------}
+-- Might take a few secend in intepreted mode
+sumPrimesBelow :: Integer -> Integer
+sumPrimesBelow x = foldl (+) 0 $ takeWhile (\n -> n < x) primes
+
+resultsEuler10 = print (sumPrimesBelow 2000000)
+
+{-------------------------------------------------------------------------------------------------------------------------------------
+ Bonus Euler 49.)
+--------------------------------------------------------------------------------------------------------------------------------------}
+arithmeticSequence :: (Integer, Integer, Integer)
+arithmeticSequence =  head[(x,y,z)| x <- [1487], y <- [1000..9999], z <-[1000..9999],
+                        (y - x == z - y),
+                        (prime x && prime y && prime z),
+                        (elem [y] (permutations [x]) && elem [z] (permutations [x]))]
