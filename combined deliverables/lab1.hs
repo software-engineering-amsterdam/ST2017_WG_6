@@ -23,7 +23,11 @@ primes = 2 : filter prime [3..]
 {-------------------------------------------------------------------------------------------------------------------------------------
 1.) Redo exercises 2 and 3 of Workshop 1 by writing QuickCheck tests for these statements.
     See the end of Lecture 1 for how this can be done.
-    1,5 hours
+
+    Implementation by:      Sara
+    Arguments for choice:   Readability
+    Time spent:             1h 30m
+
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 exercise2a :: Int -> Int
@@ -48,14 +52,17 @@ cubes n = map (^3) [1..n]
 exercise3b :: Int -> Int
 exercise3b n = (n * (n + 1) `div` 2) ^2
 
-test12 = quickCheckResult (\n -> n >= 0 --> exercise3a n == exercise3b n)
+test1 = quickCheckResult (\n -> n >= 0 --> exercise3a n == exercise3b n)
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 2.) Redo exercise 4 of Workshop 1 by replacing sets by lists, and testing the property for integer lists of the form [1..n].
     You can use subsequences :: [a] -> [[a]] for the list of all subsequences of a given list.
 
     'Prove by induction that if A is a finite set with |A|=n, then |P(A)|=2n.'
-    1,5 hours
+
+    Implementation by:      Mees
+    Arguments for choice:   Most compact
+    Time spent:             1h 30m
 --------------------------------------------------------------------------------------------------------------------------------------}
 subEqn2 :: Int -> Bool
 subEqn2 n = length(subsequences[1..n]) == 2 ^ n
@@ -64,14 +71,14 @@ test2 = quickCheckResult (\n -> (n >= 0 && n < 20) --> (subEqn2 n))
 {-------------------------------------------------------------------------------------------------------------------------------------
 ----'Is the property hard to test? If you find that it is, can you given a reason why?'
 
-    Yes the property is hard to test because the funcion itself grows exponential with n.
+    Yes the property is hard to test because the function itself grows exponential with n.
 
 ----'Give your thoughts on the following issue: when you perform the test for exercise 4, what are you testing actually?
 ----Are you checking a mathematical fact? Or are you testing whether subsequences satisfies a part of its specification?
 ----Or are you testing something else still?'
 
     We are testing a specification. But only a small part. To test it correctly we would also need to check if the value of the result of
-    subsequences is also equal to its defenition. E.g. subsequences[1..3] should result in [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+    subsequences is also equal to its definition. E.g. subsequences[1..3] should result in [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
 
  --------------------------------------------------------------------------------------------------------------------------------------}
 
@@ -81,7 +88,11 @@ test2 = quickCheckResult (\n -> (n >= 0 && n < 20) --> (subEqn2 n))
     A permutation of a list is a reordering of the members of a list.
     You can also use the Data.List function permutations.
     Find a formula (closed form) for the number of permutations of a list of n distinct objects, and prove your guess by induction.
-    30 min
+
+    Implementation by:      Mees
+    Arguments for choice:   Compact and consistent with notation of previous exercise
+    Time spent:             30m
+
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 test3 = quickCheckResult (\n -> (n >= 0) -->
@@ -89,14 +100,14 @@ test3 = quickCheckResult (\n -> (n >= 0) -->
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 ----'Is the property hard to test? If you find that it is, can you given a reason why?'
-    Yes, the function like in Excercise 2 is grows exponential with n.
+    Yes, the function like in Exercise 2 is grows exponential with n.
 
 ----Again, give your thoughts on the following issue: when you perform the test for exercise 5, what are you testing actually?
 ----Are you checking a mathematical fact? Or are you testing whether perms satisfies a part of its specification?
 ----Or are you testing something else still?
 
     Same answer as 2. We are testing a specification. But only a small part. To test it correctly we would also need to check if the value of the result of
-    permutations is also equal to its defenition. E.g. permutations[1..3] should result in [[1,2,3],[2,1,3],[3,2,1],[2,3,1],[3,1,2],[1,3,2]]
+    permutations is also equal to its definition. E.g. permutations[1..3] should result in [[1,2,3],[2,1,3],[3,2,1],[2,3,1],[3,1,2],[1,3,2]]
 
 --------------------------------------------------------------------------------------------------------------------------------------}
 
@@ -104,7 +115,10 @@ test3 = quickCheckResult (\n -> (n >= 0) -->
 {-------------------------------------------------------------------------------------------------------------------------------------
 4.) The natural number 13 has the property that it is prime and its reversal, the number 31, is also prime.
     Write a function that finds all primes < 10000 with this property.
-    2 hours
+
+    Implementation by:      Mees
+    Arguments for choice:   Compact
+    Time spent:             2h
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 reversal :: Integer -> Integer
@@ -144,7 +158,11 @@ primesEqReversal n = takeWhile ( < n ) (filter (prime . reversal) primes)
 {-------------------------------------------------------------------------------------------------------------------------------------
 5.) The number 101 is a prime, and it is also the sum of five consecutive primes, namely 13+17+19+23+29.
     Find the smallest prime number that is a sum of 101 consecutive primes.
-    1,5 hours
+
+    Implementation by:      Tim
+    Arguments for choice:   Readability
+    Time spent:             1h 30m
+
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 sublistPrimes :: [Integer] -> Bool
@@ -159,7 +177,7 @@ test5 = sum (head (filter sublistPrimes (recursiveReturnSublist 101 primes)))
     'Do you have to test that your answer is correct? How could this be checked?'
 
      Normally you test all the functions that are created and have some kind of logic in them. In this case the function uses library functions
-     to calculate the smallest prime. We don't write tests for the library functions because we assume they work as intented.
+     to calculate the smallest prime. We don't write tests for the library functions because we assume they work as intended.
 
 --------------------------------------------------------------------------------------------------------------------------------------}
 
@@ -169,7 +187,10 @@ test5 = sum (head (filter sublistPrimes (recursiveReturnSublist 101 primes)))
     Write a Haskell function that can be used to refute the following conjecture.
     "If p1,...,pn is a list of consecutive primes starting from 2, then (p1×⋯×pn)+1 is also prime."
     This can be refuted by means of a counterexample, so your Haskell program should generate counterexamples.
-    1 hour
+
+    Implementation by:      Tim
+    Arguments for choice:   Most easily understandable
+    Time spent:             1h
 --------------------------------------------------------------------------------------------------------------------------------------}
 recursiveReturnSublist2 :: Int -> [a] -> [[a]]
 recursiveReturnSublist2 n l = (take n l) : recursiveReturnSublist2 (n+1) l
@@ -177,7 +198,7 @@ recursiveReturnSublist2 n l = (take n l) : recursiveReturnSublist2 (n+1) l
 conjecture :: [Integer] -> Bool
 conjecture xs = prime ((product xs) + 1)
 
--- Smallest counterexample according to the test is: product [2,3,5,7,11,13] + 1 == 30031 which is not a primenumber
+-- Smallest counterexample according to the test is: product [2,3,5,7,11,13] + 1 == 30031 which is not a prime number
 test6 = head (filter (not.conjecture) (recursiveReturnSublist2 1 primes))
 
 {-------------------------------------------------------------------------------------------------------------------------------------
@@ -185,7 +206,10 @@ test6 = head (filter (not.conjecture) (recursiveReturnSublist2 1 primes))
     The Luhn algorithm is a formula for validating credit card numbers.
     Give an implementation in Haskell. The type declaration is given.
     This function should check whether an input number satisfies the Luhn formula.
-    2 hours
+
+    Implementation by:      Mees
+    Arguments for choice:   Most complete, well-structured and well-tested
+    Time spent:             2h
 --------------------------------------------------------------------------------------------------------------------------------------}
 -- SOURCE digs: https://stackoverflow.com/questions/3989240/int-int-convert
 digs :: Integer -> [Integer]
@@ -272,7 +296,10 @@ validAnswers = [True,True,True,True,True,False,False,False,False,False] -- test7
 {-------------------------------------------------------------------------------------------------------------------------------------
 8.) Use Haskell to write a function that computes who was the thief, and a function that computes which boys made honest declarations.
     Here are some definitions to get you started.
-    2 hours
+
+    Implementation by:      Mees
+    Arguments for choice:   Readability
+    Time spent:             2h
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 data Boy = Matthew | Peter | Jack | Arnold | Carl
@@ -303,7 +330,11 @@ printHonest = print honest
 printGuilty = print guilty
 
 {-------------------------------------------------------------------------------------------------------------------------------------
- Bonus Euler 9.) 20 min
+ Bonus Euler 9.)
+ Implementation by:      Sara
+ Arguments for choice:   Specific experience (from 'Programming in Haskell') resulting in clean one-line solution
+ Time spent:             20m
+
 --------------------------------------------------------------------------------------------------------------------------------------}
 -- Take head only because otherwise it will a.) keep searching after finding the triplet
 -- and b.) return a,b,c and also b,a,c which is unnecessary
@@ -313,17 +344,25 @@ pythagoreanTripletSums1000 :: (Int, Int, Int)
 pythagoreanTripletSums1000 = head [(x,y,z)|x<-[1..500], y<-[1..500], z<-[1..500], (x^2 + y^2 == z^2), x + y + z == 1000]
 
 {-------------------------------------------------------------------------------------------------------------------------------------
- Bonus Euler 10.) 45 min
+ Bonus Euler 10.)
+ Implementation by:      Mees
+ Arguments for choice:   Readability
+ Time spent:             45m
+
  Result -> sum_primes_below 2000000 : 142913828922
 --------------------------------------------------------------------------------------------------------------------------------------}
--- Might take a few secend in intepreted mode
+-- Might take a few seconds in interpreted mode
 sumPrimesBelow :: Integer -> Integer
 sumPrimesBelow x = foldl (+) 0 $ takeWhile (\n -> n < x) primes
 
 resultsEuler10 = print (sumPrimesBelow 2000000)
 
 {-------------------------------------------------------------------------------------------------------------------------------------
- Bonus Euler 49.) 2,5 hour
+ Bonus Euler 49.)
+ Implementation by:      Mees
+ Arguments for choice:   Similar to Sara's solution, but easier on the eyes
+ Time spent:             2h 30m
+
  Result -> 296962999629
 --------------------------------------------------------------------------------------------------------------------------------------}
 primesBetween :: Integer -> Integer -> [Integer]
