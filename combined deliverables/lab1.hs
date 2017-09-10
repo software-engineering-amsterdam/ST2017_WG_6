@@ -2,12 +2,23 @@ module Lab1 where
 import Data.List
 import Test.QuickCheck
 
+{-------------------------------------------------------------------------------------------------------------------------------------
+Helpers
+--------------------------------------------------------------------------------------------------------------------------------------}
+
 infix 1 -->
 (-->) :: Bool -> Bool -> Bool
 p --> q = (not p) || q
 
 forall :: [a] -> (a -> Bool) -> Bool
 forall = flip all
+
+prime :: Integer -> Bool
+prime n = n > 1 && all (\ x -> rem n x /= 0) xs
+  where xs = takeWhile (\ y -> y^2 <= n) primes
+
+primes :: [Integer]
+primes = 2 : filter prime [3..]
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 1.) Redo exercises 2 and 3 of Workshop 1 by writing QuickCheck tests for these statements.
@@ -24,7 +35,7 @@ exercise2b :: Int -> Int
 exercise2b n = (n * (n + 1) * (2 * n + 1)) `div` 6
 
 -- QuickCheck test
-testExercise2 n = (\n -> n >= 0 --> exercise2a n == exercise2b n)
+test11 = quickCheckResult (\n -> n >= 0 --> exercise2a n == exercise2b n)
 
 
 exercise3a :: Int -> Int
@@ -37,7 +48,7 @@ exercise3b :: Int -> Int
 exercise3b n = (n * (n + 1) `div` 2) ^2
 
 -- QuickCheck test
-testExercise3 n = (\n -> n >= 0 --> exercise3a n == exercise3b n)
+test12 = quickCheckResult (\n -> n >= 0 --> exercise3a n == exercise3b n)
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 2.) Redo exercise 4 of Workshop 1 by replacing sets by lists, and testing the property for integer lists of the form [1..n].
@@ -45,10 +56,10 @@ testExercise3 n = (\n -> n >= 0 --> exercise3a n == exercise3b n)
 
     'Prove by induction that if A is a finite set with |A|=n, then |P(A)|=2n.'
 --------------------------------------------------------------------------------------------------------------------------------------}
-sub_eq_n2 :: Int -> Bool
-sub_eq_n2 n = length(subsequences[1..n]) == 2 ^ n
+subEqn2 :: Int -> Bool
+subEqn2 n = length(subsequences[1..n]) == 2 ^ n
 
-test2 = quickCheckResult (\n -> (n >= 0 && n < 20) --> (sub_eq_n2 n))
+test2 = quickCheckResult (\n -> (n >= 0 && n < 20) --> (subEqn2 n))
 {-------------------------------------------------------------------------------------------------------------------------------------
 ----'Is the property hard to test? If you find that it is, can you given a reason why?'
 
@@ -105,20 +116,12 @@ negative these are automatically returning True. That's why the test
 always passes which approves this statement.
 --}
 --check_reversal :: Integer -> Bool
-check_reversal = \n -> prime n --> (reversal(reversal n) == n)
+checkReversal = \n -> prime n --> (reversal(reversal n) == n)
 
-test4_reversal = quickCheck (check_reversal)
+test4Reversal = quickCheck (checkReversal)
 
-
-prime :: Integer -> Bool
-prime n = n > 1 && all (\ x -> rem n x /= 0) xs
-  where xs = takeWhile (\ y -> y^2 <= n) primes
-
-primes :: [Integer]
-primes = 2 : filter prime [3..]
-
-primes_eq_reversal :: Integer -> [Integer]
-primes_eq_reversal n = takeWhile ( < n ) (filter (prime . reversal) primes)
+primesEqReversal :: Integer -> [Integer]
+primesEqReversal n = takeWhile ( < n ) (filter (prime . reversal) primes)
 
 -- prime_eq_reverse :: Integer -> Bool
 -- prime_eq_reverse n = (prime n) == (prime (reverseInt n))
@@ -153,7 +156,7 @@ sublistPrimes n = prime (sum n)
 recursiveReturnSublist :: Int -> [a] -> [[a]]
 recursiveReturnSublist n l = (take n l) : recursiveReturnSublist n (tail l)
 
-answer5 = sum (head (filter sublistPrimes (recursiveReturnSublist 101 primes)))
+test5 = sum (head (filter sublistPrimes (recursiveReturnSublist 101 primes)))
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 ----'Do you have to test that your answer is correct? How could this be checked?'
@@ -175,7 +178,7 @@ recursiveReturnSublist2 n l = (take n l) : recursiveReturnSublist2 (n+1) l
 conjecture :: [Integer] -> Bool
 conjecture xs = prime ((product xs) + 1)
 
-answer6 = head (filter (not.conjecture) (recursiveReturnSublist2 1 primes))
+test6 = head (filter (not.conjecture) (recursiveReturnSublist2 1 primes))
 
 {-------------------------------------------------------------------------------------------------------------------------------------
     What is the smallest counterexample?
