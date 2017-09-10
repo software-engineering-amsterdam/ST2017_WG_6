@@ -313,7 +313,7 @@ pythagoreanTripletSums1000 :: (Int, Int, Int)
 pythagoreanTripletSums1000 = head [(x,y,z)|x<-[1..500], y<-[1..500], z<-[1..500], (x^2 + y^2 == z^2), x + y + z == 1000]
 
 {-------------------------------------------------------------------------------------------------------------------------------------
- Bonus Euler 10.) 20min
+ Bonus Euler 10.) 45 min
  Result -> sum_primes_below 2000000 : 142913828922
 --------------------------------------------------------------------------------------------------------------------------------------}
 -- Might take a few secend in intepreted mode
@@ -323,7 +323,8 @@ sumPrimesBelow x = foldl (+) 0 $ takeWhile (\n -> n < x) primes
 resultsEuler10 = print (sumPrimesBelow 2000000)
 
 {-------------------------------------------------------------------------------------------------------------------------------------
- Bonus Euler 49.) 1 hour
+ Bonus Euler 49.) 2,5 hour
+ Result -> 296962999629
 --------------------------------------------------------------------------------------------------------------------------------------}
 primesBetween :: Integer -> Integer -> [Integer]
 primesBetween a b  =  filter prime [a .. b]
@@ -337,3 +338,10 @@ euler49 = [[x, y, z] | x <- primesBetween 1000 10000,
                         (digs y) `elem` (permutations(digs x)),
                         (digs z) `elem` (permutations(digs x))
                         ]
+
+-- SOURCE: https://stackoverflow.com/questions/5289779/printing-elements-of-a-list-on-new-lines
+joiner :: [Integer] -> Integer
+joiner = read . concatMap show
+
+
+result_euler_49 = print (joiner (head euler_49))
