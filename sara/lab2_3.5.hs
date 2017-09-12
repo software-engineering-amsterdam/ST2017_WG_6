@@ -34,7 +34,7 @@ p --> q = (not p) || q
     Deliverables: Haskell program, concise test report, indication of time spent.
 
 
-    2h 30m, and 9:15 -
+    2h 30m, and 1h: Discussed with Hugo, waiting for Ana's opinion
 -}
 
 -- perms from Workshop 1 -------------------------------
@@ -77,6 +77,12 @@ checkFullCycle xs ys 0 = False
 checkFullCycle xs ys n | (shift xs) == ys = True
                        | otherwise = checkFullCycle (shift xs) ys (n-1)
 
+
+-- Property: Sum of list A is equal to sum of list B. Weakest permutation test, more efficient than prop_format
+--prop_sum :: Eq a => [a] -> [a] -> Bool
+--prop_sum xs ys = sum xs == sum ys
+
+
 -- Property: Same format list. Weakest permutation test:
 -- Simply check if lengths of arguments are equal AND all elements of A are present in B assuming elements are unique
 prop_format :: Eq a => [a] -> [a] -> Bool
@@ -85,3 +91,4 @@ prop_format xs ys = (length(xs) == length(ys)) && (checkContainsAllElements xs y
 checkContainsAllElements :: Eq a => [a] -> [a] -> Bool
 checkContainsAllElements [] ys = True
 checkContainsAllElements (x:xs) ys = x `elem` ys && checkContainsAllElements xs ys
+
