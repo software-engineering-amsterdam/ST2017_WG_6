@@ -4,7 +4,7 @@
 -- # 4,5 hours
 -- # Result -> 
 -- ##########
--- # Given :
+-- # Given : Red Curry is right
 -- ##########
 
 import Data.List
@@ -25,12 +25,17 @@ upNth t (x:xs)
      | t < 0.25 = (x + 1):xs
      | otherwise = x:upNth (t - 0.25) xs
 
-main = do
-    x <- probs 10000
-    print (foldr (zipWith (+)) [0,0,0,0] (map (\x -> upNth x [0,0,0,0]) x))
+percQuartiles n l = do
+    let m = fromIntegral n
+    x <- probs n
+    let countedQuartiles = foldr (zipWith (+)) [0,0,0,0] (map (\x -> upNth x l) x)
+    print (zipWith (/) countedQuartiles [m,m,m,m])
+
+main = percQuartiles 100000 [0,0,0,0]
+
 
 -- ########## TODO TODO TODO TODO ##########
 -- #                                       #
--- #                 Tests                 #
+-- #              Explanation              #
 -- #                                       #
 -- #########################################
