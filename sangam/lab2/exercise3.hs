@@ -5,15 +5,8 @@ import Test.QuickCheck
 import Lecture2
 
 {-------------------------------------------------------------------------------------------------------------------------------------
-Helpers
---------------------------------------------------------------------------------------------------------------------------------------}
-
-
-{-------------------------------------------------------------------------------------------------------------------------------------
 a)  Implement all properties from the Exercise 3 from Workshop 2 as
     Haskell functions of type Int -> Bool. Consider a small domain like [(−10)..10][(−10)..10].
-
-    Which of the following properties is stronger? assume domain [1..10]
 
     (\ x -> even x && x > 3) even
     (\ x -> even x || x > 3) even
@@ -26,24 +19,46 @@ property1, property2, property3, property4 :: Int -> Bool
 property1 = (\ x -> even x && x > 3)
 property2 = (\ x -> even x || x > 3)
 property3 = (\ x -> (even x && x > 3) || even 3)
-property4 = property3
-property5 = even
+property4 = (\ x -> (even x && x > 3) || even 3) --Property 4 is the same as 3 (\ x -> (even x && x > 3) || even x)=
+
+-- Which of the following properties is stronger? assume domain [1..10]
+compare1 = compar [1..10] property1 even -- Result property1 is stronger than even
+compare2 = compar [1..10] property2 even -- Result property2 is weaker than even
+compare3 = compar [1..10] property3 even -- Result property3 is stronger than even
+compare4 = compar [1..10] even property4 -- Result even is weaker than property4
+
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 b)  Provide a descending strength list of all the implemented properties.
 --------------------------------------------------------------------------------------------------------------------------------------}
-v :: [(Int, Int -> Bool)]
-v = [(1, property1), (2, property2), (3, property3), (4, property4), (5, property5)]
+-- For convience I made a list of tuples containing all the properties with an int equivalent to the property
+-- I did this so I can print the int in a list
+allProperties :: [(Int, Int -> Bool)]
+allProperties = [(1, property1), (2, property2), (3, property3), (4, property4), (5, even)]
 
-p :: [(Int, Int -> Bool)] -> [Int]
-p [] = []
-p (x:xs) =
-   p [ a | a <- xs, s (snd a) (snd x) ]
+-- Modified stronger to work with quickSortProperties.
+strongerNotEquivalent :: (Int->Bool) -> (Int -> Bool) -> Bool
+strongerNotEquivalent p q = pq && not(qp) where
+                                pq = stronger [(-10)..10] p q
+                                qp = stronger [(-10)..10] q p
+
+-- This custom quicksort sorts the properties based on a modified stronger and weaker and prints the result in the form of an integer list.
+quickSortProperties :: [(Int, Int -> Bool)] -> [Int]
+quickSortProperties [] = []
+quickSortProperties (x:xs) =
+   quickSortProperties [ a | a <- xs, strongerNotEquivalent (snd a) (snd x) ]
    ++ [(fst x)]
-   ++ p [ a | a <- xs, w (snd a) (snd x) ]
+   ++ quickSortProperties [ a | a <- xs, weaker [(-10)..10] (snd a) (snd x) ]
 
-s:: (Int->Bool) -> (Int -> Bool) -> Bool
-s a b = stronger [(-10)..10] a b && not (stronger [(-10)..10] b a)
+exercise3 = quickSortProperties allProperties
+{-- the result of exercise3 is [1, 3, 4, 5, 2]
+    The int in the list correspond to the properties. To check if the list produced by exercise3 is truly correct,
+    I checked if result is correct with compar. Which gave me 1 eq 3, 3 eq 4 (because they are same), 4 stronger than 5 and 5 stronger than 2.
 
-w:: (Int->Bool) -> (Int -> Bool) -> Bool
-w a b = (not (stronger [(-10)..10] a b) && stronger [(-10)..10] b a) || (stronger [(-10)..10] a b && stronger [(-10)..10] b a)
+    This also means that:
+     1 is eq to 4 and stronger than 5 and 2
+     3 is eq to 1 and stronger than 5 and 2
+     etc.
+
+    Which is also true according to compar.
+--}
