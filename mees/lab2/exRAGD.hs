@@ -4,6 +4,11 @@
 -- # 4 hour(s)
 -- ##########
 
+
+-- ##########
+-- # TODO 
+-- # Provide an ordered list of properties by strength using the weaker and stronger definitions.
+-- ##########
 import Data.List
 import System.Random
 import Test.QuickCheck
