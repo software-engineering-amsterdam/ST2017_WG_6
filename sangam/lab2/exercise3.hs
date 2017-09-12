@@ -5,7 +5,7 @@ import Test.QuickCheck
 import Lecture2
 
 {-------------------------------------------------------------------------------------------------------------------------------------
-a)  Implement all properties from the Exercise 3 from Workshop 2 as
+3 a)  Implement all properties from the Exercise 3 from Workshop 2 as
     Haskell functions of type Int -> Bool. Consider a small domain like [(−10)..10][(−10)..10].
 
     (\ x -> even x && x > 3) even
@@ -13,6 +13,7 @@ a)  Implement all properties from the Exercise 3 from Workshop 2 as
     (\ x -> (even x && x > 3) || even x) even
     even (\ x -> (even x && x > 3) || even x)
 
+    Time spent: 3h
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 property1, property2, property3 :: Int -> Bool
