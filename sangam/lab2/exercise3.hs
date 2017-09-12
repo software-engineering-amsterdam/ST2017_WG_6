@@ -21,7 +21,8 @@ property2 = (\ x -> even x || x > 3)
 property3 = (\ x -> (even x && x > 3) || even 3)
 
 -- Which of the following properties is stronger? assume domain [1..10]
-compare1 = compar [1..10] property1 even -- Result property1 is stronger than even
+compare1 = compar [1..10] property1 even -- Result property1 (p1) is stronger than even. p1 is stronger because it is a subset of even.
+-- p1 [x <-x mod 2 == 0, x > 3] and even = [x <- x mod 2 == 0, x > 3 || x =< 3]
 compare2 = compar [1..10] property2 even -- Result property2 is weaker than even
 compare3 = compar [1..10] property3 even -- Result property3 is stronger than even
 compare4 = compar [1..10] even property3 -- Result even is weaker than property3
@@ -59,5 +60,5 @@ exercise3 = quickSortProperties allProperties
      3 is eq to 1 and stronger than 2
      etc.
 
-    Which is also true according to compar.
+    Which is also true according to compar. In this test we assumed compar, stronger and weaker work as intented
 --}
