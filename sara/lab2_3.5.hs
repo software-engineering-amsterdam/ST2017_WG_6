@@ -6,11 +6,6 @@ import System.Random
 import Test.QuickCheck
 import Lecture2
 
-infix 1 -->
-
-(-->) :: Bool -> Bool -> Bool
-p --> q = (not p) || q
-
 {-
     Recognizing Permutations
 
@@ -34,8 +29,82 @@ p --> q = (not p) || q
     Deliverables: Haskell program, concise test report, indication of time spent.
 
 
-    3h 30m
+    Time spent: 4h
+
 -}
+
+isPermutation :: Eq a => [a] -> [a] -> Bool
+isPermutation xs ys = xs `elem` (perms ys)
+
+-- Property: Identity permutation. Strongest: Recognizes only one type of permutation
+prop_identity :: [Char] -> [Char] -> Bool
+prop_identity xs ys = xs == ys --> isPermutation xs ys
+
+-- Property: Reversal permutation. Equally strongest: Recognizes only one type of permutation
+prop_reversal :: [Char] -> [Char] -> Bool
+prop_reversal xs ys = xs == (reverse ys) --> isPermutation xs ys
+
+-- Property: Sorting permutation. Equally strongest: Recognizes only one type of permutation
+prop_sort :: [Char] -> [Char] -> Bool
+prop_sort xs ys = xs == (sort ys) --> isPermutation xs ys
+
+-- Property: Cyclic permutation / Transposition / Shift. Weaker: Recognizes all cyclic permutations
+prop_transposition :: [Char] -> [Char] -> Bool
+prop_transposition xs ys = checkFullCycle xs ys (length(ys)) --> isPermutation xs ys
+
+-- Property: Any permutation. Weakest permutation test: Recognizes all permutations on lists with unique elements
+prop_format :: [Char] -> [Char] -> Bool
+prop_format xs ys = ((length(xs) == length(ys)) && (checkContainsAllElements xs ys)) --> isPermutation xs ys
+
+
+
+-------Tests--------
+manualTests
+    | False == isPermutation [1,2,3] [2,1,3] = print "Scrambled integers should be permutation: FAILED"
+    | False == isPermutation ['a','b','c'] ['b','c','a'] = print "Scrambled letters should be permutation: FAILED"
+    | False == isPermutation ['1','b','@'] ['@','1','b'] = print "Scrambled mixed characters should be permutation: FAILED"
+    | isPermutation [1,2,3] [2,1] = print "Missing elements: FAILED"
+    | isPermutation [1,2,3] [2,1,4] = print "Foreign elements: FAILED"
+    | isPermutation [1,2,3] [] = print "Permutation is not empty list: FAILED"
+    | isPermutation [1,2,3] [1,2,3,1,2,3] = print "Not equal length: FAILED"
+    | isPermutation ['a', 'b', 'c'] ['a','a','a'] = print "Duplicate characters are not a permutation: FAILED"
+    | otherwise = print "++ OK, All manual set test cases are valid"
+
+main = do
+    print "Strongest property: Identity permutation - Identical lists are permutation of each other"
+    quickCheck prop_identity
+
+    print "Equally strongest property: Reversal permutation - Reversing is a permutation"
+    quickCheck prop_reversal
+
+    print "Equally strongest property: Sorting permutation - Sorting is a permutation"
+    quickCheck prop_sort
+
+    print "Weaker property: Cyclic permutation - Rotating (shifting) a list is a permutation"
+    quickCheck prop_transposition
+
+    print "Weakest property: Any permutation based on equal length and presence of each element"
+    quickCheck prop_format
+
+    manualTests
+
+
+
+--Helpers------------------------------------------------------------------------------------------------------
+checkFullCycle :: [Char] -> [Char] -> Int -> Bool
+checkFullCycle xs ys 0 = False
+checkFullCycle xs ys n | (shift xs) == ys = True
+                       | otherwise = checkFullCycle (shift xs) ys (n-1)
+
+checkContainsAllElements :: [Char] -> [Char] -> Bool
+checkContainsAllElements [] ys = True
+checkContainsAllElements (x:xs) ys = x `elem` ys && checkContainsAllElements xs ys
+
+-- Modified function rotate by user 'dave4420' on May 4 '13 at https://stackoverflow.com/questions/16378773/rotate-a-list-in-haskell
+shift :: [a] -> [a]
+shift [] = []
+shift xs = zipWith const (drop 1 (cycle xs)) xs
+--------------------------------------------------
 
 -- perms from Workshop 1 -------------------------------
 perms :: [a] ->[[a]]
@@ -44,47 +113,3 @@ perms (x:xs) = concat (map (insrt x) (perms xs)) where
   insrt x [] = [[x]]
   insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)
 --------------------------------------------------------
-
-isPermutation :: Eq a => [a] -> [a] -> Bool
-isPermutation xs ys = xs `elem` (perms ys)
-
--- Property: Identity permutation. Strong: Only one possible permutation
-prop_identity :: Eq a => [a] -> [a] -> Bool
-prop_identity xs ys = (isPermutation xs ys) == (isPermutation ys xs)
-
--- Property: Reversal permutation. Strong: Only one possible permutation
-prop_reversal :: Eq a => [a] -> [a] -> Bool
-prop_reversal xs ys = (isPermutation xs ys) == (isPermutation xs (reverse ys))
-
--- Property: Sorting permutation. Strong: Only one possible permutation
-prop_sort :: Ord a => [a] -> [a] -> Bool
-prop_sort xs ys = (isPermutation xs ys) == (isPermutation xs (sort ys))
-
-
--- Property: Cyclic permutation / Transposition / Shift. Weaker: Check all possible cyclic permutations
-
--- Modified function rotate by user 'dave4420' on May 4 '13 at https://stackoverflow.com/questions/16378773/rotate-a-list-in-haskell
-shift :: [a] -> [a]
-shift [] = []
-shift xs = zipWith const (drop 1 (cycle xs)) xs
---------------------------------------------------
-
-prop_transposition :: Eq a => [a] -> [a] -> Bool
-prop_transposition xs ys = (isPermutation xs ys) == (checkFullCycle xs ys (length(ys)))
-
-checkFullCycle :: Eq a => [a] -> [a] -> Int -> Bool
-checkFullCycle xs ys 0 = False
-checkFullCycle xs ys n | (shift xs) == ys = True
-                       | otherwise = checkFullCycle (shift xs) ys (n-1)
---
----- Property: Same format list. Weakest permutation test:
----- Simply check if lengths of arguments are equal AND all elements of A are present in B assuming elements are unique
---prop_format :: Eq a => [a] -> [a] -> Bool
---prop_format xs ys = (length(xs) == length(ys)) && (checkContainsAllElements xs ys)
---
---checkContainsAllElements :: Eq a => [a] -> [a] -> Bool
---checkContainsAllElements [] ys = True
---checkContainsAllElements (x:xs) ys = x `elem` ys && checkContainsAllElements xs ys
---
---
---testDataPermutations = [ [[1,2,3,4],[1,2,3,4]], [4,1,2,3],[1,2,3,4]]
