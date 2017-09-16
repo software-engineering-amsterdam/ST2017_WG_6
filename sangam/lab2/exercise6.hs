@@ -6,6 +6,9 @@ import Lecture2
 import Data.Char
 
 {-------------------------------------------------------------------------------------------------------------------------------------
+Exercise Implementing and testing IBAN validation
+4 hours
+
 a)  Implementing and testing IBAN validation
 
     The International Bank Account Number (IBAN) was designed to facility international money transfer, to uniquely identify bank accounts worldwide.
@@ -28,31 +31,19 @@ a)  Implementing and testing IBAN validation
     Interpret the string as a decimal integer and compute the remainder of that number on division by 97
 --}
 iban :: String -> Bool
-iban num = hasCorrectLength num &&
-           hasCorrectPrefix num &&
-           isIbanAlphaNum num &&
-           joiner (replaceCharWithInt $ rearrange num) `mod` 97 == 1
+iban n = isIbanFormat n &&
+           (joiner . replaceCharWithInt . rearrange $ n) `mod` 97 == 1
 
+-- String is CountryCode and Int is the length of iban
+ibanFormat :: [(String, Int)]
+ibanFormat = [("NL", 18), ("BE", 16)]
 
--- First check is if the length of the iban is below 35
-hasCorrectLength :: String -> Bool
-hasCorrectLength x = length x <= 34
-
-isIbanAlphaNum :: [Char] -> Bool
-isIbanAlphaNum xs = forall xs (\ x -> isAlphaNum x) -- Source is Data.Char
-
-hasCorrectPrefix :: String -> Bool
-hasCorrectPrefix xs = countryCode `elem` validCountryCodes
-  where countryCode = take 2 xs
-
-validCountryCodes :: [String]
-validCountryCodes = ["NL" , "BE"]
+-- By checking it against a tuple we can give up more specific specifications per country
+isIbanFormat :: String -> Bool
+isIbanFormat iban = (length . filter (\x -> fst x == take 2 iban && snd x == length iban) $ ibanFormat) == 1
 
 rearrange :: [Char] -> [Char]
 rearrange xs = drop 4 xs ++ (take 4 xs)
-
-a1 :: String
-a1 = "NL39RABO0300065264"
 
 -- Replace each char with an int
 replaceCharWithInt:: String -> [Int]
@@ -60,7 +51,6 @@ replaceCharWithInt xs = map digitToInt' xs
 
 -- Convert a single char to int
 -- We get the ascii value of lower case char and substract 87 to get ['a'..'z'] equal to [10..35]
--- https://stackoverflow.com/questions/3261236/how-to-get-ascii-value-of-character-in-haskell
 digitToInt' :: Char -> Int
 digitToInt' c | isLetter c = (ord (toLower c) - 87)
               | otherwise = digitToInt c
@@ -69,7 +59,17 @@ digitToInt' c | isLetter c = (ord (toLower c) - 87)
 joiner :: [Int] -> Integer
 joiner = read . concatMap show
 
+testValidIban :: [Bool]
+testValidIban = map (\x -> iban x) ["NL39RABO0300065264", "BE62510007547061"] -- expect all to be true
+
+testInvalidIban :: [Bool]
+testInvalidIban = map (\x -> iban x) ["NL49RABO0300065262", "BE67510007547063"] -- expect all to be false
+
 {-------------------------------------------------------------------------------------------------------------------------------------
     Can you automate the test process?
+
+    It is possible but very difficult to automate this proces because its difficult to generate random IBAN numbers.
+    There are lots of variables which you should pay attention too. For example many countries have different IBAN format.
+
     Deliverables: Haskell program, concise test report, indication of time spent.
 --------------------------------------------------------------------------------------------------------------------------------------}
