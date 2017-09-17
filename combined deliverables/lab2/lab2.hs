@@ -9,6 +9,7 @@ import qualified Exc4Permutations as Exc4
 import qualified Exc5Derangements as Exc5
 import qualified Exc6ROT13 as Exc6
 import qualified Exc7IBAN as Exc7
+import qualified Exc8BonusEuler35 as Bonus
 
 main = do
     putStrLn "\n***Lab2 output for 1. Red Curry***"
@@ -31,3 +32,6 @@ main = do
 
     putStrLn "\n***Lab2 output for 7. Implementing and testing IBAN encoding***"
     Exc7.main
+
+    putStrLn "\n***Lab2 output for Bonus. Calculating number of circular primes below one million...***"
+    Bonus.main

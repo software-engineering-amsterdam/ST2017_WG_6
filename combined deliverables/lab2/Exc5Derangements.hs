@@ -1,3 +1,5 @@
+module Exc5Derangements where
+
 -- ##########
 -- # https://blackboard.uva.nl/bbcswebdav/pid-6839934-dt-content-rid-11209217_1/courses/2318N001.5364SOTE6Y.S1.1.2017/Lab2.html
 -- # Exercise Recognizing and generating derangements
