@@ -14,16 +14,12 @@ import System.Random
 import Test.QuickCheck
 import Lecture2
 
-isDerangement, checkProperty :: [Int]->[Int]-> Bool
+isDerangement :: [Int]->[Int]-> Bool
+isDerangement [] [] = False
 isDerangement x y
     | (sort x) /= (sort y) = False
-    | x == [] = False
-    | otherwise = checkProperty x y
-
-checkProperty [] [] = True
-checkProperty (x:xs) (y:ys)
-    | x == y = False
-    | otherwise = checkProperty xs ys
+    | or (zipWith (==) x y) = False
+    | otherwise = True
 
 deran :: Int -> [[Int]]
 deran n = filter (isDerangement [0..n - 1]) (permutations [0..n - 1])
