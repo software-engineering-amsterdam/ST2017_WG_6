@@ -2,7 +2,7 @@
 Assignment:		Lab 2: Exercise 5 - Recognizing and generating derangements
 Name:           Mees Kalf
 Time spent:     4h
-Remarks:
+Remarks:        See below.
 Sources:        reverseList from https://gist.github.com/kaveet/2fec32c18a35a51476711a912ff442c9
 
 ---------------}
