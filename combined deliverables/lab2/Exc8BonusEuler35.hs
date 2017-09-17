@@ -1,11 +1,3 @@
-module Exc8BonusEuler35 where
-
-import Data.List
-import Data.Char
-import System.Random
-import Test.QuickCheck
-import Lecture2
-
 {-
 Assignment:		Lab 2: Bonus Project Euler problem
 Name:           Sara Oonk
@@ -18,8 +10,17 @@ Remarks:        Answer: There are 129 circular primes below one million.
 Sources:        - https://projecteuler.net/problem=35
                 - Lab 1 prime functions
                 - Shift as used in exercise 4
+---------------}
 
----------------
+module Exc8BonusEuler35 where
+
+import Data.List
+import Data.Char
+import System.Random
+import Test.QuickCheck
+import Lecture2
+
+{-
 Circular primes
 Problem 35
 

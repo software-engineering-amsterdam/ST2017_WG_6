@@ -1,3 +1,11 @@
+{-
+Assignment:		Lab 2: Exercise 6 - Implementing and testing ROT13 encoding
+Name:           Sara Oonk
+Time spent:     2h 30m
+Sources:        https://hackage.haskell.org/package/base-4.7.0.0/docs/Data-Char.html
+
+---------------}
+
 module Exc6ROT13 where
 
 import Data.List
@@ -22,11 +30,6 @@ that 26 / 2 = 13, ROT13 inverses the letters, meaning applying it twice will res
     Next, give a simple implementation of ROT13.
 
     Finally, turn the specification into a series of QuickCheck testable properties, and use these to test your implementation.
-
-    2h 30m
-
-    Source used: https://hackage.haskell.org/package/base-4.7.0.0/docs/Data-Char.html
-
 -}
 
 rot13 :: [Char] -> [Char]

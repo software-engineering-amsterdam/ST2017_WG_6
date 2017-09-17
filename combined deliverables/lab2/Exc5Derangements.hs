@@ -1,16 +1,14 @@
+{-
+Assignment:		Lab 2: Exercise 5 - Recognizing and generating derangements
+Name:           Mees Kalf
+Time spent:     4h
+Remarks:
+Sources:        reverseList from https://gist.github.com/kaveet/2fec32c18a35a51476711a912ff442c9
+
+---------------}
+
 module Exc5Derangements where
 
--- ##########
--- # https://blackboard.uva.nl/bbcswebdav/pid-6839934-dt-content-rid-11209217_1/courses/2318N001.5364SOTE6Y.S1.1.2017/Lab2.html
--- # Exercise Recognizing and generating derangements
--- # 4 hour(s)
--- ##########
-
-
--- ##########
--- # TODO
--- # Provide an ordered list of properties by strength using the weaker and stronger definitions.
--- ##########
 import Data.List
 import System.Random
 import Test.QuickCheck

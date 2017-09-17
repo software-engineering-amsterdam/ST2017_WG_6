@@ -1,3 +1,14 @@
+{-
+Assignment:		Lab 2: Exercise 4 - Recognizing permutations
+Name:           Sara Oonk
+Time spent:     4h
+Remarks:        Had difficulties understanding the requirements of the assignment.
+
+Sources:        Modified function rotate by user 'dave4420' on May 4 '13 at
+                https://stackoverflow.com/questions/16378773/rotate-a-list-in-haskell
+
+---------------}
+
 module Exc4Permutations where
 import Data.List
 import Data.Char
@@ -26,9 +37,6 @@ import Lecture2
     Can you automate the test process? Use the techniques presented in this week's lecture. Also use QuickCheck.
 
     Deliverables: Haskell program, concise test report, indication of time spent.
-
-
-    Time spent: 4h
 
 -}
 

@@ -1,10 +1,9 @@
 {-
-Assignment:		Lab 2: ...
+Assignment:		Lab 2: Exercise 2 - Recognizing triangles
 Name:           Tim Nederveen
-UVA id:      	11959037
-Remarks:        --
-Sources:        --
--}
+Time spent:     TODO INVULLEN
+
+---------------}
 
 module Exc2Triangles where
 import Data.List
@@ -22,7 +21,6 @@ import Lecture2
 - Isosceles (Gelijkbenig) if the three numbers are the lengths of the sides of an isosceles (but not equilateral) triangle,
 - Other (Anders) if the three numbers are the lengths of the sides of a triangle that is not equilateral, not rectangular, and not isosceles.
 
-Deliverables: Haskell program, concise test report, indication of time spent.
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 

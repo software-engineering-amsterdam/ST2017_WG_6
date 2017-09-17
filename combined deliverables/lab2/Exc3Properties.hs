@@ -1,3 +1,12 @@
+{-
+Assignment:		Lab 2: Exercise 3 - Testing properties strength
+Name:           Sangam Gupta
+Time spent:     3h
+
+Remarks:        See below.
+Sources:        Lecture2.hs
+
+---------------}
 
 module Exc3Properties where
 import System.Random
@@ -13,7 +22,6 @@ import Lecture2
     (\ x -> (even x && x > 3) || even x) even
     even (\ x -> (even x && x > 3) || even x)
 
-    Time spent: 3h
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 property1, property2, property3 :: Int -> Bool

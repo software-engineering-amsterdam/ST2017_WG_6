@@ -1,4 +1,10 @@
-
+{-
+Assignment:		Lab 2: Exercise 7 - Implementing and testing IBAN validation
+Name:           Sangam Gupta
+Time spent:     4h
+Sources:        - https://en.wikipedia.org/wiki/International_Bank_Account_Number
+                - https://stackoverflow.com/questions/1918486/convert-list-of-integers-into-one-int-like-concat-in-haskell
+---------------}
 module Exc7IBAN where
 import System.Random
 import Test.QuickCheck
@@ -7,7 +13,6 @@ import Data.Char
 
 {-------------------------------------------------------------------------------------------------------------------------------------
 Exercise Implementing and testing IBAN validation
-4 hours
 
 a)  Implementing and testing IBAN validation
 
@@ -22,7 +27,6 @@ a)  Implementing and testing IBAN validation
     Note It is not enough to test only with correct examples. You should invent a way to test with incorrect examples also.
 --------------------------------------------------------------------------------------------------------------------------------------}
 
--- source https://en.wikipedia.org/wiki/International_Bank_Account_Number
 
 {--
     Check that the total IBAN length is correct as per the country. If not, the IBAN is invalid

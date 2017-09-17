@@ -1,11 +1,14 @@
--- ##########
--- # https://blackboard.uva.nl/bbcswebdav/pid-6839934-dt-content-rid-11209217_1/courses/2318N001.5364SOTE6Y.S1.1.2017/Lab2.html
--- # Exercise 1
--- # 4,5 hours
--- # Result -> Red Curry is right
--- ##########
--- # Given 
--- ##########
+{-
+Assignment:		Lab 2: Exercise 1 - 'Red Curry'
+Name:           Mees Kalf
+Time spent:     4h 30m
+
+Result:         Red Curry is right, see explanation below
+---------------}
+
+-------
+--Given
+-------
 module Exc1RedCurry where
 import Data.List
 import System.Random
@@ -17,10 +20,9 @@ probs n = do
             ps <- probs (n-1)
             return (p:ps)
 
--- ##########
--- # Self coded
--- ##########
-
+------------
+--Self coded
+------------
 upNth t (x:xs)
      | t < 0.25 = (x + 1):xs
      | otherwise = x:upNth (t - 0.25) xs
