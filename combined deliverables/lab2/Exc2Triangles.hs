@@ -63,4 +63,5 @@ manualTests
 
 main = do
   manualTests
+  print "Test if scrambled input ordering is handled correctly:"
   test1
