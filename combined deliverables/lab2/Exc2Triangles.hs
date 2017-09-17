@@ -47,9 +47,6 @@ inputs = [ [x,y,z] | x <- [-1..5],
                      z <- [y..5] ]
 
 
--- test1 =  | [x,y,z] <- inputs
--- test2 =  | [x,z,z] <-
-
 orderIrrelevant :: Integer -> Integer -> Integer -> Bool
 orderIrrelevant = \x y z -> (triangle x y z == triangle y z x && triangle x y z == triangle z y x)
 

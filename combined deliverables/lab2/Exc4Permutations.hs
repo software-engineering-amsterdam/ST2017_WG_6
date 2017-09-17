@@ -36,26 +36,21 @@ isPermutation :: Eq a => [a] -> [a] -> Bool
 isPermutation xs ys = xs `elem` (perms ys)
 
 -- Property: Identity permutation. Strongest: Recognizes only one type of permutation
-prop_identity :: [Char] -> [Char] -> Bool
+prop_identity, prop_reversal, prop_sort, prop_transposition
+   , prop_format :: [Char] -> [Char] -> Bool
 prop_identity xs ys = xs == ys --> isPermutation xs ys
 
 -- Property: Reversal permutation. Equally strongest: Recognizes only one type of permutation
-prop_reversal :: [Char] -> [Char] -> Bool
 prop_reversal xs ys = xs == (reverse ys) --> isPermutation xs ys
 
 -- Property: Sorting permutation. Equally strongest: Recognizes only one type of permutation
-prop_sort :: [Char] -> [Char] -> Bool
 prop_sort xs ys = xs == (sort ys) --> isPermutation xs ys
 
 -- Property: Cyclic permutation / Transposition / Shift. Weaker: Recognizes all cyclic permutations
-prop_transposition :: [Char] -> [Char] -> Bool
 prop_transposition xs ys = checkFullCycle xs ys (length(ys)) --> isPermutation xs ys
 
 -- Property: Any permutation. Weakest permutation test: Recognizes all permutations on lists with unique elements
-prop_format :: [Char] -> [Char] -> Bool
 prop_format xs ys = ((length(xs) == length(ys)) && (checkContainsAllElements xs ys)) --> isPermutation xs ys
-
-
 
 -------Tests--------
 manualTests
@@ -86,8 +81,6 @@ main = do
     quickCheck prop_format
 
     manualTests
-
-
 
 --Helpers------------------------------------------------------------------------------------------------------
 checkFullCycle :: [Char] -> [Char] -> Int -> Bool
