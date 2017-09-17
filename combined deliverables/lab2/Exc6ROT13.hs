@@ -30,18 +30,12 @@ that 26 / 2 = 13, ROT13 inverses the letters, meaning applying it twice will res
 -}
 
 rot13 :: [Char] -> [Char]
-rot13 [] = []
-rot13 (c:cs) = (rot c) : (rot13 cs)
+rot13 c  = map newCharIndex c
 
-rot :: Char -> Char
-rot c | (isLetter c) = toEnum (newCharIndex c) :: Char
-      | otherwise = c
-
-
-newCharIndex :: Char -> Int
-newCharIndex c | (isAsciiLower c) = rotIndexMinMax (fromEnum 'a' :: Int) (fromEnum 'z' :: Int) (fromEnum c :: Int)
-               | (isAsciiUpper c) = rotIndexMinMax (fromEnum 'A' :: Int) (fromEnum 'Z' :: Int) (fromEnum c :: Int)
-               | otherwise = fromEnum c :: Int
+newCharIndex :: Char -> Char
+newCharIndex c | (isAsciiLower c) = toEnum (rotIndexMinMax (fromEnum 'a' :: Int) (fromEnum 'z' :: Int) (fromEnum c :: Int))
+               | (isAsciiUpper c) = toEnum (rotIndexMinMax (fromEnum 'A' :: Int) (fromEnum 'Z' :: Int) (fromEnum c :: Int))
+               | otherwise = c
 
 rotIndexMinMax :: Int -> Int -> Int -> Int
 rotIndexMinMax i j n | (13 + n) > j = i-1 + ((13 + n) - j) -- i-1 to restore the index otherwise it skips 'a'
