@@ -30,7 +30,6 @@ deran n = filter (isDerangement [0..n - 1]) (permutations [0..n - 1])
 -- #                                       #
 -- #########################################
 
--- 1. define some testable properties for the isDerangement function,
 {--
 The isDerangement function checks if two lists are valid derangements of eachother
 by the definition as stated on Lab 2 from blackboard. A derangement B of list A,containing
@@ -44,6 +43,7 @@ only natural numbers, must serveral properties when the derangement suffices:
 
 --}
 
+-- Properties
 prop_len :: [Int] -> [Int] -> Bool
 prop_len x y = isDerangement x y --> length x == length y
 
