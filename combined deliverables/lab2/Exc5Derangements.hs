@@ -40,7 +40,10 @@ only natural numbers, must serveral properties when the derangement suffices:
 3 - Commutativity: if A is a derangement of B then b is a derangement of A
 4 - The reverse of A and B are also derangements of eachother
 
-
+For these properties we conducted some automated test with quickcheck, but since
+the possibility that two random Int lists created by quickcheck are a derangement
+is quite small. Therefore we also conducted some manual tests with well chosen Int lists
+to be sure that we preserve the robustness of our implemenation.
 --}
 
 -- Properties
@@ -72,6 +75,15 @@ main = do
 
     manualTests
 
+{-
+Although we where not able to to generate the stronger and weaker properties we
+can still manually derive it. The preconditon that it is a derangement we 
+have given in our properties, and given that no tests are failing, all properties
+are equally strong within the space of a derangement, eq it is not possible
+that the Int list is a derangement and the property fails on any property.
+
+Therefore they are al stronger and weaker than eachother.
+-}
 
 -- ##########
 -- # Helping functions
