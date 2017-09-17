@@ -44,16 +44,10 @@ only natural numbers, must serveral properties when the derangement suffices:
 --}
 
 -- Properties
-prop_len :: [Int] -> [Int] -> Bool
+prop_len, prop_comm, prop_perm, prop_reverse:: [Int] -> [Int] -> Bool
 prop_len x y = isDerangement x y --> length x == length y
-
-prop_comm :: [Int] -> [Int] -> Bool
 prop_comm x y = isDerangement x y --> isDerangement y x
-
-prop_perm :: [Int] -> [Int] -> Bool
 prop_perm x y = isDerangement x y --> sort x == sort y
-
-prop_reverse :: [Int] -> [Int] -> Bool
 prop_reverse x y = isDerangement x y --> isDerangement (reverseList (x)) (reverseList (y))
 
 manualTests
