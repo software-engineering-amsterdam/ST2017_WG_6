@@ -1,9 +1,11 @@
 {-
+
 Assignment:		Lab 2: Exercise 2 - Recognizing triangles
 Name:           Tim Nederveen
-Time spent:     TODO INVULLEN
+Time spent:     3.5h
 
 ---------------}
+
 
 module Exc2Triangles where
 import Data.List
@@ -23,6 +25,12 @@ import Lecture2
 
 --------------------------------------------------------------------------------------------------------------------------------------}
 
+{--
+    We both perform manual tests using shapes that are known to fit specific triangle categories, 
+    and a quickcheck test check if the program correctly handles scrambled input orderings, which should not lead
+    to different outcomes. 
+--}
+
 
 data Shape = NoTriangle | Equilateral
            | Isosceles  | Rectangular | Other deriving (Eq,Show)
@@ -40,21 +48,33 @@ orderedInputTriangle [x,y,z]
     | otherwise = Other
 
 
+orderIrrelevant :: Integer -> Integer -> Integer -> Bool
+orderIrrelevant = \x y z -> (triangle x y z == triangle y z x && triangle x y z == triangle z y x)
+
+test1 = quickCheckResult (\x y z -> (x >= 0 && y >= 0 && z >= 0) --> orderIrrelevant x y z)
+
 inputs = [ [x,y,z] | x <- [-1..5],
                      y <- [x..5],
                      z <- [y..5] ]
 
 
-orderIrrelevant :: Integer -> Integer -> Integer -> Bool
-orderIrrelevant = \x y z -> (triangle x y z == triangle y z x && triangle x y z == triangle z y x)
+-- inputNoTriangle = [[2,3,8],[20,6,4],[9,1,2]]
+-- inputEquilateral = [[2,2,2],[5,5,5],[15,15,15]]
+-- inputRectangular = [[3,4,5],[10,6,8],[12,20,16]]
+-- inputIsosceles = [[5,5,8],[7,6,6],[3,2,3]]
 
-multiplicationIrrelevant :: Integer -> Integer -> Integer -> Integer -> Bool
-multiplicationIrrelevant = \w x y z -> (triangle x y z == triangle (w*x) (w*y) (w*z))
+process :: [Integer] -> Shape -> Bool
+process (x:y:z:xs) shape = triangle x y z == shape
 
-test1 = quickCheckResult (\x y z -> (x >= 0 && y >= 0 && z >= 0) --> orderIrrelevant x y z)
+manualTests
+    | triangle 2 3 8 /= NoTriangle = print "Test NoTriangle failed"
+    | triangle 2 2 2 /= Equilateral = print "Test Equilateral failed"
+    | triangle 3 4 5 /= Rectangular = print "Test Rectangular failed"
+    | triangle 5 5 8 /= Isosceles = print "Test Isosceles failed"
+    | otherwise = print "++ All manual set test cases are valid"
 
-test2 = quickCheckResult (\w x y z -> (w > 0 && x >= 0 && y >= 0 && z >= 0) --> multiplicationIrrelevant w x y z)
 
 main = do
+  manualTests
   test1
-  test2
+  -- map process inputNoTriangle NoTriangle
