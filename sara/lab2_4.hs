@@ -1,4 +1,4 @@
-module Lab2 where
+module Lab2_4 where
 
 import Data.List
 import Data.Char
