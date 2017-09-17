@@ -2,9 +2,9 @@
 -- # https://blackboard.uva.nl/bbcswebdav/pid-6839934-dt-content-rid-11209217_1/courses/2318N001.5364SOTE6Y.S1.1.2017/Lab2.html
 -- # Exercise 1
 -- # 4,5 hours
--- # Result ->
+-- # Result -> Red Curry is right
 -- ##########
--- # Given : Red Curry is right
+-- # Given 
 -- ##########
 module Exc1RedCurry where
 import Data.List
@@ -34,11 +34,11 @@ percQuartiles n l = do
 main = percQuartiles 10000 [0,0,0,0]
 
 
--- ########## TODO TODO TODO TODO ##########
--- #                                       #
--- #              Explanation              #
--- #                                       #
--- #########################################
+-- ##################
+-- #                #
+-- #  Explanation   #
+-- #                #
+-- ##################
 
 -- percQuartiles 10 ->       [0.3      ,0.2     ,0.3      ,0.2]
 -- percQuartiles 100 ->      [0.26     ,0.2     ,0.27     ,0.27]
