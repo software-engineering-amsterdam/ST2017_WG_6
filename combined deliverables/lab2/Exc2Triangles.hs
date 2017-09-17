@@ -53,19 +53,6 @@ orderIrrelevant = \x y z -> (triangle x y z == triangle y z x && triangle x y z 
 
 test1 = quickCheckResult (\x y z -> (x >= 0 && y >= 0 && z >= 0) --> orderIrrelevant x y z)
 
-inputs = [ [x,y,z] | x <- [-1..5],
-                     y <- [x..5],
-                     z <- [y..5] ]
-
-
--- inputNoTriangle = [[2,3,8],[20,6,4],[9,1,2]]
--- inputEquilateral = [[2,2,2],[5,5,5],[15,15,15]]
--- inputRectangular = [[3,4,5],[10,6,8],[12,20,16]]
--- inputIsosceles = [[5,5,8],[7,6,6],[3,2,3]]
-
-process :: [Integer] -> Shape -> Bool
-process (x:y:z:xs) shape = triangle x y z == shape
-
 manualTests
     | triangle 2 3 8 /= NoTriangle = print "Test NoTriangle failed"
     | triangle 2 2 2 /= Equilateral = print "Test Equilateral failed"
@@ -77,4 +64,3 @@ manualTests
 main = do
   manualTests
   test1
-  -- map process inputNoTriangle NoTriangle
