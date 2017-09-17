@@ -9,7 +9,6 @@
 -- # TODO
 -- # Provide an ordered list of properties by strength using the weaker and stronger definitions.
 -- ##########
-module Exc5Derangements where
 import Data.List
 import System.Random
 import Test.QuickCheck
@@ -27,7 +26,7 @@ checkProperty (x:xs) (y:ys)
     | otherwise = checkProperty xs ys
 
 deran :: Int -> [[Int]]
-deran n = filter (isDerangement [0..n]) (permutations [0..n])
+deran n = filter (isDerangement [0..n - 1]) (permutations [0..n - 1])
 
 -- #########################################
 -- #                                       #
