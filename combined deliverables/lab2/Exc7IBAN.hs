@@ -67,6 +67,13 @@ validIbanNumbers, invalidIbanNumers :: [String]
 validIbanNumbers = ["NL39RABO0300065264", "BE62510007547061", "HR1210010051863000160"]
 invalidIbanNumers =  ["NL49RABO0300065262", "BE67510007547063", "IT1210010051863000160"]
 
+
+-- To test IBAN we give as input a valid and an invalid list of IBAN numbers. We check for both valid and invalid because the function itself can have two result.
+-- True or False which both should be tested.
+
+-- Besides that we made a clear seperation between invalid and valid ibannumbers, so we know when Iban should return true and when it should not.
+-- Combining the list would make it difficult to test the function since you don't know whether the input should return true or false. If you combine the list we would
+-- need to check if the iban is correct in a seperate function. So in that case we would have two implementations of iban and we would check if the result is the same for an input.
 testValidIban :: Bool
 testValidIban = forall validIbanNumbers (\x -> iban x)  -- expect all to be true
 
