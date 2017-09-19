@@ -44,10 +44,11 @@
     - Leftover tokens are not shown in the result of the function 'parse'.
     - If input is unparsable, output must be empty.
       - Input is unparsable when order of tokens conflicts with grammar rules of lexer (to conclude from its implementation).
-      - Input is unparsable when number of opening parenthesis does not equal the number of closing parenthesis.
+      - Input is unparsable when number of opening parentheses does not equal the number of closing parentheses.
 
-    POSTCONDITION: If parsable, the String representation of the result must be equal to the input (ignoring spaces).
-                   Otherwise, the result must be the empty list.
+    POSTCONDITION: If parsable: - The String representation of the result must be equal to the start of the input (ignoring spaces).
+                                - Characters after the last closing parenthesis must not be shown in the result.
+                   Otherwise: The result must be the empty list.
 
 -----------------------------------------------------------------------------------------------------------------------}
 
@@ -57,5 +58,71 @@ where
 import Lecture2
 import Lecture3
 
+-- DOMAIN
+-- Each element is a String/[Char] so that "==>" and "<=>" can each be evaluated as one token
+validTokens :: [[Char]]
+validTokens = [
+ " ", "==>", "<=>",
+ "(", ")", "*", "+", "-",
+ "0", "1", "2", "3", "4",
+ "5", "6", "7", "8", "9"
+ ]
+
+-- These are added to the generator's domain to measure Hoare relevance
+invalidTokens :: [[Char]]
+invalidTokens = ["p", "q", "r", "x", "y"]
+
+genDomain :: [[Char]]
+genDomain = validTokens++invalidTokens
 
 
+
+-- PROPERTIES
+precondition :: [[Char]] -> Bool
+precondition [] = True
+precondition (c:cs) = elem c validTokens && precondition cs
+
+--["1", "2," "==>"]
+
+-- isParsable
+  -- equalParenthesis
+  -- correctGrammar
+
+-- noRemainder
+-- ( = +1
+-- ) = -1
+-- _ && > 0 ? False
+--
+
+testParse = do
+ cs <- genRandomListTokens
+ form <- return (concat cs)
+ print form
+
+
+-- GENERATOR
+genRandomListTokens :: IO [[Char]]
+genRandomListTokens = do
+ ns <- genIntList'
+ return (mapIntsToTokens ns [])
+
+
+mapIntsToTokens :: [Int] -> [[Char]] -> [[Char]]
+mapIntsToTokens [] cs = cs
+mapIntsToTokens (n:ns) cs = mapIntsToTokens ns (([genDomain !! n])++cs)
+
+
+-- Modified from Lecture 2 -----------------------------------
+genIntList' :: IO [Int]
+genIntList' = do
+  k <- getRandomInt (length(validTokens++invalidTokens) -1)
+  n <- getRandomInt 30
+  getIntL' k n
+
+getIntL' :: Int -> Int -> IO [Int]
+getIntL' _ 0 = return []
+getIntL' k n = do
+   x <-  getRandomInt k
+   xs <- getIntL' k (n-1)
+   return (x:xs)
+---------------------------------------------------------------
