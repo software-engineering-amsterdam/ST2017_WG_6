@@ -15,6 +15,7 @@
 import Data.List
 import System.Random
 import Test.QuickCheck
+import Test.QuickCheck.Random
 import Lecture3
 
 convertToCNF :: Form ->  Form
@@ -28,8 +29,10 @@ convertToCNF = toCNF . nnf . arrowfree
         toCNF (Dsj (f1:f2)) = disLaw (toCNF f1) (toCNF (Dsj f2))
 
         disLaw :: Form -> Form -> Form
+        disLaw (Cnj []) _ = Cnj []
+        disLaw (Cnj [f1]) f2 = disLaw f1 f2
         disLaw (Cnj (f11:f12)) f2 = Cnj [(disLaw f11 f2), (disLaw (Cnj f12) f2)]
-        disLaw f1 (Cnj (f21:f22)) = Cnj [(disLaw f1 f21), (disLaw f1 (Cnj f22))]
+        disLaw f1 (Cnj (f21:f22)) = Cnj [(disLaw f1 f21), (disLaw (Cnj f22) f1)]
         disLaw f1 f2 = Dsj [f1, f2]
 
 a = Prop 1
@@ -38,8 +41,9 @@ c = Prop 3
 d = Prop 4
 
 -- Should be (after cnf): (A ∧ ((B ∨ C) ∧ (B ∨ D)))
--- Result               : *(A *(+(B C) *(+(B D) +(B *()))))
 form4 = Cnj [a, (Dsj [b, (Cnj [c,d])])]
 
 -- Truth Table, origin vs converted
 ttOriginVSConverted f = zipWith (==) (map (\ v -> evl v f) (allVals f)) (map (\ v -> evl v (convertToCNF f)) (allVals f))
+
+r12 = parse "+(+(-1 2))"
