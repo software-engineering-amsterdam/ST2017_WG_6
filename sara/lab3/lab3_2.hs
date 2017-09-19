@@ -55,8 +55,9 @@
 
 module Lab3_2
 where
-import Lecture2
 import Lecture3
+import System.Random
+
 
 -- DOMAIN
 -- Each element is a String/[Char] so that "==>" and "<=>" can each be evaluated as one token
@@ -82,6 +83,10 @@ precondition :: [[Char]] -> Bool
 precondition [] = True
 precondition (c:cs) = elem c validTokens && precondition cs
 
+
+postcondition :: [Char] -> Bool
+postcondition cs = True
+
 --["1", "2," "==>"]
 
 -- isParsable
@@ -92,12 +97,23 @@ precondition (c:cs) = elem c validTokens && precondition cs
 -- ( = +1
 -- ) = -1
 -- _ && > 0 ? False
---
 
-testParse = do
- cs <- genRandomListTokens
- form <- return (concat cs)
- print form
+testParse :: Bool
+testParse = (postcondition (parseC genRandomListTokens))
+
+--
+--
+--testParse = do
+-- hoareTestRc precondition parseC postcondition genRandomListTokens
+--
+--
+--
+-- cs <- genRandomListTokens
+-- form <- return (concat cs)
+-- print form
+
+parseC :: IO [[Char]] -> [Char]
+parseC cs = show (parse (concat cs))
 
 
 -- GENERATOR
@@ -125,4 +141,40 @@ getIntL' k n = do
    x <-  getRandomInt k
    xs <- getIntL' k (n-1)
    return (x:xs)
+
+
+
+getRandomInt :: Int -> IO Int
+getRandomInt n = getStdRandom (randomR (0,n))
+
+
+
+
+
+hoareTestRc ::  Fractional t =>
+               (a -> Bool)
+               -> (a -> a) -> (a -> Bool) -> [a] -> (Bool,t)
+hoareTestRc precond f postcond testcases = let
+       a = fromIntegral (length $ filter precond testcases)
+       b = fromIntegral (length testcases)
+     in
+       (all (\x ->
+         precond x --> postcond (f x)) testcases,a/b)
+
+
+--testR :: Int -> Int -> ([Int] -> [Int])
+--                    -> ([Int] -> [Int] -> Bool) -> IO ()
+--testR k n f r = if k == n then print (show n ++ " tests passed")
+--                else do
+--                  xs <- genIntList
+--                  if r xs (f xs) then
+--                    do print ("pass on: " ++ show xs)
+--                       testR (k+1) n f r
+--                  else error ("failed test on: " ++ show xs)
+--
+--testPost :: ([Int] -> [Int]) -> ([Int] -> Bool) -> IO ()
+--testPost f p = testR 1 100 f (\_ -> p)
+
+concatter :: [[Char]] -> [Char]
+concatter x = (concat x)
 ---------------------------------------------------------------
