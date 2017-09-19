@@ -41,16 +41,11 @@ randomForm d = do q <- getRandomInt
                   k <- randomForm (d-1)
                   m <- randomForm (d-1)
                   case q of
-                    0 -> do
-                        return $ Neg k
-                    1 -> do
-                        return $ Equiv (k) (m)
-                    2 -> do
-                        return $ Impl (k) (m)
-                    3 -> do
-                        return $ Cnj [(k), (m)] -- Limited to two
-                    4 -> do
-                        return $ Dsj [(k), (m)] -- Limited to two
+                    0 -> do return $ Neg k
+                    1 -> do return $ Equiv (k) (m)
+                    2 -> do return $ Impl (k) (m)
+                    3 -> do return $ Cnj [(k), (m)] -- Limited to two
+                    4 -> do return $ Dsj [(k), (m)] -- Limited to two
 
 {-- To test if convertToCNF, we check if the
     original form and the converted form are logical equivelant.
