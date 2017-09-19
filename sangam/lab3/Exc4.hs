@@ -17,7 +17,7 @@ import Lecture3
     Deliverables: generator for formulas, sequence of test properties,
     test report, indication of time spent.
 
-    Time spent:
+    Time spent: 5h
 --------------------------------------------------------------------------------------------------------------------------------------}
 
 getRandomInt :: IO Int
