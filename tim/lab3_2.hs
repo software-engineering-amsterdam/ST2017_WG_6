@@ -1,5 +1,5 @@
 {-
-Assignment:		Lab 3: Assignment 1
+Assignment:		Lab 3: Assignment 2
 Name:           Tim Nederveen
 Time spent:     TODO
 
