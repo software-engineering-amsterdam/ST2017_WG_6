@@ -25,7 +25,6 @@ convertToCNF = toCNF . nnf . arrowfree
         toCNF (Prop x) = Prop x
         toCNF (Neg (Prop x)) = (Neg (Prop x))
         toCNF (Cnj fs) = Cnj (map toCNF fs)
-        -- toCNF (Dsj []) = Dsj []
         toCNF (Dsj [a]) = toCNF a
         toCNF (Dsj (f1:f2)) = disLaw (toCNF f1) (toCNF (Dsj f2))
 
@@ -33,8 +32,6 @@ convertToCNF = toCNF . nnf . arrowfree
         disLaw (Cnj []) _ = Cnj []
         disLaw (Cnj [f1]) f2 = disLaw f1 f2
         disLaw (Cnj (f11:f12)) f2 = Cnj [(disLaw f11 f2), (disLaw (Cnj f12) f2)]
-        -- disLaw  _ (Cnj []) = Cnj []
-        -- disLaw f1 (Cnj [f2]) = disLaw f1 f2
         disLaw f1 (Cnj (f21:f22)) = Cnj [(disLaw f1 f21), (disLaw (Cnj f22) f1)]
         disLaw f1 f2 = Dsj [f1, f2]
 
@@ -44,7 +41,6 @@ c = Prop 3
 d = Prop 4
 
 -- Should be (after cnf): (A ∧ ((B ∨ C) ∧ (B ∨ D)))
--- Result               : *(A *(+(B C) *(+(B D) +(B *()))))
 form4 = Cnj [a, (Dsj [b, (Cnj [c,d])])]
 
 -- Truth Table, origin vs converted
