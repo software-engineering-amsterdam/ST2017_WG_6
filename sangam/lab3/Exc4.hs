@@ -39,7 +39,7 @@ randomForm d = do q <- getRandomInt
                         return $ Cnj [(k), (m)] -- Limited to two
                     4 -> do
                         return $ Dsj [(k), (m)] -- Limited to two
-
+-- TODO remove when finished
 test = do
           print "Generated Form: "
           x <- randomForm 2
