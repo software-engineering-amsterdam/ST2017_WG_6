@@ -49,6 +49,20 @@ test = do
           print "Are the same?"
           print (equiv x (convertToCNF x))
 
+test100 = testR 1 100 convertToCNF equiv
+
+
+testR :: Int -> Int -> (Form -> Form) -> (Form -> Form -> Bool) -> IO ()
+testR k n f r = if k == n then print (show n ++ " tests passed")
+                else do
+                  x <- randomForm 2
+                  if r x (f x) then
+                    do print ("pass on: " ++ show x)
+                       testR (k+1) n f r
+                  else error ("failed test on: " ++ show x)
+
+
+--TODO remove code from here and reuse modulez
 tautology :: Form -> Bool
 tautology f = all (\ v -> evl v f) (allVals f)
 
