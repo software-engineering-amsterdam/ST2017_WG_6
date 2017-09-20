@@ -7,18 +7,6 @@
                         - Considering approaches, proposed them to Hugo & Ana
                         - Finalizing approach, structuring and documenting
                 1h defining properties, roughly designing my test by studying parser and lexer further
-                5h trying to implement, concluded design flaw. Talked to Hugo, tried to get it working together.
-                The state we left it in is the file: tuesdayafternoon_lab3_2.hs
-          
-                Came up with two options with Hugo:
-                    -   Simplify the generator by discarding "<=>" and "==>" so that it can work with single Chars instead of String lists.
-                        This way you can't check for proper "<=>" and "==>" tokens but this way the generator actually generates
-                        something that meets the type of 'parse' and therefore solves conflicts with pre- and postconditions and the 
-                        need to concatenate stuff in the middle of the Hoare test (after checking the precondition) which is 
-                        very fishy to begin with.
-                    -   Implement the use of a generator that was made as solution for exercise 4 
-
-                2h - Just keep getting stuck on IO types, can't seem to close the gap anywhere. Didn't really know much about IO beforehand.
                 ____
           TOTAL:
 
@@ -48,13 +36,6 @@
     well as proper formulas. This means I will let my generator throw in some characters that are not recognized as tokens
     by the lexer. After drawing conclusions, I will remove the invalid characters from the domain of the generator to
     verify 100% relevance.
-    
-    My approach for the generator turned out to cause complicated conflicts between the pre- and postcondition and 'parse' itself.
-    I simplified the generator by removing "==>" and "<=>" so that I could at least make my implementation work.
-    Sadly, though this helped a little, I was still unable to close the gap between IO and non-IO types in this construction.
-
-    I will provide a more standard solution by using a generator that was made for exercise 4, and disregard testing with
-    relevance for the moment.
 
     ---- TEST PROPERTIES ----
     - 'parse' only accepts Strings and throws an error when unknown tokens are passed. So;
@@ -76,36 +57,37 @@ module Lab3_2
 where
 import Lecture3
 import System.Random
-import System.IO
 
 
 -- DOMAIN
--- Removed "==>" and "<=>" to at least make my implementation work after a long experiment
-validTokens :: [Char]
+-- Each element is a String/[Char] so that "==>" and "<=>" can each be evaluated as one token
+validTokens :: [[Char]]
 validTokens = [
- ' ',
- '(', ')', '*', '+', '-',
- '0', '1', '2', '3', '4',
- '5', '6', '7', '8', '9'
+ " ", "==>", "<=>",
+ "(", ")", "*", "+", "-",
+ "0", "1", "2", "3", "4",
+ "5", "6", "7", "8", "9"
  ]
 
 -- These are added to the generator's domain to measure Hoare relevance
-invalidTokens :: [Char]
-invalidTokens = ['p', 'q', 'r', 'x', 'y']
+invalidTokens :: [[Char]]
+invalidTokens = ["p", "q", "r", "x", "y"]
 
-genDomain :: [Char]
+genDomain :: [[Char]]
 genDomain = validTokens++invalidTokens
 
 
 
 -- PROPERTIES
-precondition :: String -> Bool
+precondition :: [[Char]] -> Bool
 precondition [] = True
 precondition (c:cs) = elem c validTokens && precondition cs
 
 
-postcondition :: String -> Bool
+postcondition :: [Char] -> Bool
 postcondition cs = True
+
+--["1", "2," "==>"]
 
 -- isParsable
   -- equalParenthesis
@@ -115,36 +97,35 @@ postcondition cs = True
 -- ( = +1
 -- ) = -1
 -- _ && > 0 ? False
+
+testParse :: Bool
+testParse = (postcondition (parseC genRandomListTokens))
+
 --
---testParse :: Bool
---testParse = (postcondition (parseC genRandomListTokens))
+--
+--testParse = do
+-- hoareTestRc precondition parseC postcondition genRandomListTokens
+--
+--
+--
+-- cs <- genRandomListTokens
+-- form <- return (concat cs)
+-- print form
 
-parseS s = do show(parse s)
+parseC :: IO [[Char]] -> [Char]
+parseC cs = show (parse (concat cs))
 
-testParseWithRelevance = do
- fs <- return (genFormStrings 100 [])
- hoareTestRc precondition parseS postcondition fs
 
 -- GENERATOR
-genFormStrings :: Int -> [String] -> [String]
-genFormStrings 0 fs = fs
-genFormStrings n fs = genFormStrings (n-1) (fs ++ (return (concat genRandomListTokens)))
-
---
---do
--- if n < 100 then genFormStrings (k+1) n (fs ++ (return genRandomListTokens))
--- else fs
-
-
-genRandomListTokens :: [String]
+genRandomListTokens :: IO [[Char]]
 genRandomListTokens = do
- ns <- return genIntList'
+ ns <- genIntList'
  return (mapIntsToTokens ns [])
 
 
---mapIntsToTokens :: IO [Int] -> [Char] -> String
---mapIntsToTokens [] cs = cs
-mapIntsToTokens ns cs = do mapIntsToTokens (tail ns) (([genDomain !! (head ns)])++cs)
+mapIntsToTokens :: [Int] -> [[Char]] -> [[Char]]
+mapIntsToTokens [] cs = cs
+mapIntsToTokens (n:ns) cs = mapIntsToTokens ns (([genDomain !! n])++cs)
 
 
 -- Modified from Lecture 2 -----------------------------------
@@ -166,6 +147,10 @@ getIntL' k n = do
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
 
+
+
+
+
 hoareTestRc ::  Fractional t =>
                (a -> Bool)
                -> (a -> a) -> (a -> Bool) -> [a] -> (Bool,t)
@@ -176,4 +161,20 @@ hoareTestRc precond f postcond testcases = let
        (all (\x ->
          precond x --> postcond (f x)) testcases,a/b)
 
+
+--testR :: Int -> Int -> ([Int] -> [Int])
+--                    -> ([Int] -> [Int] -> Bool) -> IO ()
+--testR k n f r = if k == n then print (show n ++ " tests passed")
+--                else do
+--                  xs <- genIntList
+--                  if r xs (f xs) then
+--                    do print ("pass on: " ++ show xs)
+--                       testR (k+1) n f r
+--                  else error ("failed test on: " ++ show xs)
+--
+--testPost :: ([Int] -> [Int]) -> ([Int] -> Bool) -> IO ()
+--testPost f p = testR 1 100 f (\_ -> p)
+
+concatter :: [[Char]] -> [Char]
+concatter x = (concat x)
 ---------------------------------------------------------------
