@@ -19,8 +19,10 @@
                     -   Implement the use of a generator that was made as solution for exercise 4 
 
                 2h - Just keep getting stuck on IO types, can't seem to close the gap anywhere. Didn't really know much about IO beforehand.
+                1h - Implemented an automated test using Sangam's formula generator, which only generates syntactically correct formulas.
+                My precondition check is limited to exclude "<" ">" and "=" characters for simplicity due to time spent.
                 ____
-          TOTAL:
+         TOTAL: 12h (Interesting and informative but recommending myself not to take it this far next time)
 
     SOURCES:    - Lecture 2 for Hoare testing and random Ints
                 - Lecture 3
@@ -78,102 +80,150 @@ import Lecture3
 import System.Random
 import System.IO
 
+-- PROPERTIES
+precondition :: String -> Bool
+precondition [] = True
+precondition (c:cs) = elem c validChars && precondition cs
 
--- DOMAIN
--- Removed "==>" and "<=>" to at least make my implementation work after a long experiment
-validTokens :: [Char]
-validTokens = [
+postcondition :: String -> Bool
+postcondition form = form == (show(head(parse form)))
+
+testParse :: IO ()
+testParse = testP 1 100
+
+
+--"Build your own Quickcheck" variant
+testP :: Int -> Int -> IO ()
+testP k n = if k == n then print (show n ++ " tests passed")
+ else do
+  xs <- randomForm 3
+  if ((precondition (show xs)) --> (postcondition (show xs))) then
+   do
+    print ("pass on: " ++ show xs)
+    testP (k+1) n
+    else error ("failed test on: " ++ show xs)
+
+
+
+--"<=>" "==>" removed for simplicity after overcomplicated experiment, see notes above and/or .hs file "tuesdayafternoon..."
+validChars :: [Char]
+validChars = [
  ' ',
  '(', ')', '*', '+', '-',
  '0', '1', '2', '3', '4',
  '5', '6', '7', '8', '9'
  ]
 
--- These are added to the generator's domain to measure Hoare relevance
-invalidTokens :: [Char]
-invalidTokens = ['p', 'q', 'r', 'x', 'y']
-
-genDomain :: [Char]
-genDomain = validTokens++invalidTokens
 
 
 
--- PROPERTIES
-precondition :: String -> Bool
-precondition [] = True
-precondition (c:cs) = elem c validTokens && precondition cs
 
 
-postcondition :: String -> Bool
-postcondition cs = True
+-- REUSED SOURCES ---------------------------------
 
--- isParsable
-  -- equalParenthesis
-  -- correctGrammar
-
--- noRemainder
--- ( = +1
--- ) = -1
--- _ && > 0 ? False
---
---testParse :: Bool
---testParse = (postcondition (parseC genRandomListTokens))
-
-parseS s = do show(parse s)
-
-testParseWithRelevance = do
- fs <- return (genFormStrings 100 [])
- hoareTestRc precondition parseS postcondition fs
-
--- GENERATOR
-genFormStrings :: Int -> [String] -> [String]
-genFormStrings 0 fs = fs
-genFormStrings n fs = genFormStrings (n-1) (fs ++ (return (concat genRandomListTokens)))
-
---
---do
--- if n < 100 then genFormStrings (k+1) n (fs ++ (return genRandomListTokens))
--- else fs
-
-
-genRandomListTokens :: [String]
-genRandomListTokens = do
- ns <- return genIntList'
- return (mapIntsToTokens ns [])
-
-
---mapIntsToTokens :: IO [Int] -> [Char] -> String
---mapIntsToTokens [] cs = cs
-mapIntsToTokens ns cs = do mapIntsToTokens (tail ns) (([genDomain !! (head ns)])++cs)
-
-
--- Modified from Lecture 2 -----------------------------------
-genIntList' :: IO [Int]
-genIntList' = do
-  k <- getRandomInt (length(validTokens++invalidTokens) -1)
-  n <- getRandomInt 30
-  getIntL' k n
-
-getIntL' :: Int -> Int -> IO [Int]
-getIntL' _ 0 = return []
-getIntL' k n = do
-   x <-  getRandomInt k
-   xs <- getIntL' k (n-1)
-   return (x:xs)
-
-
+-- Sangam's randomForm (slight modification)
+randomForm :: Int -> IO Form
+randomForm 0 = do Prop <$> getRandomInt 4
+randomForm d = do q <- getRandomInt 4
+                  k <- randomForm (d-1)
+                  m <- randomForm (d-1)
+                  case q of
+                    0 -> do return $ Neg k
+                    1 -> do return $ Equiv (k) (m)
+                    2 -> do return $ Impl (k) (m)
+                    3 -> do return $ Cnj [(k), (m)] -- Limited to two
+                    4 -> do return $ Dsj [(k), (m)] -- Limited to two
 
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
 
-hoareTestRc ::  Fractional t =>
-               (a -> Bool)
-               -> (a -> a) -> (a -> Bool) -> [a] -> (Bool,t)
-hoareTestRc precond f postcond testcases = let
-       a = fromIntegral (length $ filter precond testcases)
-       b = fromIntegral (length testcases)
-     in
-       (all (\x ->
-         precond x --> postcond (f x)) testcases,a/b)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- !!! --
+-------------- FAILED EXPERIMENT ---------------------------------------------------------------------------------------
+-- DOMAIN
+-- Removed "==>" and "<=>" to at least make my implementation work after a long experiment
+--validTokens :: [Char]
+--validTokens = [
+-- ' ',
+-- '(', ')', '*', '+', '-',
+-- '0', '1', '2', '3', '4',
+-- '5', '6', '7', '8', '9'
+-- ]
+--
+---- These are added to the generator's domain to measure Hoare relevance
+--invalidTokens :: [Char]
+--invalidTokens = ['p', 'q', 'r', 'x', 'y']
+--
+--genDomain :: [Char]
+--genDomain = validTokens++invalidTokens
+--
+--
+--
+--parseS s = do show(parse s)
+--
+--testParseWithRelevance = do
+-- fs <- return (genFormStrings 100 [])
+-- hoareTestRc precondition parseS postcondition fs
+
+-- GENERATOR
+--genFormStrings :: Int -> [String] -> [String]
+--genFormStrings 0 fs = fs
+--genFormStrings n fs = genFormStrings (n-1) (fs ++ (return (concat genRandomListTokens)))
+
+--
+--genRandomListTokens :: [String]
+--genRandomListTokens = do
+-- ns <- return genIntList'
+-- return (mapIntsToTokens ns [])
+
+
+--mapIntsToTokens :: IO [Int] -> [Char] -> String
+--mapIntsToTokens [] cs = cs
+--mapIntsToTokens ns cs = do mapIntsToTokens (tail ns) (([genDomain !! (head ns)])++cs)
+
+
+-- Modified from Lecture 2 -----------------------------------
+--genIntList' :: IO [Int]
+--genIntList' = do
+--  k <- getRandomInt (length(validTokens++invalidTokens) -1)
+--  n <- getRandomInt 30
+--  getIntL' k n
+--
+--getIntL' :: Int -> Int -> IO [Int]
+--getIntL' _ 0 = return []
+--getIntL' k n = do
+--   x <-  getRandomInt k
+--   xs <- getIntL' k (n-1)
+--   return (x:xs)
+--
+--
+--
+--getRandomInt :: Int -> IO Int
+--getRandomInt n = getStdRandom (randomR (0,n))
+--
+--hoareTestRc ::  Fractional t =>
+--               (a -> Bool)
+--               -> (a -> a) -> (a -> Bool) -> [a] -> (Bool,t)
+--hoareTestRc precond f postcond testcases = let
+--       a = fromIntegral (length $ filter precond testcases)
+--       b = fromIntegral (length testcases)
+--     in
+--       (all (\x ->
+--         precond x --> postcond (f x)) testcases,a/b)
+--
 ---------------------------------------------------------------
+
