@@ -12,7 +12,6 @@
 -- # 4 hour(s)
 -- ################################################
 module Exc3 where    
-
 import Data.List
 import Lecture3
 
@@ -21,10 +20,7 @@ import Lecture3
 -- expressions with the given "arrowfree" function given in Lecture3. Now we should
 -- get rid of illigal negations (from the CNF point of view) which is done with the
 -- "nnf" function, aslo fiven in Lecture3.hs.
--- 
--- 
--- 
--- 
+
 convertToCNF :: Form ->  Form
 convertToCNF = toCNF . nnf . arrowfree
     where
