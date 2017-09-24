@@ -94,4 +94,5 @@ checkCNF f
         dsjCheck (Dsj (f1:ft)) = dsjCheck f1 && dsjCheck (Dsj ft)
         dsjCheck x = True
 
+main :: IO ()
 main = test testExc4 1 100

@@ -42,6 +42,7 @@ quickCheckTwoForms func k depth = do
                 then quickCheckTwoForms func (k - 1) depth
                 else error ("failed test on: " ++ show x ++ " AND " ++ show y)
 
+main :: IO ()
 main = do
     putStrLn "Contradiction:"
     quickCheckOneForm quickCont numTests depth

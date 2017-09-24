@@ -65,4 +65,5 @@ manualTests
     | not testEquiv = print "Equivalence tests failed"
     | otherwise = print "++ All manual set test cases are valid"
 
+main :: IO ()
 main = manualTests
