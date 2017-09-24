@@ -65,16 +65,18 @@ randomForm d = do q <- getRandomInt
 
     The result is that all 100 succeed. so convertToCNF is correctly implemented
 --}
-test100 = test 1 100
 
-test :: Int -> Int -> IO ()
-test k n = if k == n then print (show n ++ " tests passed")
-                else do
-                  x <- randomForm 3 -- This can be changed to a random int. To increase the randomness of the test b
-                  if equiv x (convertToCNF x) && checkCNF (convertToCNF x) then
---                    do print ("pass on: " ++ show x) -- This line may be enabled to see test input
-                       test (k+1) n
+testm :: (Form -> Bool) -> Int -> Int -> IO ()
+testm func k n 
+    | k == n = print (show n ++ " tests passed")
+    | otherwise = do 
+                  x <- randomForm 3
+                  if func x
+                     then do testm func (k+1) n
                   else error ("failed test on: " ++ show x)
+
+testExc4 :: Form -> Bool
+testExc4 x = equiv x (convertToCNF x) && checkCNF (convertToCNF x)
 
 checkCNF :: Form ->  Bool
 checkCNF f
@@ -92,4 +94,4 @@ checkCNF f
         dsjCheck (Dsj (f1:ft)) = dsjCheck f1 && dsjCheck (Dsj ft)
         dsjCheck x = True
 
-main = test100
+main = testm testExc4 1 100

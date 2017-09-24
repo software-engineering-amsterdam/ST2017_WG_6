@@ -29,17 +29,9 @@ cls2cnf [x:xs] = Dsj (cls2cnf [[x]] : [cls2cnf [xs]])
 cls2cnf (x:xs) = Cnj (cls2cnf [x] : [cls2cnf xs])
 
 -- This test fucntion and the one from Exc4 can be made generic
-testcls :: Int -> Int -> IO ()
-testcls k n = if k == n then print (show n ++ " tests passed")
-                else do
-                    x <- randomForm 3
-                    if equiv (convertToCNF x) (cls2cnf  (cnf2cls (convertToCNF x))) 
-                        then
---                         do print ("pass on: " ++ show x) -- This line may be enabled to see test input
-                                 testcls (k+1) n
-                    else error ("failed test on: " ++ show x)
 
-testExc5 = testcls 1 100
+testExc5 :: Form -> Bool
+testExc5 x = equiv (convertToCNF x) (cls2cnf  (cnf2cls (convertToCNF x)))
 
 {-- All 100 testcases succeed. We test by converting cnf to cls and then back to cnf.
     By converting it back we expect the statement to be equivelant to the original.
@@ -48,5 +40,4 @@ testExc5 = testcls 1 100
     different function written for the test. We can conclude with the equivalance check that the (semantics) is also correct.
 
 --}
-
-main = testExc5
+main = testm testExc5 1 100
