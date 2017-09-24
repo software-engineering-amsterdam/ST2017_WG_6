@@ -40,4 +40,4 @@ testExc5 x = equiv (convertToCNF x) (cls2cnf  (cnf2cls (convertToCNF x)))
     different function written for the test. We can conclude with the equivalance check that the (semantics) is also correct.
 
 --}
-mainn = testm testExc5 1 100
+main = testm testExc5 1 100
