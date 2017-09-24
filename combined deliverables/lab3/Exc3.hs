@@ -9,7 +9,7 @@
 -- ################################################
 -- # Mees Kalf
 -- # Excersize 3
--- # X hour(s)
+-- # 4 hour(s)
 -- ################################################
 module Exc3 where    
 
@@ -33,15 +33,6 @@ convertToCNF = toCNF . nnf . arrowfree
         disLaw f1 (Cnj (f21:f22)) = Cnj [disLaw f1 f21, disLaw (Cnj f22) f1]
         disLaw f1 f2 = Dsj [f1, f2]
 
-a = Prop 1
-b = Prop 2
-c = Prop 3
-d = Prop 4
-
--- Should be (after cnf): (A ∧ ((B ∨ C) ∧ (B ∨ D)))
-form4 = Cnj [a, Dsj [b, Cnj [c, d]]]
-
--- Truth Table, origin vs converted
+-- Truth Table, origin vs converted 
 ttOriginVSConverted f = zipWith (==) (map (`evl` f) (allVals f)) (map (\ v -> evl v (convertToCNF f)) (allVals f))
 
-r12 = parse "+(+(-1 2))"
