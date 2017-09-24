@@ -116,7 +116,6 @@ testParse k n = if k == n then print (show n ++ " tests passed")
   else error ("failed test on: " ++ show xs)
 
 
-
 --"<=>" "==>" removed for simplicity after overcomplicated experiment, see notes above and/or .hs file "tuesdayafternoon..."
 validChars :: [Char]
 validChars = [
