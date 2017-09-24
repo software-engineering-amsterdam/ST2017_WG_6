@@ -17,7 +17,7 @@ main = do
     Exc1ExtraTests.main
 
     putStrLn "\n*** Lab3 output for 2. Testing parse function ***"
-    Exc2.mainn
+    Exc2.main
 
     putStrLn "\n*** Lab3 output for 3. CNF converter ***"
     putStrLn "* Skipping, as converter is tested in exercise 4 *"

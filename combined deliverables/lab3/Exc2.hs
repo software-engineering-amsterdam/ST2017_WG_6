@@ -93,8 +93,8 @@ import System.IO
 import Exc4
 
 -- Main function --
-mainn :: IO ()
-mainn = testParse 1 100
+main :: IO ()
+main = testParse 1 100
 
 
 -- PROPERTIES
