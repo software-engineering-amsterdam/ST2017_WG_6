@@ -19,9 +19,12 @@ type Clause  = [Int]
 type Clauses = [Clause]
 
 cnf2cls :: Form -> Clauses
-cnf2cls (Prop x) = [[x]]
-cnf2cls (Neg (Prop x)) = [[-x]]
--- cnf2cls (Cnj x:xs) = cnf2cls x : cnf
+cnf2cls (Cnj xs) = map cnf2clssub xs
+cnf2cls x = cnf2cls (Cnj [x])
+
+cnf2clssub :: Form -> Clause
+cnf2clssub (Prop x) = [x]
+cnf2clssub (Neg (Prop x)) = [-x]
 -- cnf2cls (Cnj []) = cnf2cls x : cnf
 -- cnf2cls (Dsj [a]) =
 -- cnf2cls (Dsj (f1:f2)) = 
