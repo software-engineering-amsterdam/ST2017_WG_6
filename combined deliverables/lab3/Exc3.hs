@@ -19,7 +19,8 @@ import Lecture3
 -- negations should only apply on properties. Therefore we first remove the arrow
 -- expressions with the given "arrowfree" function given in Lecture3. Now we should
 -- get rid of illigal negations (from the CNF point of view) which is done with the
--- "nnf" function, aslo fiven in Lecture3.hs.
+-- "nnf" function, aslo fiven in Lecture3.hs. Futher we converted the expression 
+-- to a CNF conform wikipedia: https://en.wikipedia.org/wiki/Conjunctive_normal_form
 
 convertToCNF :: Form ->  Form
 convertToCNF = toCNF . nnf . arrowfree
