@@ -71,6 +71,11 @@
                                 - Characters after the last closing parenthesis must not be shown in the result.
                    Otherwise: The result must be the empty list.
 
+
+    Summary of above: After careful preparation and design I ended up having to give up on the chosen approach, even after
+    consulting Hugo (.hs file "tuesdayafternoon..." is the state we left it in after a final attempt). Above text contains
+    the theory and plans I had, below is a simpler implementation using Sangam's generator for exercise 4.
+    Though it was an interesting process and a fun challenge I will refrain from spending 12h on an exercise like this in the future.
 -----------------------------------------------------------------------------------------------------------------------}
 
 
