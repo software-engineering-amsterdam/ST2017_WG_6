@@ -112,9 +112,7 @@ testP k n = if k == n then print (show n ++ " tests passed")
  else do
   xs <- randomForm 3
   if ((precondition (show xs)) --> (postcondition (show xs))) then
-   do
-    print ("pass on: " ++ show xs)     -- This line may be disabled
-    testP (k+1) n
+   do testP (k + 1) n
     else error ("failed test on: " ++ show xs)
 
 

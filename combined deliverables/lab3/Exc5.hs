@@ -34,8 +34,7 @@ testcls k n = if k == n then print (show n ++ " tests passed")
                 else do
                     x <- randomForm 3
                     if equiv (convertToCNF x) (cls2cnf  (cnf2cls (convertToCNF x))) 
-                        then  do print ("pass on: " ++ show x)
-                                 testcls (k+1) n
+                        then  do testcls (k + 1) n
                     else error ("failed test on: " ++ show x)
 
 testExc5 = testcls 1 100

@@ -72,8 +72,7 @@ test k n = if k == n then print (show n ++ " tests passed")
                 else do
                   x <- randomForm 3 -- This can be changed to a random int. To increase the randomness of the test b
                   if equiv x (convertToCNF x) && checkCNF (convertToCNF x) then
-                    do print ("pass on: " ++ show x)
-                       test (k+1) n
+                    do test (k + 1) n
                   else error ("failed test on: " ++ show x)
 
 checkCNF :: Form ->  Bool

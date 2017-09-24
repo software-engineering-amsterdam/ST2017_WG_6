@@ -25,6 +25,9 @@ import Lecture3
 We test the implemented specifications by using propositions p q and r, and form1, form2, 
 form3 as specified in Lecture3.hs. For each function, input for at least one valid and 
 one non-valid result is tested, using expressions of which the expected outcome is known.
+
+Since exercise 4 we can create random forms and therefore also included autmated test for
+these functions. To avoid cyclic dependencies these are in the file ExtraTests.hs.
 --}
 
 contradiction, tautology :: Form -> Bool
