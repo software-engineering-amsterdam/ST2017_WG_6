@@ -16,7 +16,7 @@ main = do
     Exc2.main
 
     putStrLn "\n*** Lab3 output for 3. CNF converter ***"
-    Exc3.main
+    putStrLn "*** Skipping, as converter is tested in exercise 4 ***"
 
     putStrLn "\n*** Lab3 output for 4. Formula generator ***"
     Exc4.main

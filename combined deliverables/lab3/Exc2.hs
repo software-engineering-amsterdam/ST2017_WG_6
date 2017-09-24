@@ -153,13 +153,7 @@ getRandomInt n = getStdRandom (randomR (0,n))
 -----------------------------------------------------
 
 
-
-
-
-
-
-
-
+main = testParse
 
 
 

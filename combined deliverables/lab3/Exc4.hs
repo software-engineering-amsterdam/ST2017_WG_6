@@ -91,3 +91,5 @@ checkCNF f
         dsjCheck (Cnj fs) = False
         dsjCheck (Dsj (f1:ft)) = dsjCheck f1 && dsjCheck (Dsj ft)
         dsjCheck x = True
+
+main = test100

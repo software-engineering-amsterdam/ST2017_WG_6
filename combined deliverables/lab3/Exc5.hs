@@ -47,3 +47,5 @@ testExc5 = testcls 1 100
     different function written for the test. We can conclude with the equivalance check that the (semantics) is also correct.
 
 --}
+
+main = testExc5
