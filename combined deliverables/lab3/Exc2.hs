@@ -86,8 +86,7 @@ SEE SUMMARY ABOVE
 -----------------------------------------------------------------------------------------------------------------------}
 
 
-module Lab3_2
-where
+module Exc2 where
 import Lecture3
 import System.Random
 import System.IO
