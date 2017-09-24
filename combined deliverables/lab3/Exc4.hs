@@ -27,7 +27,7 @@ import Exc1
 -- Random function copied from Lecture 2 and limited to 4 because there
 -- are four cases.
 getRandomInt :: IO Int
-getRandomInt = getStdRandom (randomR (0,4))
+getRandomInt = getStdRandom (randomR (1,5))
 
 
 {-- This random form generator does not create a complete random form
@@ -45,11 +45,11 @@ randomForm d = do q <- getRandomInt
                   k <- randomForm (d-1)
                   m <- randomForm (d-1)
                   case q of
-                    0 -> return $ Neg k
-                    1 -> return $ Equiv k m
-                    2 -> return $ Impl k m
-                    3 -> return $ Cnj [k,m] -- Limited to two
-                    4 -> return $ Dsj [k, m] -- Limited to two
+                    1 -> return $ Neg k
+                    2 -> return $ Equiv k m
+                    3 -> return $ Impl k m
+                    4 -> return $ Cnj [k,m] -- Limited to two
+                    5 -> return $ Dsj [k, m] -- Limited to two
 
 {-- To test if convertToCNF, we check if the
     original form and the converted form are logical equivelant.
