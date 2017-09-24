@@ -32,7 +32,3 @@ convertToCNF = toCNF . nnf . arrowfree
         disLaw (Cnj (f11:f12)) f2 = Cnj [disLaw f11 f2, disLaw (Cnj f12) f2]
         disLaw f1 (Cnj (f21:f22)) = Cnj [disLaw f1 f21, disLaw (Cnj f22) f1]
         disLaw f1 f2 = Dsj [f1, f2]
-
--- Truth Table, origin vs converted 
-ttOriginVSConverted f = zipWith (==) (map (`evl` f) (allVals f)) (map (\ v -> evl v (convertToCNF f)) (allVals f))
-
