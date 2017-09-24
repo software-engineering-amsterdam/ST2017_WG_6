@@ -3,7 +3,8 @@ Assignment:		Lab 3: Assignment 1
 Name:           Tim Nederveen
 Time spent:     TODO
 
-Remarks:        - 
+Remarks:        - TODO:
+                - Include one logical derivation
 
 Sources:        - 
 ---------------}
@@ -16,9 +17,8 @@ import Test.QuickCheck
 import Lecture3
 
 {-------------------------------------------------------------------------------------------------------------------------------------
-Exercise Implementing and testing IBAN validation
 
-a)  The lecture notes of this week discuss the notions of satisfiability, tautology, contradiction, logical entailment and logical equivalence for formulas of propositional logic.
+3.1)  The lecture notes of this week discuss the notions of satisfiability, tautology, contradiction, logical entailment and logical equivalence for formulas of propositional logic.
 
 The lecture notes give a definition of satisfiable, for objects of type Form.
 
