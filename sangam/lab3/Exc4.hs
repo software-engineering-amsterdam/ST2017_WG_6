@@ -2,7 +2,6 @@ module Exc4 where
 
 import Data.List
 import System.Random
-import Test.QuickCheck
 import Lecture3
 
 {-------------------------------------------------------------------------------------------------------------------------------------
@@ -33,19 +32,19 @@ getRandomInt = getStdRandom (randomR (0,4))
     Besides that we limited Cnj and Dsj to max two forms. So the generation
     of forms doesn't take too long and it also keeps the (extra) code to a minimum.
     If needed you could also randomly generate the number of forms in Cnj and Dsj
-    but this will suffice for testing purpose.
+    but this will suffice for testing purposes.
  --}
 randomForm :: Int -> IO Form
-randomForm 0 = do Prop <$> getRandomInt
+randomForm 0 = Prop <$> getRandomInt
 randomForm d = do q <- getRandomInt
                   k <- randomForm (d-1)
                   m <- randomForm (d-1)
                   case q of
-                    0 -> do return $ Neg k
-                    1 -> do return $ Equiv (k) (m)
-                    2 -> do return $ Impl (k) (m)
-                    3 -> do return $ Cnj [(k), (m)] -- Limited to two
-                    4 -> do return $ Dsj [(k), (m)] -- Limited to two
+                    0 -> return $ Neg k
+                    1 -> return $ Equiv k m
+                    2 -> return $ Impl k m
+                    3 -> return $ Cnj [k,m] -- Limited to two
+                    4 -> return $ Dsj [k, m] -- Limited to two
 
 {-- To test if convertToCNF, we check if the
     original form and the converted form are logical equivelant.
@@ -59,7 +58,7 @@ randomForm d = do q <- getRandomInt
 
     We run both test together against 100 randomly generated forms.
 
-    The result is that all 100 succeed. so convertToCNF is correctly implemended
+    The result is that all 100 succeed. so convertToCNF is correctly implemented
 --}
 test100 = test 1 100
 
@@ -67,7 +66,7 @@ test :: Int -> Int -> IO ()
 test k n = if k == n then print (show n ++ " tests passed")
                 else do
                   x <- randomForm 3 -- This can be changed to a random int. To increase the randomness of the test b
-                  if (equiv x (convertToCNF x)) && checkCNF (convertToCNF x) then
+                  if equiv x (convertToCNF x) && checkCNF (convertToCNF x) then
                     do print ("pass on: " ++ show x)
                        test (k+1) n
                   else error ("failed test on: " ++ show x)
@@ -89,12 +88,12 @@ checkCNF f
     where
         isCNF :: Form -> Bool
         isCNF (Cnj f) = all isCNF f
-        isCNF (Dsj (f1:ft)) = (dsjCheck f1) && (isCNF (Dsj ft))
+        isCNF (Dsj (f1:ft)) = dsjCheck f1 && isCNF (Dsj ft)
         isCNF f = True
 
         dsjCheck :: Form -> Bool
         dsjCheck (Cnj fs) = False
-        dsjCheck (Dsj (f1:ft)) = (dsjCheck f1) && (dsjCheck (Dsj ft))
+        dsjCheck (Dsj (f1:ft)) = dsjCheck f1 && dsjCheck (Dsj ft)
         dsjCheck x = True
 
 
@@ -103,7 +102,7 @@ convertToCNF = toCNF . nnf . arrowfree
     where
         toCNF :: Form -> Form
         toCNF (Prop x) = Prop x
-        toCNF (Neg (Prop x)) = (Neg (Prop x))
+        toCNF (Neg (Prop x)) = Neg (Prop x)
         toCNF (Cnj fs) = Cnj (map toCNF fs)
         toCNF (Dsj [a]) = toCNF a
         toCNF (Dsj (f1:f2)) = disLaw (toCNF f1) (toCNF (Dsj f2))
