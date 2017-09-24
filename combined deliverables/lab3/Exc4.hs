@@ -66,13 +66,13 @@ randomForm d = do q <- getRandomInt
     The result is that all 100 succeed. so convertToCNF is correctly implemented
 --}
 
-testm :: (Form -> Bool) -> Int -> Int -> IO ()
-testm func k n 
+test :: (Form -> Bool) -> Int -> Int -> IO ()
+test func k n 
     | k == n = print (show n ++ " tests passed")
     | otherwise = do 
                   x <- randomForm 3
                   if func x
-                     then do testm func (k+1) n
+                     then test func (k+1) n
                   else error ("failed test on: " ++ show x)
 
 testExc4 :: Form -> Bool
@@ -94,4 +94,4 @@ checkCNF f
         dsjCheck (Dsj (f1:ft)) = dsjCheck f1 && dsjCheck (Dsj ft)
         dsjCheck x = True
 
-main = testm testExc4 1 100
+main = test testExc4 1 100
