@@ -94,7 +94,7 @@ import Exc4
 
 -- Main function --
 main :: IO ()
-main = testParse 1 100
+main = test testExc2 1 100
 
 
 -- PROPERTIES
@@ -105,16 +105,9 @@ precondition (c:cs) = elem c validChars && precondition cs
 postcondition :: String -> Bool
 postcondition form = form == (show(head(parse form)))
 
-
---"Build your own Quickcheck" variant
-testParse :: Int -> Int -> IO ()
-testParse k n = if k == n then print (show n ++ " tests passed")
- else do
-  xs <- randomForm 3
-  if ((precondition (show xs)) --> (postcondition (show xs))) then
-   do testParse (k + 1) n
-  else error ("failed test on: " ++ show xs)
-
+-- Test function
+testExc2 :: Form -> Bool
+testExc2 x = ((precondition (show x)) --> (postcondition (show x)))
 
 --"<=>" "==>" removed for simplicity after overcomplicated experiment, see notes above and/or .hs file "tuesdayafternoon..."
 validChars :: [Char]
