@@ -113,7 +113,7 @@ testParse k n = if k == n then print (show n ++ " tests passed")
   xs <- randomForm 3
   if ((precondition (show xs)) --> (postcondition (show xs))) then
    do
-    print ("pass on: " ++ show xs)     -- This line may be disabled
+--    print ("pass on: " ++ show xs)     -- This line may be enabled to see test input
     testParse (k+1) n
     else error ("failed test on: " ++ show xs)
 
