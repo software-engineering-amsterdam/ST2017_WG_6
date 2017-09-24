@@ -9,7 +9,7 @@
 -- ################################################
 -- # Mees Kalf
 -- # Excersize 3
--- # X hour(s)
+-- # 4 hour(s)
 -- ################################################
 
 import Data.List
@@ -34,11 +34,6 @@ convertToCNF = toCNF . nnf . arrowfree
         disLaw (Cnj (f11:f12)) f2 = Cnj [(disLaw f11 f2), (disLaw (Cnj f12) f2)]
         disLaw f1 (Cnj (f21:f22)) = Cnj [(disLaw f1 f21), (disLaw (Cnj f22) f1)]
         disLaw f1 f2 = Dsj [f1, f2]
-
-a = Prop 1
-b = Prop 2
-c = Prop 3
-d = Prop 4
 
 -- Should be (after cnf): (A ∧ ((B ∨ C) ∧ (B ∨ D)))
 form4 = Cnj [a, (Dsj [b, (Cnj [c,d])])]
