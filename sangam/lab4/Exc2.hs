@@ -7,10 +7,8 @@ Time spent:     1 hour
 module Exc2 where
 
 import Data.List
-import System.Random
 import Test.QuickCheck
 import SetOrd
-import Lecture4
 import Lecture2
 
 {-------------------------------------------------------------------------------------------------------------------------------------

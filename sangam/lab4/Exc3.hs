@@ -7,20 +7,16 @@ Time spent:     2 hour
 module Exc4 where
     
 import Data.List
-import System.Random
 import Test.QuickCheck
 import SetOrd
-import Lecture4
-import Lecture2
 import Exc2
-import Data.Maybe
     
-    {-------------------------------------------------------------------------------------------------------------------------------------
-    2)  Implement operations for set intersection, set union and set difference, 
-        for the datatype Set defined in SetOrd.hs. Next, use automated testing to check 
-        that your implementation is correct. First use your own generator, next use QuickCheck.
-        (Deliverables: implementations, test properties, short test report, indication of time spent.)
-    --------------------------------------------------------------------------------------------------------------------------------------}
+{-------------------------------------------------------------------------------------------------------------------------------------
+2)  Implement operations for set intersection, set union and set difference, 
+    for the datatype Set defined in SetOrd.hs. Next, use automated testing to check 
+    that your implementation is correct. First use your own generator, next use QuickCheck.
+    (Deliverables: implementations, test properties, short test report, indication of time spent.)
+--------------------------------------------------------------------------------------------------------------------------------------}
 
 -- Union of Sets
 unionSet', intersectionSet, differenceSet :: Integral a => Set a -> Set a -> Set a
@@ -29,9 +25,9 @@ differenceSet (Set x) (Set y)   = list2set $ x \\ y
 intersectionSet (Set x) (Set y) = list2set $ x `intersect` y
 
 {-
-We won't test the concrete implementation of the functions above. By example testing it 
+We won't test the concrete implementation of the functions above. E.g. testing it 
 against the given unionSet in SetOrds.hs (do both functions return the same result) 
-because we assume that the library functions union, intersect and difference and 
+because we assume that the library functions union, intersect and difference 
 work as intented and because testing it that way won't garauntee that the properties 
 of a Set still hold. We would merely check if the functions return the same result without checking 
 whether the returned result is correct.
