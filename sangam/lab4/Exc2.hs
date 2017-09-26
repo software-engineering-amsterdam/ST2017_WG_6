@@ -1,10 +1,10 @@
 
-{-
+{--
 Assignment:		Lab 4: Assignment 2
 Name:           Sangam Gupta
 Time spent:     1 hour
----------------}
-module Lab4 where
+--}
+module Exc2 where
 
 import Data.List
 import System.Random
@@ -25,6 +25,6 @@ randomSetGenerator :: IO (Set Int)
 randomSetGenerator = list2set <$> genIntList
 
 -- Make Set a subclass of arbitrary. Quick then recognises data Set and knows 
--- How to use it.
-instance (Arbitrary a) => Arbitrary (Set a) where
-    arbitrary = Set <$> arbitrary
+-- -- How to use it.
+instance (Integral a, Arbitrary a) => Arbitrary (Set a) where
+    arbitrary = list2set <$> arbitrary
