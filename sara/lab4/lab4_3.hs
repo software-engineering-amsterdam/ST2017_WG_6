@@ -1,7 +1,7 @@
 {-
     Assignment:		Lab 4: Exercise 3 - Implementing and testing set operations
     Name:           Sara Oonk
-    Time spent:     2h 30m
+    Time spent:     3h 30m
     Sources:        SetOrd.hs
                     Lecture2
                     http://web.mnstate.edu/peil/MDEV102/U1/S3/Property6.htm
@@ -28,34 +28,22 @@ import Test.QuickCheck
    | unionSet (Set (x:xs)) set2  = insertSet x (unionSet (Set xs) set2)  |
     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -}
-
+onionSet :: (Ord a) => Set a -> Set a -> Set a
+onionSet (Set xs) (Set ys) = list2set (union xs ys)
 
 intersectionSet :: (Ord a) => Set a -> Set a -> Set a
-intersectionSet (Set [])     set2 = (Set [])
-intersectionSet (Set (x:xs)) set2 = if (inSet x set2) then insertSet x (intersectionSet (Set xs) set2)
-                                    else intersectionSet (Set xs) set2
-                                    {- if x in both sets, keep x by appending it to recursive result -}
-                                    {- otherwise discard x by NOT appending it to recursive result -}
+intersectionSet (Set xs) (Set ys) = list2set (intersect xs ys)
+
 
 differenceSet :: (Ord a) => Set a -> Set a -> Set a
-differenceSet (Set [])     set2 = (Set [])
-differenceSet (Set (x:xs)) set2 = if (inSet x set2) then differenceSet (Set xs) set2
-                                  else insertSet x (differenceSet (Set xs) set2)
-                                  {- if x in both sets, discard x by NOT appending it to recursive result -}
-                                  {- otherwise keep x by appending it to recursive result -}
+differenceSet (Set xs) (Set ys) = list2set (xs \\ ys)
 
 main = do
  automatedTests
  putStrLn "\n"
  quickChecks
  putStrLn "\n"
- unionTests
- putStrLn "\n"
- intersectionTests
- putStrLn "\n"
- differenceTests
-
-
+ propertyTests
 
 automatedTests = do
  putStrLn "\n**** Automated tests for implementation ****"
@@ -75,32 +63,30 @@ quickChecks = do
  putStrLn "\n*** Union: ***"
  quickCheckSet testUnion
 
-unionTests = do
- putStrLn "\n**** Automated test for union properties ****"
- putStrLn "\n*** Commutative law: ***"
- testSet commutativeUnion
- putStrLn "\n*** Law of identity element: ***"
- testSet identityUnion
- putStrLn "\n*** Idempotent law: ***"
- testSet idempotentUnion
- 
-intersectionTests = do
- putStrLn "\n**** Automated test for intersection properties ****"
- putStrLn "\n*** Commutative law: ***"
- testSet commutativeIntersection
- putStrLn "\n*** Law of identity element: ***"
- testSet identityIntersection
- putStrLn "\n*** Idempotent law: ***"
- testSet idempotentIntersection
- 
-differenceTests = do
- putStrLn "\n**** Automated test for difference properties ****"
- putStrLn "\n*** Commutative law: ***"
- testSet commutativeDifference
- putStrLn "\n*** Law of identity element: ***"
- testSet identityDifference
- putStrLn "\n*** Idempotent law: ***"
- testSet idempotentDifference
+propertyTests = do
+ putStrLn "\n**** Automated tests for relational properties ****"
+ putStrLn "\n*** Commutative laws: ***"
+ quickCheck (\xs -> \ys -> commutative onionSet        (nub $ sort xs) (nub $ sort ys))
+ quickCheck (\xs -> \ys -> commutative intersectionSet (nub $ sort xs) (nub $ sort ys))
+ quickCheck (\xs -> \ys -> (commutative differenceSet   (nub $ sort xs) (nub $ sort ys)) == False || xs == ys)
+
+ putStrLn "\n*** Identity laws: ***"
+ quickCheck (\xs -> identitySelf  onionSet        (nub $ sort xs))
+ quickCheck (\xs -> identitySelf  differenceSet   (nub $ sort xs))
+ quickCheck (\xs -> identityEmpty intersectionSet (nub $ sort xs))
+
+ putStrLn "\n*** Idempotent laws: ***"
+ quickCheck (\xs -> idempotent onionSet        (nub $ sort xs))
+ quickCheck (\xs -> idempotent intersectionSet (nub $ sort xs))
+ quickCheck (\xs -> (idempotent differenceSet  (nub $ sort xs)) == False || xs == [])
+
+ putStrLn "\n*** Associative laws: ***"
+ quickCheck (\xs -> \ys -> \zs -> associative onionSet        (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
+ quickCheck (\xs -> \ys -> \zs -> associative intersectionSet (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
+
+ putStrLn "\n*** Distributive laws: ***"
+ quickCheck (\xs -> \ys -> \zs -> distributive onionSet intersectionSet (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
+ quickCheck (\xs -> \ys -> \zs -> distributive intersectionSet onionSet (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
 
 
 -- Automated tests
@@ -117,32 +103,47 @@ testS k n c = if k == n then print (show n ++ " tests passed")
                   else error ("failed test on: " ++ show (nub $ sort xs) ++ " with " ++ show (nub $ sort ys))
 
 
--- Test implementations using Haskell's Data.List operations
+-- Test implementations using Haskell's Data.List vs own extensive implementation (see bottom of file)
 testIntersection, testDifference, testUnion :: [Int] -> [Int] -> Bool
-testIntersection xs ys = (intersectionSet (Set xs) (Set ys)) == list2set (intersect xs ys)
-testDifference   xs ys = (differenceSet (Set xs) (Set ys))   == list2set (xs \\ ys)
-testUnion        xs ys = (unionSet (Set xs) (Set ys))        == list2set (xs `union` ys)
+testIntersection xs ys = (intersectionSet (Set xs) (Set ys)) == intSet   (Set xs) (Set ys)
+testDifference   xs ys = (differenceSet (Set xs) (Set ys))   == difSet   (Set xs) (Set ys)
+testUnion        xs ys = (onionSet (Set xs) (Set ys))        == unionSet (Set xs) (Set ys)
 
--- QuickCheck using above properties for 'setOp'
-quickCheckSet :: ([Int] -> [Int] -> Bool) -> IO Result
-quickCheckSet setOp = quickCheckResult (\xs -> \ys -> setOp (nub $ sort xs) (nub $ sort ys))
+-- QuickCheck using above properties for 'testOperation'
+quickCheckSet :: ([Int] -> [Int] -> Bool) -> IO ()
+quickCheckSet testOperation = quickCheck(\xs -> \ys -> testOperation (nub $ sort xs) (nub $ sort ys))
 
--- Properties for union
-commutativeUnion, identityUnion, idempotentUnion :: [Int] -> [Int] -> Bool
-commutativeUnion xs ys = (unionSet (Set xs) (Set ys)) == (unionSet (Set ys) (Set xs))
-identityUnion    xs ys = (unionSet (Set xs) (Set [])) == (Set xs)
-idempotentUnion  xs ys = (unionSet (Set xs) (Set xs)) == (Set xs)
 
--- Properties for intersection
-commutativeIntersection, identityIntersection, idempotentIntersection :: [Int] -> [Int] -> Bool
-commutativeIntersection xs ys = (intersectionSet (Set xs) (Set ys)) == (intersectionSet (Set ys) (Set xs))
-identityIntersection    xs ys = (intersectionSet (Set xs) (Set [])) == (Set [])
-idempotentIntersection  xs ys = (intersectionSet (Set xs) (Set xs)) == (Set xs)
+-- Testable relational properties on sets
+idempotent, identitySelf, identityEmpty  :: (Set Int -> Set Int -> Set Int) -> [Int] -> Bool
+idempotent    f xs = (f (Set xs) (Set xs)) == (Set xs)
+identitySelf  f xs = (f (Set xs) (Set [])) == (Set xs)
+identityEmpty f xs = (f (Set xs) (Set [])) == (Set [])
 
--- Properties for difference
-commutativeDifference, identityDifference, idempotentDifference :: [Int] -> [Int] -> Bool
-commutativeDifference xs ys = xs /= ys --> (differenceSet (Set xs) (Set ys)) /= (differenceSet (Set ys) (Set xs))
-identityDifference    xs ys = (differenceSet (Set xs) (Set [])) == (Set xs)
-idempotentDifference  xs ys = (differenceSet (Set xs) (Set xs)) == (Set [])
+commutative :: (Set Int -> Set Int -> Set Int) -> [Int] -> [Int] -> Bool
+commutative f xs ys = f (Set xs) (Set ys) == f (Set ys) (Set xs)
+
+associative :: (Set Int -> Set Int -> Set Int) -> [Int] -> [Int] -> [Int] -> Bool
+associative f xs ys zs = f (f (Set xs) (Set ys)) (Set zs) == f (Set xs) (f (Set ys) (Set zs))
+
+distributive :: (Set Int -> Set Int -> Set Int) -> (Set Int -> Set Int -> Set Int) -> [Int] -> [Int] -> [Int] -> Bool
+distributive f g xs ys zs = f (Set xs) (g (Set ys) (Set zs)) == g (f (Set xs) (Set ys)) (f (Set xs) (Set zs))
+
+
+
+-- Extensive implementations of intersectionSet and differenceSet using SetOrd in a fashion similar to given unionSet
+intSet :: (Ord a) => Set a -> Set a -> Set a
+intSet (Set [])     set2 = (Set [])
+intSet (Set (x:xs)) set2 = if (inSet x set2) then insertSet x (intSet (Set xs) set2)
+                                    else intSet (Set xs) set2
+                                    {- if x in both sets, keep x by appending it to recursive result -}
+                                    {- otherwise discard x by NOT appending it to recursive result -}
+
+difSet :: (Ord a) => Set a -> Set a -> Set a
+difSet (Set [])     set2 = (Set [])
+difSet (Set (x:xs)) set2 = if (inSet x set2) then difSet (Set xs) set2
+                                  else insertSet x (difSet (Set xs) set2)
+                                  {- if x in both sets, discard x by NOT appending it to recursive result -}
+                                  {- otherwise keep x by appending it to recursive result -}
 
 
