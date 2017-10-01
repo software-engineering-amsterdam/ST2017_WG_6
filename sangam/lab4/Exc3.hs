@@ -1,6 +1,5 @@
-
 {--
-Assignment:		Lab 4: Assignment 3
+Assignment:     Lab 4: Assignment 3
 Name:           Sangam Gupta
 Time spent:     2 hour
 --}
@@ -46,29 +45,31 @@ testCommutative f a b = (f a b) == (f b a)
 testIdempotent :: Integral a => (Set a -> Set a -> Set a) -> Set a -> Bool
 testIdempotent f a = (f a a) == a
 
-testUnion :: Set Int -> Set Int -> Bool
+testUnion, testIntersection, testDifference :: Set Int -> Set Int -> Bool
 testUnion a b = testIdempotent unionSet' a && testCommutative unionSet' a b
-
-testIntersection :: Set Int -> Set Int -> Bool
 testIntersection a b = testIdempotent intersectionSet a && testCommutative intersectionSet a b
-
--- A\{} = A and A\B is a subset of A
-testDifference :: Set Int -> Set Int -> Bool
 testDifference a b = differenceSet a emptySet == a && subSet (differenceSet a b) a 
 
-testUnionWithQuick = quickCheck testUnion
-testUnionWithGen = testUnion <$> randomSetGenerator <*> randomSetGenerator
+testUnionWithGen, testIntersectionWithGen, testDifferenceWithGen :: IO ()
+testUnionWithGen = test8 testUnion 100
+testIntersectionWithGen = test8 testIntersection 100
+testDifferenceWithGen = test8 testDifference 100
 
-testIntersectionWithQuick = quickCheck testIntersection
-testIntersectionWithGen = testIntersection <$> randomSetGenerator <*> randomSetGenerator
 
-testDifferenceWithQuick = quickCheck testIntersection
-testDifferenceWithGen = testIntersection <$> randomSetGenerator <*> randomSetGenerator
+test8 :: (Set Int -> Set Int -> Bool) -> Int -> IO ()
+test8 f 0 = print ("++ All self-automated tests passed")
+test8 f n = do
+    x <- randomSetGenerator
+    y <- randomSetGenerator
+    if testUnion x y
+    then test8 f (n - 1)
+    else error ("failed test on: " ++ show x ++ " AND " ++ show y)
 
 main = do 
-        testUnionWithQuick
         testUnionWithGen
-        testIntersectionWithQuick
         testIntersectionWithGen
-        testDifferenceWithQuick
         testDifferenceWithGen
+
+        quickCheck testUnion
+        quickCheck testIntersection
+        quickCheck testIntersection

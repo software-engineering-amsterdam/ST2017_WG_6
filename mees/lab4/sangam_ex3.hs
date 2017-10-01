@@ -50,10 +50,20 @@ testUnion a b = testIdempotent unionSet' a && testCommutative unionSet' a b
 testIntersection a b = testIdempotent intersectionSet a && testCommutative intersectionSet a b
 testDifference a b = differenceSet a emptySet == a && subSet (differenceSet a b) a 
 
-testUnionWithGen, testIntersectionWithGen, testDifferenceWithGen :: IO Bool
-testUnionWithGen = testUnion <$> randomSetGenerator <*> randomSetGenerator
-testIntersectionWithGen = testIntersection <$> randomSetGenerator <*> randomSetGenerator
-testDifferenceWithGen = testIntersection <$> randomSetGenerator <*> randomSetGenerator
+testUnionWithGen, testIntersectionWithGen, testDifferenceWithGen :: IO ()
+testUnionWithGen = test8 testUnion 100
+testIntersectionWithGen = test8 testIntersection 100
+testDifferenceWithGen = test8 testDifference 100
+
+
+test8 :: (Set Int -> Set Int -> Bool) -> Int -> IO ()
+test8 f 0 = print ("++ All self-automated tests passed")
+test8 f n = do
+    x <- randomSetGenerator
+    y <- randomSetGenerator
+    if testUnion x y
+    then test8 f (n - 1)
+    else error ("failed test on: " ++ show x ++ " AND " ++ show y)
 
 main = do 
         testUnionWithGen
