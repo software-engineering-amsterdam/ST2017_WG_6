@@ -12,7 +12,7 @@
 -}
 module Ex3 where
 import SetOrd
-import Lecture2
+import Lab4
 import Data.List
 import Test.QuickCheck
 
