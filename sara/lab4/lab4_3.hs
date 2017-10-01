@@ -28,15 +28,10 @@ import Test.QuickCheck
    | unionSet (Set (x:xs)) set2  = insertSet x (unionSet (Set xs) set2)  |
     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -}
-onionSet :: (Ord a) => Set a -> Set a -> Set a
-onionSet (Set xs) (Set ys) = list2set (union xs ys)
-
-intersectionSet :: (Ord a) => Set a -> Set a -> Set a
+onionSet, intersectionSet, differenceSet :: (Ord a) => Set a -> Set a -> Set a
+onionSet        (Set xs) (Set ys) = list2set (union xs ys)
 intersectionSet (Set xs) (Set ys) = list2set (intersect xs ys)
-
-
-differenceSet :: (Ord a) => Set a -> Set a -> Set a
-differenceSet (Set xs) (Set ys) = list2set (xs \\ ys)
+differenceSet   (Set xs) (Set ys) = list2set (xs \\ ys)
 
 main = do
  automatedTests
@@ -114,7 +109,7 @@ quickCheckSet :: ([Int] -> [Int] -> Bool) -> IO ()
 quickCheckSet testOperation = quickCheck(\xs -> \ys -> testOperation (nub $ sort xs) (nub $ sort ys))
 
 
--- Testable relational properties on sets
+-- Testable relational properties on sets - using [Int] for easy quickcheck
 idempotent, identitySelf, identityEmpty  :: (Set Int -> Set Int -> Set Int) -> [Int] -> Bool
 idempotent    f xs = (f (Set xs) (Set xs)) == (Set xs)
 identitySelf  f xs = (f (Set xs) (Set [])) == (Set xs)
