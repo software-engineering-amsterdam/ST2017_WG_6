@@ -16,7 +16,7 @@ import Ex2
 
 -- Properties
 -- Relation R should be a subset of the transitive closure of R
-propSubset, propDecomp :: (Integral a) => Rel a -> Bool
+propSubset, propDecomp :: Rel Int -> Bool
 propSubset x = null ((nub x) \\ trClos(x))
 
 -- The trClo of R should be the same as the decomposition of R with its trClo
@@ -35,6 +35,6 @@ test7 f n = do
 main = do
     test7 propSubset 100
     test7 propDecomp 100
-    -- TODO GET THESE quickCheck working! they work in ghci...
-    -- quickCheck propDecomp
-    -- quickCheck propSubset
+
+    quickCheck propDecomp
+    quickCheck propSubset
