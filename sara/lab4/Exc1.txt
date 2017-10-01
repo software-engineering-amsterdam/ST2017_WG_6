@@ -1,0 +1,40 @@
+Q1: What is the difference between a set and a list?
+
+Q2: What is an axiom?
+
+Q3: What is a theorem?
+
+Q4: What is a lemma?
+
+Q5: What is the Russell Paradox?
+
+Q6: What is the closest Haskell equivalent of ∈?
+
+Q7: What is operator overloading?
+
+
+
+
+
+
+
+
+A1: A set is a collection of distinct objects, a list in Haskell can be used
+    to represent a set but does not necessarily follow the rules of a set
+
+A2: An axiom is a truth given outright without proof
+
+A3: Theorems are statements of intrinsic value that have already been proved
+
+A4: Lemmas are statements that are often used in proving theorems
+
+A5: The Russell Paradox: It is not true that to every property E
+    there corresponds a set of all objects that have E. For example,
+    The property of not having yourself as member which is true for most sets.
+    The set of all even natural numbers itself is not an even natural number,
+    and the set of all integers itself is not an integer. Call this an ordinary set.
+    If R ∈ R and R is an ordinary set then that would mean R ∈ R ⇔ R ∉ R which is impossible.
+
+A6: elem is the closest equivalent of ∈
+
+A7:
