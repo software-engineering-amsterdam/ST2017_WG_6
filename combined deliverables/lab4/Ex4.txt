@@ -1,3 +1,4 @@
+Time spent: 2,5 hr
 Q1: What is the difference between antisymmetry and asymmetry?
 
 Q2: What is transitive closure on R?
