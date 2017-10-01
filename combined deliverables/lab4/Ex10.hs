@@ -52,7 +52,7 @@ divided into independent subproblems. The chosen solution uses recursion for a d
 addition-chain exponentiation as discussed in https://en.wikipedia.org/wiki/Addition-chain_exponentiation
 -}
 
-module Exc10 where
+module Ex10 where
 
 import Data.List
 
