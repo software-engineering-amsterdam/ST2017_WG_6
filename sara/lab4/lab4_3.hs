@@ -33,57 +33,6 @@ onionSet        (Set xs) (Set ys) = list2set (union xs ys)
 intersectionSet (Set xs) (Set ys) = list2set (intersect xs ys)
 differenceSet   (Set xs) (Set ys) = list2set (xs \\ ys)
 
-main = do
- automatedTests
- putStrLn "\n"
- quickChecks
- putStrLn "\n"
- propertyTests
-
-automatedTests = do
- putStrLn "\n**** Automated tests for implementation ****"
- putStrLn "\n*** Intersection: ***"
- testSet testIntersection
- putStrLn "\n*** Difference: ***"
- testSet testDifference
- putStrLn "\n*** Union: ***"
- testSet testUnion
-
-quickChecks = do
- putStrLn "\n**** QuickCheck tests for implementation ****"
- putStrLn "\n*** Intersection: ***"
- quickCheckSet testIntersection
- putStrLn "\n*** Difference: ***"
- quickCheckSet testDifference
- putStrLn "\n*** Union: ***"
- quickCheckSet testUnion
-
-propertyTests = do
- putStrLn "\n**** Automated tests for relational properties ****"
- putStrLn "\n*** Commutative laws: ***"
- quickCheck (\xs -> \ys -> commutative onionSet        (nub $ sort xs) (nub $ sort ys))
- quickCheck (\xs -> \ys -> commutative intersectionSet (nub $ sort xs) (nub $ sort ys))
- quickCheck (\xs -> \ys -> (commutative differenceSet   (nub $ sort xs) (nub $ sort ys)) == False || xs == ys)
-
- putStrLn "\n*** Identity laws: ***"
- quickCheck (\xs -> identitySelf  onionSet        (nub $ sort xs))
- quickCheck (\xs -> identitySelf  differenceSet   (nub $ sort xs))
- quickCheck (\xs -> identityEmpty intersectionSet (nub $ sort xs))
-
- putStrLn "\n*** Idempotent laws: ***"
- quickCheck (\xs -> idempotent onionSet        (nub $ sort xs))
- quickCheck (\xs -> idempotent intersectionSet (nub $ sort xs))
- quickCheck (\xs -> (idempotent differenceSet  (nub $ sort xs)) == False || xs == [])
-
- putStrLn "\n*** Associative laws: ***"
- quickCheck (\xs -> \ys -> \zs -> associative onionSet        (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
- quickCheck (\xs -> \ys -> \zs -> associative intersectionSet (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
-
- putStrLn "\n*** Distributive laws: ***"
- quickCheck (\xs -> \ys -> \zs -> distributive onionSet intersectionSet (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
- quickCheck (\xs -> \ys -> \zs -> distributive intersectionSet onionSet (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
-
-
 -- Automated tests
 testSet :: ([Int] -> [Int] -> Bool) -> IO ()
 testSet c = testS 1 100 c
@@ -142,3 +91,53 @@ difSet (Set (x:xs)) set2 = if (inSet x set2) then difSet (Set xs) set2
                                   {- otherwise keep x by appending it to recursive result -}
 
 
+-- Main
+main = do
+ automatedTests
+ putStrLn "\n"
+ quickChecks
+ putStrLn "\n"
+ propertyTests
+
+automatedTests = do
+ putStrLn "\n**** Automated tests for implementation ****"
+ putStrLn "\n*** Intersection: ***"
+ testSet testIntersection
+ putStrLn "\n*** Difference: ***"
+ testSet testDifference
+ putStrLn "\n*** Union: ***"
+ testSet testUnion
+
+quickChecks = do
+ putStrLn "\n**** QuickCheck tests for implementation ****"
+ putStrLn "\n*** Intersection: ***"
+ quickCheckSet testIntersection
+ putStrLn "\n*** Difference: ***"
+ quickCheckSet testDifference
+ putStrLn "\n*** Union: ***"
+ quickCheckSet testUnion
+
+propertyTests = do
+ putStrLn "\n**** Automated tests for relational properties ****"
+ putStrLn "\n*** Commutative laws: ***"
+ quickCheck (\xs -> \ys -> commutative onionSet        (nub $ sort xs) (nub $ sort ys))
+ quickCheck (\xs -> \ys -> commutative intersectionSet (nub $ sort xs) (nub $ sort ys))
+ quickCheck (\xs -> \ys -> (commutative differenceSet   (nub $ sort xs) (nub $ sort ys)) == False || xs == ys)
+
+ putStrLn "\n*** Identity laws: ***"
+ quickCheck (\xs -> identitySelf  onionSet        (nub $ sort xs))
+ quickCheck (\xs -> identitySelf  differenceSet   (nub $ sort xs))
+ quickCheck (\xs -> identityEmpty intersectionSet (nub $ sort xs))
+
+ putStrLn "\n*** Idempotent laws: ***"
+ quickCheck (\xs -> idempotent onionSet        (nub $ sort xs))
+ quickCheck (\xs -> idempotent intersectionSet (nub $ sort xs))
+ quickCheck (\xs -> (idempotent differenceSet  (nub $ sort xs)) == False || xs == [])
+
+ putStrLn "\n*** Associative laws: ***"
+ quickCheck (\xs -> \ys -> \zs -> associative onionSet        (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
+ quickCheck (\xs -> \ys -> \zs -> associative intersectionSet (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
+
+ putStrLn "\n*** Distributive laws: ***"
+ quickCheck (\xs -> \ys -> \zs -> distributive onionSet intersectionSet (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
+ quickCheck (\xs -> \ys -> \zs -> distributive intersectionSet onionSet (nub $ sort xs) (nub $ sort ys) (nub $ sort zs))
