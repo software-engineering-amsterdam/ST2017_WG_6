@@ -8,6 +8,8 @@ module Ex7 where
 import Data.List
 import Lecture4
 import Test.QuickCheck
+import Data.Tuple
+
 import Lab4
 import SetOrd
 import Ex5
@@ -16,18 +18,21 @@ import Ex2
 
 -- Properties Transitive Closure
 -- Relation R should be a subset of the transitive closure of R
-propSubset, propDecomp :: Rel Int -> Bool
-propSubset x = null ((nub x) \\ trClos(x))
+propSubset, propDecomp, propSymClosSubset, propInverseSubset :: Rel Int -> Bool
+propSubset x = null (nub x \\ trClos x)
 
 -- The trClo of R should be the same as the decomposition of R with its trClo
-propDecomp x = trClos x  == sortUniq (union x (x @@ (trClos x)))
+propDecomp x = trClos x  == sortUniq (union x (x @@ trClos x))
 
 -- Properties Symetric closure
--- Relation R should a subset of Symetric closure of R
+-- R should a subset of Symetric closure of R
+propSymClosSubset x = null (nub x \\ symClos x)
 
+-- Inverse R should also be a subset of Symetric closure r
+propInverseSubset x = null (map swap (nub x) \\ symClos x)
 
 test7 :: (Rel Int -> Bool) -> Int -> IO ()
-test7 f 0 = print ("++ All self-automated tests passed")
+test7 f 0 = print "++ All self-automated tests passed"
 test7 f n = do
     x <- genIntList
     y <- genIntList
@@ -38,6 +43,10 @@ test7 f n = do
 main = do
     test7 propSubset 100
     test7 propDecomp 100
+    test7 propSymClosSubset 100
+    test7 propInverseSubset 100
 
     quickCheck propDecomp
     quickCheck propSubset
+    quickCheck propSymClosSubset
+    quickCheck propInverseSubset
