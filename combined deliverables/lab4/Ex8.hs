@@ -6,10 +6,8 @@
 module Ex8 where
 
 import Data.List
-import Lecture4
 import Test.QuickCheck
 import Lab4
-import SetOrd
 import Ex5
 import Ex6
 
@@ -24,8 +22,9 @@ symClosTrClos x = symClos(trClos(x))
 -- Check if the trClosSymClos and symClosTrClos are commutative, this test
 -- can be executed with quickCheck, we see it fails: they are not commutative.
 -- Using verboseCheck gives us the imput on which it crashes.
-test8 :: Integral a => Rel a -> Bool
+test8 :: Integral a => Rel Int -> Bool
 test8 x = trClosSymClos x == symClosTrClos x
+
 
 {------------------------------------------------------------------------------
     
