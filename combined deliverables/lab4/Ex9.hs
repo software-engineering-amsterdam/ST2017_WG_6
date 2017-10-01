@@ -1,7 +1,7 @@
 {--
 Assignment:		Lab 4: Assignment 9
 Name:           Sangam Gupta
-Time spent:     
+Time spent:     2h 30m
 --}
 
 module Ex9 where
@@ -15,16 +15,15 @@ import Lecture4
     Next, write a read function, and use show and read to state some abstract test properties 
     for how these functions should behave. Next, use QuickCheck to test your implementations.
     Deliverable: implementation, QuickCheck properties, test report.
+
+
+    There is no read implemented yet, after some research it seems like a parser such as in
+    Lecture 3 is needed. The final test would at least test the property that showing then reading
+    a statement should result in exactly the same statement:
+
+    statement == read (show statement)
 --------------------------------------------------------------------------------------------------------------------------------------}
 
-
-{-
-data Statement = Ass Var Expr
-               | Cond Condition Statement Statement
-               | Seq [Statement]
-               | While Condition Statement
-               deriving (Eq)
--}
 
 showLst,showRest :: [Condition] -> String -> String
 showLst [] _ = ""
