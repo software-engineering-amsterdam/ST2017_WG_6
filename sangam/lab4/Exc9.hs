@@ -26,19 +26,6 @@ data Statement = Ass Var Expr
                deriving (Eq)
 -}
 
---Var is string
--- stat = Var ""
-
-tt :: String
-tt = "hoo"
-
-as = Ass "v" (V "v")
-co = Eq (I 1) (I 2)
-caa = Cj [Eq (I 1) (I 2), Eq (I 1) (I 2)]
-
-st = Cond co as as
-stt = Seq [Cond co as as, While co as]
-
 showLst,showRest :: [Condition] -> String -> String
 showLst [] _ = ""
 showLst (c:cs) s = show c ++ showRest cs s
