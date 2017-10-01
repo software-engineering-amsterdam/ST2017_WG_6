@@ -1,3 +1,8 @@
+-- ################################################
+-- # Mees Kalf
+-- # Excersize 7
+-- # 2 hour(s)
+-- ################################################
 module Ex7 where
 
 import Data.List
@@ -9,10 +14,27 @@ import Ex5
 import Ex6
 import Ex2
 
-
--- prop :: Ord a => Set (a, a) -> Bool
--- prop (Set x) = trClos(x) == trClos(trClos(x))
-
-
-propSubset :: (Integral a) => Rel a -> Bool
+-- Properties
+-- Relation R should be a subset of the transitive closure of R
+propSubset, propDecomp :: (Integral a) => Rel a -> Bool
 propSubset x = null ((nub x) \\ trClos(x))
+
+-- The trClo of R should be the same as the decomposition of R with its trClo
+propDecomp x = trClos x  == sortUniq (union x (x @@ (trClos x)))
+
+
+test7 :: (Rel Int -> Bool) -> Int -> IO ()
+test7 f 0 = print ("++ All self-automated tests passed")
+test7 f n = do
+    x <- genIntList
+    y <- genIntList
+    if f (zip x y)
+    then test7 f (n - 1)
+    else error ("failed test on: " ++ show x ++ " AND " ++ show y)
+
+main = do
+    test7 propSubset 100
+    test7 propDecomp 100
+    -- TODO GET THESE quickCheck working! they work in ghci...
+    -- quickCheck propDecomp
+    -- quickCheck propSubset
