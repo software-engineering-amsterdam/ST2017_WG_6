@@ -1,6 +1,6 @@
 Q1: What is the difference between antisymmetry and asymmetry?
 
-
+Q2: What is transitive closure on R?
 
 
 
@@ -9,3 +9,5 @@ Q1: What is the difference between antisymmetry and asymmetry?
 A1: Antisymmetry means R (A, B) & R (B, A) can only hold when A == B.
     Asymmetric is the same except for the property that the relation can not be reflexive.
     Simply put, a relation is asymmetric when it is both antisymmetric and irreflexive.
+
+A2: The smallest transitive relation that contains R.
