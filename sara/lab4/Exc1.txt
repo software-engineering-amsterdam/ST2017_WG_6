@@ -12,6 +12,9 @@ Q6: What is the closest Haskell equivalent of ∈?
 
 Q7: What is operator overloading?
 
+Q8: What is the Halting Problem?
+
+Q9: What is the symmetric difference between to sets A and B?
 
 
 
@@ -20,7 +23,8 @@ Q7: What is operator overloading?
 
 
 A1: A set is a collection of distinct objects, a list in Haskell can be used
-    to represent a set but does not necessarily follow the rules of a set
+    to represent a set but does not necessarily follow the rules of a set.
+    Sets are unordered, whereas for lists the order does matter.
 
 A2: An axiom is a truth given outright without proof
 
@@ -37,4 +41,15 @@ A5: The Russell Paradox: It is not true that to every property E
 
 A6: elem is the closest equivalent of ∈
 
-A7:
+A7: A common practise in programming (in general, not Haskell per se) where multiple
+    implementations are given based on different input types. This way you don't need
+    to distinguish functions by name when they share the same functionality but
+    work differently for different types.
+
+A8: The Halting Problem is the fact that there is no way to check whether a program
+    will terminate for a particular input. An algorithm for this, which always terminates,
+    would be a paradox.
+
+A9: The symmetric difference between two sets A and B is the set of elements that are
+    either in A or B but not in both.
+
