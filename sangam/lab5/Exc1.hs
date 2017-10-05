@@ -5,20 +5,6 @@ import System.Random
 import Lecture5
 
 -- Sudoku
-a :: (Row, Column) -> Value
-a (1,2) = 2
-p = initNode example6
-
-sudd = grid2sud example6 
-sudd1 = grid2sud example7 
-
-k1 = freeAtPos sudd (2,3)
-v = subGrid1 sudd (2,2)
-n = solveAndShow example6
-
-
-
-l (x:xs) = showNode x
 
 -- bl1 :: Int -> [Int]
 -- bl1 x = concat $ filter (elem x) blocks1
@@ -34,7 +20,7 @@ l (x:xs) = showNode x
 -- freeInSubgrid1 :: Sudoku -> (Row,Column) -> [Value]
 -- freeInSubgrid1 s (r,c) = freeInSeq (subGrid1 s (r,c))
 
-cc = constraints (grid2sud example6)
+-- 3 uur
 
 example6 :: Grid
 example6 = [[0,0,0,3,0,0,0,0,0],
