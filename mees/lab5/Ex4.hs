@@ -1,26 +1,36 @@
+-- ################################################
+-- # Mees Kalf
+-- # Excersize 4
+-- # 3 hour(s)
+-- ################################################
 module Ex4 where
 
 import Data.List
 import System.Random
 import Lecture5
 
+
+-- Generate a list of all blocks containing their positions
 blockPos :: [[(Row, Column)]]
 blockPos = concat $ map (\x -> map (\y -> [(i,j)|i <- y ,j <- x]) blocks) blocks
 
+-- Get al different sequences of blocks with a certain length
 diffSeq :: Int -> [[(Row, Column)]] -> [[[(Row, Column)]]]
 diffSeq n bp = filter ((== n).length) (subsequences bp)
 
-
---  TODO second let can be [] instead of [(sol, _)] that's why man4 crashes sometimes
-genSudEmpty n 
-        | n > 4 = print "More than 4 empty blocks is mathematically impossible"
-        | otherwise = do 
+-- Generate an mimimal sudoku with n empty blocks
+genSudEmpty :: Int -> IO ()
+genSudEmpty n = do 
         [r] <- rsolveNs [emptyN]
         bp <- randomize blockPos
         let tr = map ((foldl eraseN r).concat) (diffSeq n bp)
-        let [(sol, _)] = take 1 (filter (snd) (zip tr (map uniqueSol tr)))
-        showNode sol
+        let node = take 1 (filter (snd) (zip tr (map uniqueSol tr)))
+        if null node
+        then print "No minimal solution found"
+        else showNode (fst(head(node)))
 
+-- All sudokus atleast have the possibility to have 3 empty blocks, 4 is most times
+-- possible and 5 empty blocks are mathemathical impossible. 
 main = do
     genSudEmpty 1
     genSudEmpty 2
