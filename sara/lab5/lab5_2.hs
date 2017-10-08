@@ -8,26 +8,81 @@ import System.Random
 {-
     Assignment:		Lab 5: Exercise 2
     Name:           Sara Oonk
-    Time spent:
+    Time spent:     About 14h
     Sources:        Lecture 5
-    Comments:
+    Comments:       As far as I've seen and from what I've heard, nobody implemented the
+                    proposed definitions COMPLETELY, as in, they're all leaving the old
+                    Constraint type intact, and only add Constrnt on top of the existing code.
+                    Checking with Ana and Hugo confirmed that this isn't what's expected from
+                    the exercise, and that a full refactor, as in, fully replacing Constraint
+                    with the new Constrtnt type, would indeed provide a challenge.
+                    (Please note, this refactor has completely replaced the old type. Constrnt is
+                    called Constraint in below code.)
 
+                    What makes this challenging, is that the old Contraint type consists of
+                    (Row, Column, [Value]) whereas the new type Constrnt consists of [[Position]].
+                    This means that the old Constraint type actually resembles a Position type
+                    more closely than it represents a new Constrnt type. This results in having
+                    to replace most Constraint occurrences with Position occurrences, and everything
+                    breaking, so to speak, as the actual Values are now not stored with Constraints
+                    anymore.
+
+                    After giving it my try, and sitting with Hugo for a while at the end of the day,
+                    I managed to get it compiling and able to solve Sudokus. Generating on the other hand,
+                    didn't seem to work, it would just hang and not print anything. Solving Sudoku's worked
+                    in a reasonable amount of seconds, though noticeably slower than the original code.
+
+                    After working on it some more, I came to a point where I made an adjustment (a leftover
+                    pattern from the old Constraint type, a fault) and it suddenly printed a generated Sudoku
+                    by running main, within a few seconds!
+
+                    The problem didn't follow after as would be expected, so I interrupted it and reran.
+                    Oddly, I was unable to replicate it... But then a moment later I suddenly noticed
+                    output appearing yet again in a terminal that I had left running while going back to work.
+                    The thing is, I could never replicate the result I had before, of it suddenly printing
+                    in a rather short time. This made wonder, what if it does work but it is just extremely slow?
+
+                    And so I opened a couple of terminals and let them go at it, hoping to find confirmation.
+                    After an hour, a Sudoku miraculously appeared. It took AN ADDITIONAL TWO HOURS for it to print the
+                    problem. So it does work...
+
+                    Conclusion: Yes, it's easier to define constraints such as NRC like this, you'd
+                    just add some lines similar to subgrid blocks. But efficient? No, not even a realistic alternative,
+                    not like this!
+                    But why is this happening? It seems it's explosively exponentially checking all possible positions
+                    and values, possibly because the lack of the prune function. The prune function was removed
+                    whilst consulting Hugo, we concluded that it was not needed anymore.
+
+                    Perhaps this could be improved, but for now the time and effort limit has been reached,
+                    if not crossed, for this exercise. The 'easy way' that I've seen people take this exercise,
+                    might actually be a more realistic approach; at least it allows for easy definition of new
+                    constraints using the new type, and still uses the reliable old type to do its work in a very
+                    acceptable time.
+
+
+                    I debugged by extracting bits and pieces and testing them separately in quick drafty do-blocks, or
+                    returning some predefined debug data instead of [], to see where it'd break. This debug data
+                    has been left below to illustrate this. I also left in comments with my findings and confirmation
+                    to illustrate the process of trying to grasp everything and ruling out errors.
+
+---------------------
+Description:
 Exercise 2
 
 When the Sudoku code was presented to an audience of Master of Logic students, a proposal emerged to refactor the code
 to make the formulation of constraints more uniform. The following definitions were proposed:
 
 > type Position = (Row,Column)
-> type Constraint = [[Position]]
+> type Constrnt = [[Position]]
 The regular constraints for Sudoku can now be stated as:
 
-> rowConstraint = [[(r,c)| c <- values ] | r <- values ]
-> columnConstraint = [[(r,c)| r <- values ] | c <- values ]
-> blockConstraint = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
+> rowConstrnt = [[(r,c)| c <- values ] | r <- values ]
+> columnConstrnt = [[(r,c)| r <- values ] | c <- values ]
+> blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
 
 The generation of the values that are still possible at a given position now takes the following shape:
 
-> freeAtPos' :: Sudoku -> Position -> Constraint -> [Value]
+> freeAtPos' :: Sudoku -> Position -> Constrnt -> [Value]
 > freeAtPos' s (r,c) xs = let
 >    ys = filter (elem (r,c)) xs
 >  in
@@ -182,7 +237,6 @@ showNode = showSudoku . fst
 
 solved  :: Node -> Bool
 solved = slvd
---null . snd
 
 slvd :: Node -> Bool
 slvd (s,ps) = length(filledPositions s) == 81 && consistent s
@@ -203,13 +257,8 @@ openPositions s = [ (r,c) | r <- coordinates,
                             c <- coordinates,
                             s (r,c) == 0 ]
 
---length3rd :: (a,b,[c]) -> (a,b,[c]) -> Ordering
---length3rd (_,_,zs) (_,_,zs') = compare (length zs) (length zs')
-
---TODO not sure about this one
 positions :: Sudoku -> [(Position, [Value])]
-positions s = --sortBy length3rd
-    [(pos, freeAtPos s pos allConstraints) |
+positions s = [(pos, freeAtPos s pos allConstraints) |
                         pos <- openPositions s ]
 
 data Tree a = T a [Tree a] deriving (Eq,Ord,Show)
@@ -404,9 +453,10 @@ main = do [r] <- rsolveNs [emptyN]
           showNode r
           s  <- genProblem r
           showNode s
---
---mainpls = do s <- genProblem debugNode
---             showNode s
+
+
+
+
 
 -- DEBUG DATA ----------------------------------------------------------------------------------------------------------
 debug :: Grid
