@@ -1,7 +1,4 @@
-
-module Lecture5
-
-where 
+module Lecture5 where 
 
 import Data.List
 import System.Random
@@ -173,6 +170,7 @@ exmple1 = T 1 [T 2 [], T 3 []]
 exmple2 = T 0 [exmple1,exmple1,exmple1]
 
 grow :: (node -> [node]) -> node -> Tree node 
+
 grow step seed = T seed (map (grow step) (step seed))
 
 count :: Tree a -> Int 
@@ -182,7 +180,8 @@ takeT :: Int -> Tree a -> Tree a
 takeT 0 (T x _) = T x []
 takeT n (T x ts) = T x $ map (takeT (n-1)) ts
 
-search :: (node -> [node]) -> (node -> Bool) -> [node] -> [node]
+search :: (node -> [node]) 
+       -> (node -> Bool) -> [node] -> [node]
 search children goal [] = []
 search children goal (x:xs) 
   | goal x    = x : search children goal xs
@@ -287,12 +286,14 @@ rsuccNode :: Node -> IO [Node]
 rsuccNode (s,cs) = do xs <- getRandomCnstr cs
                       if null xs 
                         then return []
-                        else return (extendNode (s,cs\\xs) (head xs))
+                        else return 
+                          (extendNode (s,cs\\xs) (head xs))
 
 rsolveNs :: [Node] -> IO [Node]
 rsolveNs ns = rsearch rsuccNode solved (return ns)
 
-rsearch :: (node -> IO [node]) -> (node -> Bool) -> IO [node] -> IO [node]
+rsearch :: (node -> IO [node]) 
+            -> (node -> Bool) -> IO [node] -> IO [node]
 rsearch succ goal ionodes = 
   do xs <- ionodes 
      if null xs 
@@ -326,7 +327,7 @@ eraseS s (r,c) (x,y) | (r,c) == (x,y) = 0
 
 eraseN :: Node -> (Row,Column) -> Node
 eraseN n (r,c) = (s, constraints s) 
-  where s = eraseS (fst n) (r,c)
+  where s = eraseS (fst n) (r,c) 
 
 minimalize :: Node -> [(Row,Column)] -> Node
 minimalize n [] = n

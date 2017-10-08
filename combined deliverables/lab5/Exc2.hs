@@ -48,7 +48,8 @@ import System.Random
 
                     Conclusion: Yes, it's easier to define constraints such as NRC like this, you'd
                     just add some lines similar to subgrid blocks. But efficient? No, not even a realistic alternative,
-                    not like this!
+                    not like this! Perhaps this code contains flaws, and the correct implementation would do better.
+
                     But why is this happening? It seems it's explosively exponentially checking all possible positions
                     and values, possibly because the lack of the prune function. The prune function was removed
                     whilst consulting Hugo, we concluded that it was not needed anymore.
