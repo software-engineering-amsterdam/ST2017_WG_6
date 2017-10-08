@@ -21,7 +21,4 @@ test = do   [r] <- rsolveNs [emptyN]
             print "Original has a unique solution?"
             print (uniqueSol s)
             print "Is the solution trully unique?"
-            print (all (checkUniqueSolution s) (filledPositions (fst s)))
-
-checkUniqueSolution :: Node -> (Row,Column) -> Bool
-checkUniqueSolution n (r,c)= not (uniqueSol (eraseN n (r,c)))
+            print (all (not . uniqueSol . eraseN s) (filledPositions (fst s)))
