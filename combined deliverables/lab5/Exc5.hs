@@ -1,5 +1,5 @@
 {--
-Assignment:		Lab 5: Assignment 5
+Assignment:   Lab 5: Assignment 5
 Name:           Sangam Gupta
 Time spent:     1 hour
 --}
@@ -30,12 +30,12 @@ type Grid   = [[Value]]
     one new line of code for a new constraint which is less then the old sudoku solver.
 -}
 
-main :: IO ()
+main :: IO [()]
 main = do [r] <- rsolveNs [emptyN]
           showNode r
           s <- genProblem r
           showNode s
-          showNode (head . solveNs $ [s])
+          solveShowNs [s]
 
 -- ************** New piece of code **************
 
