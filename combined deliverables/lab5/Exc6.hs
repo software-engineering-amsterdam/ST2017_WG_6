@@ -1,5 +1,5 @@
 {-
-Assignment:   Lab 5: Exercise 6
+Assignment:   	Lab 5: Exercise 6
 Name:           Tim Nederveen
 Time spent:     6.5h
 
@@ -12,7 +12,6 @@ module Exc6 where
 
 import Data.List
 import Lecture5
--- import lab5_3
 
 {-
 Exercise 6 (Bonus)
