@@ -1,26 +1,38 @@
+{--
+Assignment:     Lab 5: Assignment 1
+Name:           Sangam Gupta
+Time spent:     3 hours
+--}
+
 module Lab5 where
 
 import Data.List
 import System.Random
 import Lecture5
 
--- Sudoku
+{- 
+Below the modified code in lecture5.hs
 
--- bl1 :: Int -> [Int]
--- bl1 x = concat $ filter (elem x) blocks1
+bl1 :: Int -> [Int]
+bl1 x = concat $ filter (elem x) blocks1
 
--- blocks1 :: [[Int]]
--- blocks1 = [[2..4],[6..8]]
+blocks1 :: [[Int]]
+blocks1 = [[2..4],[6..8]]
 
--- subGrid1:: Sudoku -> (Row, Column) -> [Value]
--- subGrid1 s (r,c) = [ s (r',c') | r' <- bl1 r, c' <- bl1 c ]
--- -- printAllNodes [] = show ""
--- printAllNodes = showNode (head (initNode example1))
+subGrid1:: Sudoku -> (Row, Column) -> [Value]
+subGrid1 s (r,c) = [ s (r',c') | r' <- bl1 r, c' <- bl1 c ]
 
--- freeInSubgrid1 :: Sudoku -> (Row,Column) -> [Value]
--- freeInSubgrid1 s (r,c) = freeInSeq (subGrid1 s (r,c))
+freeInSubgrid1 :: Sudoku -> (Row,Column) -> [Value]
+freeInSubgrid1 s (r,c) = freeInSeq (subGrid1 s (solveAr,c))
 
--- 3 uur
+sameblock1 :: (Row,Column) -> (Row,Column) -> Bool
+sameblock1 (r,c) (x,y) = bl1 r == bl1 x && bl1 c == bl1 y 
+-}
+
+test = do n <- return (initNode example6)
+          solveShowNs n
+
+
 
 example6 :: Grid
 example6 = [[0,0,0,3,0,0,0,0,0],

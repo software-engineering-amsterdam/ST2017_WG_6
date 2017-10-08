@@ -137,7 +137,7 @@ update f (y,z) x = if x == y then z else f x
 
 type Constraint = (Row,Column,[Value])
 
-type Node = (Sudoku,[Constraint])
+type Node = (Sudoku,Constrnt)
 
 showNode :: Node -> IO()
 showNode = showSudoku . fst

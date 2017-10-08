@@ -1,27 +1,27 @@
+{--
+Assignment:     Lab 5: Assignment 3
+Name:           Sangam Gupta
+Time spent:     1 hour
+--}
 module Lab5 where
     
 import Data.List
 import System.Random
 import Lecture5
 
--- 1 uur
-
+{-
+    We check whether the generated problem is unique by removing an element (r,c) from the node. 
+    After removing we check if the solution is still unique. We do this for all elements.
+    If we can find no element for which after removing it the solution is still unique then 
+    we can conlude that the current generated problem is indeed minimal.
+-}
 test = do   [r] <- rsolveNs [emptyN]
             s <- genProblem r
             showNode s
-            print "Is original an uniq"
+            print "Original has a unique solution?"
             print (uniqueSol s)
-            print "Is one removed an uniq"
-            print (uniqueSol ( all eraseN s (head (filledPositions (fst s)))))
-        
+            print "Is the solution trully unique?"
+            print (all (checkUniqueSolution s) (filledPositions (fst s)))
 
-example6 :: Grid
-example6 = [[0,0,0,3,0,0,0,0,0],
-            [0,0,0,7,0,0,3,0,0],
-            [2,0,0,0,0,0,0,0,8],
-            [0,0,6,0,0,5,0,0,0],
-            [0,9,1,6,0,0,0,0,0],
-            [3,0,0,0,7,1,2,0,0],
-            [0,0,0,0,0,0,0,3,1],
-            [0,8,0,0,4,0,0,0,0],
-            [0,0,2,0,0,0,0,0,0]]
+checkUniqueSolution :: Node -> (Row,Column) -> Bool
+checkUniqueSolution n (r,c)= not (uniqueSol (eraseN n (r,c)))

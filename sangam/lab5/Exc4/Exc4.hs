@@ -52,8 +52,21 @@ childeren (x:xs) l n | length p == 1 = p -- 1 is the number of problems you want
 
 
 findSudoku n = do [r] <- rsolveNs [emptyN]
-                  showNode r
+                --   showNode r
                   tree <- return (take n (createTree coordinates n))
                   s <- return (childeren tree n r)
                   if length s > 0 then showNode (head s) else print "No problem found"      
                 --   solveShowNs s
+
+{-after running findsudoku a few times we found that a Sudoku with three will always be found. 
+  One with four will sometimes be found and a sudoku with five will never be found. 
+  
+  You can test each sudoku for uniqueness by removing all other remaining subgrids one by ones and 
+  checking whether it is still unique.-}
+
+test = do print "3 blanks"
+          findSudoku 3
+          print "4 blanks"
+          findSudoku 4
+          print "5 blanks"
+          findSudoku 5
