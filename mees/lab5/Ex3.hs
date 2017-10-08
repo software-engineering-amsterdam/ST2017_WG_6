@@ -8,8 +8,5 @@ minSudGen :: IO Bool
 minSudGen = do 
     [r] <- rsolveNs [emptyN]
     node@(sud, _) <- genProblem r
-    let allNotUnique = all (not.uniqueSol.(eraseN node)) (filledPositions sud)
-    if uniqueSol node && allNotUnique
-    then return True
-    else return False
+    return (uniqueSol node && all (not.uniqueSol.(eraseN node)) (filledPositions sud))
 
