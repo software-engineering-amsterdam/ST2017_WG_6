@@ -30,7 +30,8 @@ genSudEmpty n = do
         else showNode (fst(head(node)))
 
 -- All sudokus atleast have the possibility to have 3 empty blocks, 4 is most times
--- possible and 5 empty blocks are mathemathical impossible. 
+-- possible and 5 empty blocks are mathemathical impossible. As is explained at:
+-- https://puzzling.stackexchange.com/questions/309/what-is-the-maximum-number-of-empty-3x3-blocks-a-proper-sudoku-can-have
 main = do
     genSudEmpty 1
     genSudEmpty 2
