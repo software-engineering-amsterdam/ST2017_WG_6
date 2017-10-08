@@ -1,5 +1,5 @@
 {--
-Assignment:		Lab 5: Assignment 5
+Assignment:   Lab 5: Assignment 5
 Name:           Sangam Gupta
 Time spent:     1 hour
 --}
