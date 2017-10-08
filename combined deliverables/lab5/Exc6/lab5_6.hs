@@ -1,5 +1,5 @@
 {-
-Assignment:		Lab 5: Exercise 6
+Assignment:   Lab 5: Exercise 6
 Name:           Tim Nederveen
 Time spent:     6.5h
 
@@ -12,7 +12,6 @@ module Exc6 where
 
 import Data.List
 import Lecture5
--- import Data.List.Split
 -- import lab5_3
 
 {-
@@ -56,25 +55,25 @@ Due to time constraints, it was chosen to only define the global approach and fu
 -- We need the following functions for this exercise:
 
 
--- calcPossibilities :: [Constraint] -> Int
--- -- When passed an list of constraints, outputs a summation of the next-step possibilities
+calcPossibilities :: [Constraint] -> Int
+-- When passed an list of constraints, outputs a summation of the next-step possibilities
 
--- generatePossibilities :: Int -> [Int]
--- -- When passed an int n, generates n problems using the problem generator, and appends the result of running calcPossibilities on each of those to a list
+generatePossibilities :: Int -> [Int]
+-- When passed an int n, generates n problems using the problem generator, and appends the result of running calcPossibilities on each of those to a list
 
--- defineCategoryBoundaries :: [Int] -> Int -> [(Int,Int)]
--- -- When passed a list of next-step possibility summations from generatePossibilities 
--- -- and an int n, returns an array of n upper and lower-bound tuples, representing the boundaries of n categories. N will be 3 for this solution
+defineCategoryBoundaries :: [Int] -> Int -> [(Int,Int)]
+-- When passed a list of next-step possibility summations from generatePossibilities 
+-- and an int n, returns an array of n upper and lower-bound tuples, representing the boundaries of n categories. N will be 3 for this solution
 
--- getDifficultyRating :: [Constraint] -> String
--- -- When passed a list of constraints, generates whether it is "easy", "medium", or "hard" by running calcPossibilities on it and checking in which boundary it falls
+getDifficultyRating :: [Constraint] -> String
+-- When passed a list of constraints, generates whether it is "easy", "medium", or "hard" by running calcPossibilities on it and checking in which boundary it falls
 
--- checkUniqueSolution :: Node -> (Row,Column) -> Bool
--- -- The function defined in exercise3 to check whether a solution is minimal.
+checkUniqueSolution :: Node -> (Row,Column) -> Bool
+-- The function defined in exercise3 to check whether a solution is minimal.
 
--- main = do
-	-- genproblem for which it should hold that
-	-- checkUniqueSolution == true && getDifficultyRating == "hard"
+main = do
+  -- genproblem for which it should hold that
+  -- checkUniqueSolution == true && getDifficultyRating == "hard"
 
 
 
