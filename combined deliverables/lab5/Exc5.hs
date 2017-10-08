@@ -1,5 +1,10 @@
+{--
+Assignment:		Lab 5: Assignment 5
+Name:           Sangam Gupta
+Time spent:     1 hour
+--}
 
-module Lecture5
+module Exc5
 
 where 
 
@@ -10,6 +15,64 @@ type Row    = Int
 type Column = Int 
 type Value  = Int
 type Grid   = [[Value]]
+
+{-
+    By adding the constraint:
+    
+    nrcConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocksNrc, b2 <- blocksNrc ]
+    allConstraints = blockConstrnt ++ rowConstrnt ++ columnConstrnt ++ nrcConstrnt
+
+    We limited the program to generate only NRC problems. 
+    
+    Although we haven't completly managed to build a fast version of sudoku solver
+    that only uses the datatype constrnt (exc2). We did get a general idea about pros of 
+    the refactoring in Exercise2. After the refactoring of exc2 we only need to add 
+    one new line of code for a new constraint which is less then the old sudoku solver.
+-}
+
+main :: IO ()
+main = do [r] <- rsolveNs [emptyN]
+          showNode r
+          s <- genProblem r
+          showNode s
+          showNode (head . solveNs $ [s])
+
+-- ************** New piece of code **************
+
+blNrc :: Int -> [Int]
+blNrc x = concat $ filter (elem x) blocksNrc
+
+blocksNrc :: [[Int]]
+blocksNrc = [[2..4],[6..8]]
+
+subGridNrc:: Sudoku -> (Row, Column) -> [Value]
+subGridNrc s (r,c) = [ s (r',c') | r' <- blNrc r, c' <- blNrc c ]
+
+freeInSubgridNrc :: Sudoku -> (Row,Column) -> [Value]
+freeInSubgridNrc s (r,c) = freeInSeq (subGridNrc s (r,c))
+
+type Position = (Row,Column)
+type Constrnt = [[Position]]
+
+rowConstrnt, columnConstrnt, blockConstrnt, nrcConstrnt, allConstraints :: Constrnt
+rowConstrnt = [[(r,c)| c <- values ] | r <- values ]
+columnConstrnt = [[(r,c)| r <- values ] | c <- values ]
+blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
+nrcConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocksNrc, b2 <- blocksNrc ]
+allConstraints = blockConstrnt ++ rowConstrnt ++ columnConstrnt ++ nrcConstrnt
+
+freeAtPos' :: Sudoku -> Position -> Constrnt -> [Value]
+freeAtPos' s (r,c) xs = let 
+    ys = filter (elem (r,c)) xs 
+    in 
+    foldl1 intersect (map ((values \\) . map s) ys)
+
+constraints :: Sudoku -> [Constraint] 
+constraints s = sortBy length3rd 
+    [(r,c, freeAtPos' s (r,c) allConstraints) | (r,c) <- openPositions s ]
+
+    
+-- **************************************************************
 
 positions, values :: [Int]
 positions = [1..9]
@@ -88,7 +151,8 @@ freeAtPos :: Sudoku -> (Row,Column) -> [Value]
 freeAtPos s (r,c) = 
   (freeInRow s r) 
    `intersect` (freeInColumn s c) 
-   `intersect` (freeInSubgrid s (r,c)) 
+   `intersect` (freeInSubgrid s (r,c))
+   `intersect` (freeInSubgridNrc s (r,c))
 
 injective :: Eq a => [a] -> Bool
 injective xs = nub xs == xs
@@ -144,10 +208,14 @@ prune (r,c,v) ((x,y,zs):rest)
   | c == y = (x,y,zs\\[v]) : prune (r,c,v) rest
   | sameblock (r,c) (x,y) = 
         (x,y,zs\\[v]) : prune (r,c,v) rest
+  | sameblockNrc (r,c) (x,y) = (x,y,zs\\[v]) : prune (r,c,v) rest 
   | otherwise = (x,y,zs) : prune (r,c,v) rest
 
 sameblock :: (Row,Column) -> (Row,Column) -> Bool
 sameblock (r,c) (x,y) = bl r == bl x && bl c == bl y 
+
+sameblockNrc :: (Row,Column) -> (Row,Column) -> Bool
+sameblockNrc (r,c) (x,y) = blNrc r == blNrc x && blNrc c == blNrc y 
 
 initNode :: Grid -> [Node]
 initNode gr = let s = grid2sud gr in 
@@ -161,11 +229,6 @@ openPositions s = [ (r,c) | r <- positions,
 
 length3rd :: (a,b,[c]) -> (a,b,[c]) -> Ordering
 length3rd (_,_,zs) (_,_,zs') = compare (length zs) (length zs')
-
-constraints :: Sudoku -> [Constraint] 
-constraints s = sortBy length3rd 
-    [(r,c, freeAtPos s (r,c)) | 
-                       (r,c) <- openPositions s ]
 
 data Tree a = T a [Tree a] deriving (Eq,Ord,Show)
 
@@ -202,61 +265,6 @@ solveAndShow gr = solveShowNs (initNode gr)
 
 solveShowNs :: [Node] -> IO[()]
 solveShowNs = sequence . fmap showNode . solveNs
-
-example1 :: Grid
-example1 = [[5,3,0,0,7,0,0,0,0],
-            [6,0,0,1,9,5,0,0,0],
-            [0,9,8,0,0,0,0,6,0],
-            [8,0,0,0,6,0,0,0,3],
-            [4,0,0,8,0,3,0,0,1],
-            [7,0,0,0,2,0,0,0,6],
-            [0,6,0,0,0,0,2,8,0],
-            [0,0,0,4,1,9,0,0,5],
-            [0,0,0,0,8,0,0,7,9]]
-
-example2 :: Grid
-example2 = [[0,3,0,0,7,0,0,0,0],
-            [6,0,0,1,9,5,0,0,0],
-            [0,9,8,0,0,0,0,6,0],
-            [8,0,0,0,6,0,0,0,3],
-            [4,0,0,8,0,3,0,0,1],
-            [7,0,0,0,2,0,0,0,6],
-            [0,6,0,0,0,0,2,8,0],
-            [0,0,0,4,1,9,0,0,5],
-            [0,0,0,0,8,0,0,7,9]]
-
-example3 :: Grid
-example3 = [[1,0,0,0,3,0,5,0,4],
-            [0,0,0,0,0,0,0,0,3],
-            [0,0,2,0,0,5,0,9,8], 
-            [0,0,9,0,0,0,0,3,0],
-            [2,0,0,0,0,0,0,0,7],
-            [8,0,3,0,9,1,0,6,0],
-            [0,5,1,4,7,0,0,0,0],
-            [0,0,0,3,0,0,0,0,0],
-            [0,4,0,0,0,9,7,0,0]]
-
-example4 :: Grid
-example4 = [[1,2,3,4,5,6,7,8,9],
-            [2,0,0,0,0,0,0,0,0],
-            [3,0,0,0,0,0,0,0,0],
-            [4,0,0,0,0,0,0,0,0],
-            [5,0,0,0,0,0,0,0,0],
-            [6,0,0,0,0,0,0,0,0],
-            [7,0,0,0,0,0,0,0,0],
-            [8,0,0,0,0,0,0,0,0],
-            [9,0,0,0,0,0,0,0,0]]
-
-example5 :: Grid
-example5 = [[1,0,0,0,0,0,0,0,0],
-            [0,2,0,0,0,0,0,0,0],
-            [0,0,3,0,0,0,0,0,0],
-            [0,0,0,4,0,0,0,0,0],
-            [0,0,0,0,5,0,0,0,0],
-            [0,0,0,0,0,6,0,0,0],
-            [0,0,0,0,0,0,7,0,0],
-            [0,0,0,0,0,0,0,8,0],
-            [0,0,0,0,0,0,0,0,9]]
 
 emptyN :: Node
 emptyN = (\ _ -> 0,constraints (\ _ -> 0))
@@ -346,10 +354,4 @@ genProblem :: Node -> IO Node
 genProblem n = do ys <- randomize xs
                   return (minimalize n ys)
    where xs = filledPositions (fst n)
-
-main :: IO ()
-main = do [r] <- rsolveNs [emptyN]
-          showNode r
-          s  <- genProblem r
-          showNode s
 
