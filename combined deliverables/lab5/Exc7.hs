@@ -3,26 +3,26 @@
 -- # Excersize 2
 -- # 2 hour(s)
 -- ################################################
-module Ex7 where
+module Exc7 where
 
 import Data.List
 import System.Random
 import Lecture5
-import Ex1
+import Exc1
 
 -- Get all values of the sudoku which are not 0
 sudValues :: Lecture5.Sudoku -> [Lecture5.Value]
-sudValues s = filter (/=0) [ s (r',c') | r' <- Ex1.positions , c' <- Ex1.positions ]
+sudValues s = filter (/=0) [ s (r',c') | r' <- Exc1.positions , c' <- Exc1.positions ]
 
 
 -- Return the amount of filled values in the sudoku
-lenFilled fSolve fGen = do [r] <- fSolve [Ex1.emptyN]
+lenFilled fSolve fGen = do [r] <- fSolve [Exc1.emptyN]
                            s <- fGen r
                            return (length (sudValues (fst s)))
 
 
 -- Calculate the average length of n generated minimal sudokus
-avrLen :: (Fractional b, Monad m) => ([Ex1.Node] -> m [t])-> (t -> m (Ex1.Sudoku, b1)) -> Int -> m Double
+avrLen :: (Fractional b, Monad m) => ([Exc1.Node] -> m [t])-> (t -> m (Exc1.Sudoku, b1)) -> Int -> m Double
 avrLen fs fg n = do
         te <- sequence (replicate n (lenFilled fs fg))
         let m = (fromIntegral (sum te)) / (fromIntegral n)
@@ -32,7 +32,7 @@ avrLen fs fg n = do
 avrFilledSud n = avrLen Lecture5.rsolveNs Lecture5.genProblem n
 
 -- Calculate the average length for NRC minimal generated sudokus
-avrFilledNrc n = avrLen Ex1.rsolveNs Ex1.genProblem n
+avrFilledNrc n = avrLen Exc1.rsolveNs Exc1.genProblem n
 
 {-----------------------------------------------------------------------------
 
