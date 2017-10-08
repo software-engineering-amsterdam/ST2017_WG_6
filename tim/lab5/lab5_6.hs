@@ -12,7 +12,6 @@ module Exc6 where
 
 import Data.List
 import Lecture5
--- import Data.List.Split
 -- import lab5_3
 
 {-
