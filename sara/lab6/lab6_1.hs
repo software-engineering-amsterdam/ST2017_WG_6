@@ -8,74 +8,56 @@ import System.Random
 {-
     Assignment:		Lab 6: Exercise 1
     Name:           Sara Oonk
-    Time spent:
-    Sources:        Modular exponentiation:             https://en.wikipedia.org/wiki/Modular_exponentiation
+    Time spent:     5h
+    Sources:        Integrated into Lecture6.hs
+                    Modular exponentiation:             https://en.wikipedia.org/wiki/Modular_exponentiation
                     Power of two:                       https://en.wikipedia.org/wiki/Power_of_two
                     How to check if power of two:       http://www.exploringbinary.com/ten-ways-to-check-if-an-integer-is-a-power-of-two-in-c/
                     Modular Exponentiation Calculator:  http://comnuan.com/cmnn02/cmnn02008/
-    Comments:
 
+    Comments:       This approach is an attempt at a literal translation of the method given in the example.
 
+DESCRIPTION:
 Exercise 1
 
 Implement a function
 
- exM :: Integer -> Integer -> Integer -> Integer
+exM :: Integer -> Integer -> Integer -> Integer
+
 that does modular exponentiation of xy in polynomial time, by repeatedly squaring modulo N.
 
 E.g., x33 mod5 can be computed by means of
 
-x33(mod5)=x32(mod5)×x(mod5).
+x^33(mod5)=x^32(mod5) * x(mod5).
 
-x32(modN) is computed in five steps by means of repeatedly squaring modulo N:
+x^32(modN) is computed in five steps by means of repeatedly squaring modulo N:
 
-x(modN)→x2(modN)→x4(modN)→…→x32(modN).
+x(modN)→x^2(modN)→x^4(modN)→…→x^32(modN).
 
 If this explanation is too concise, look up relevant literature
-
 
 -}
 
 
-{- exM: Modular exponentiation of b to the power of e by repeatedly squaring modulo m.
- - Integer b: base
- - Integer e: exponent
- - Integer m: modulus
- -}
+-- Modular exponentiation of b to the power of e by repeatedly squaring modulo m.
 exM :: Integer -> Integer -> Integer -> Integer
 exM b e m | isPowerOfTwo(e) = exMr b e m
           | otherwise = exMl intermediate b m (e-npt)
                              where npt          = (findNearestPowerOfTwo e)
                                    intermediate = (exMr b npt m)
-
 -- (e-npt) is the difference between the actual goal exponent and the nearest power-of-two exponent,
 -- in other words the number of multiplications that remain to be done.
 
--- (b^2): we're starting off at the first squaring so that we can pass 2 as next exponent,
--- this way recursion can take over by squaring 2.
 
-
-
-{- exMr: Recursively square values until exponent e has been reached by goal g.
- - Integer b: base
- - Integer g: goal exponent
- - Integer m: modulo
- - Integer e: next exponent
- -}
+-- Recursively square modulos until exponent e == 1
 exMr :: Integer -> Integer -> Integer -> Integer
 exMr b e m | (e == 1) = b
            | (e > 1)  = exMr (multM (b `mod` m) (b `mod` m) m) (e `div` 2) m
            | (e < 1)  = undefined
 
-{- exmL: Multiply for the leftover amount of exponents
- - v: final value
- - b: base
- - m: modulus
- - l: leftover
- -}
+-- exmL: Multiply value v by base b modulo m, for n times. Apply final modulo on v for answer.
 exMl :: Integer -> Integer -> Integer -> Integer -> Integer
-exMl v b m l = if l == 0 then v `mod` m else exMl (v * (b `mod` m)) b m (l-1)
-
+exMl v b m n = if n == 0 then v `mod` m else exMl (v * (b `mod` m)) b m (n-1)
 
 isPowerOfTwo :: Integer -> Bool
 isPowerOfTwo n = if (odd n) then (n == 1) else isPowerOfTwo (n `div` 2)
@@ -100,7 +82,7 @@ findNearestPowerOfTwo n = if (isPowerOfTwo n) then n else findNearestPowerOfTwo 
 
 
 
----
+---LECTURE 6---------------------------------
 
 factorsNaive :: Integer -> [Integer]
 factorsNaive n0 = factors' n0 2 where
