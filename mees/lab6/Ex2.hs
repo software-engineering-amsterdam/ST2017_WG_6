@@ -1,0 +1,8 @@
+-- Go into ghci
+-- load Ex1.hs
+-- type :set +s
+-- execute multiple functions to see difference
+-- The algorithm LOTTTSSSS faster
+-- for instance
+-- (takes 1.00 second): exMass 444 22222222 312
+-- (takes 0.00 second)exMstraight 444 22222222 312
