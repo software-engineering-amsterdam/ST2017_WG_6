@@ -4,6 +4,7 @@ module Lecture6
 where 
 
 import System.Random
+import Data.Bits
 
 factorsNaive :: Integer -> [Integer]
 factorsNaive n0 = factors' n0 2 where 
@@ -111,7 +112,10 @@ expM ::  Integer -> Integer -> Integer -> Integer
 expM x y = rem (x^y)
 
 exM :: Integer -> Integer -> Integer -> Integer
-exM = expM -- to be replaced by a fast version
+exM _ 0 _ = 1
+exM x y n = let z | testBit y 0 = mod x n 
+                   | otherwise = 1 
+             in mod (z * (exM (mod (x^2) n) (shiftR y 1) n)) n
 
 primeTestF :: Integer -> IO Bool
 primeTestF n = do 
@@ -142,9 +146,6 @@ primeMR k n = do
     a <- randomRIO (2, n-1) :: IO Integer
     if exM a (n-1) n /= 1 || mrComposite a n
     then return False else primeMR (k-1) n
-
--- composites :: [Integer]
--- composites = error "not yet implemented"
 
 composites :: [Integer]
 composites = filter (not.prime) [2..]
@@ -209,11 +210,11 @@ rsaEncode :: (Integer,Integer) -> Integer -> Integer
 rsaEncode (e,n) m =  exM m e n
 
 rsaDecode :: (Integer,Integer) -> Integer -> Integer 
-rsaDecode = rsaEncode                              
+rsaDecode = rsaEncode
 
 trapdoor :: (Integer,Integer) -> Integer -> Integer
-trapdoor = rsaEncode 
+trapdoor = rsaEncode
 
-secret, bound :: Integer                
+secret, bound :: Integer
 secret = mers 18
 bound  = 131
