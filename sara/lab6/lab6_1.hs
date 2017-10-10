@@ -1,5 +1,5 @@
 
-module Lecture6
+module Lab6_1
 
 where
 
@@ -44,9 +44,9 @@ If this explanation is too concise, look up relevant literature
  -}
 exM :: Integer -> Integer -> Integer -> Integer
 exM b e m | isPowerOfTwo(e) = exMr b e m
-          | otherwise = exMl intermediate m (e-npt)
+          | otherwise = exMl intermediate b m (e-npt)
                              where npt          = (findNearestPowerOfTwo e)
-                                   intermediate = (exMr b npt m 2)
+                                   intermediate = (exMr b npt m)
 
 -- (e-npt) is the difference between the actual goal exponent and the nearest power-of-two exponent,
 -- in other words the number of multiplications that remain to be done.
@@ -62,19 +62,19 @@ exM b e m | isPowerOfTwo(e) = exMr b e m
  - Integer m: modulo
  - Integer e: next exponent
  -}
-exMr :: Integer -> Integer -> Integer -> Integer -> Integer
-exMr b e m | (g == 1) = (b `mod` m)
-             | (g == e) = b
-             | (e < g)  = exMr (multM (b `mod` m) (b `mod` m) m) g m (e^2)
-             | (e > g)  = undefined
+exMr :: Integer -> Integer -> Integer -> Integer
+exMr b e m | (e == 1) = b
+           | (e > 1)  = exMr (multM (b `mod` m) (b `mod` m) m) (e `div` 2) m
+           | (e < 1)  = undefined
 
 {- exmL: Multiply for the leftover amount of exponents
+ - v: final value
  - b: base
  - m: modulus
  - l: leftover
  -}
-exMl :: Integer -> Integer -> Integer -> Integer
-exMl b m l = if l == 0 then (b `mod` m) else exMl (multM (b `mod` m) (b `mod` m) m) m (l-1)
+exMl :: Integer -> Integer -> Integer -> Integer -> Integer
+exMl v b m l = if l == 0 then v `mod` m else exMl (v * (b `mod` m)) b m (l-1)
 
 
 isPowerOfTwo :: Integer -> Bool
@@ -82,6 +82,21 @@ isPowerOfTwo n = if (odd n) then (n == 1) else isPowerOfTwo (n `div` 2)
 
 findNearestPowerOfTwo :: Integer -> Integer
 findNearestPowerOfTwo n = if (isPowerOfTwo n) then n else findNearestPowerOfTwo (n-1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
