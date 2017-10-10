@@ -65,14 +65,3 @@ test = do print "3 blanks"
           findSudoku 4
           print "5 blanks"
           findSudoku 5
-
-test7 :: Int -> IO ()
-test7 0 = print "++ All self-automated tests passed"
-test7 n = do
-             [r] <- rsolveNs [emptyN]
-             tree <- return (take 5 (createTree coordinates 5))
-             s <- return (childeren tree 5 r)
-             print n
-             if (null s)
-             then test7 (n - 1)
-             else error ("failed test on: " ++ show n)
