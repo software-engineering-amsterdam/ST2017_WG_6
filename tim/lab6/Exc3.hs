@@ -1,7 +1,7 @@
 {-
 Assignment:		Lab 6: Exercise 3
 Name:           Tim Nederveen
-Time spent:		
+Time spent:		1h
 
 Remarks:        
 Sources:        
@@ -11,7 +11,6 @@ module Exc3 where
 
 import Data.List
 import Lecture6
--- import Data.Numbers.Primes
 
 {-
 Exercise 3
@@ -29,4 +28,4 @@ Write a function composites :: [Integer] that generates the infinite list of com
 --    return (exM a (n-1) n == 1)
 
 composites :: [Integer]
-composites = filter (not.prime) [1..]
+composites = filter (not.prime) [2..]

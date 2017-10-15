@@ -1,105 +1,31 @@
-
-module Lab6_1
-
-where
-
+module Lecture6 where 
 import System.Random
-
-{-
-    Assignment:		Lab 6: Exercise 1
-    Name:           Sara Oonk
-    Time spent:     5h
-    Sources:        Integrated into Lecture6.hs
-                    Modular exponentiation:             https://en.wikipedia.org/wiki/Modular_exponentiation
-                    Power of two:                       https://en.wikipedia.org/wiki/Power_of_two
-                    How to check if power of two:       http://www.exploringbinary.com/ten-ways-to-check-if-an-integer-is-a-power-of-two-in-c/
-                    Modular Exponentiation Calculator:  http://comnuan.com/cmnn02/cmnn02008/
-
-    Comments:       This approach is an attempt at a literal translation of the method given in the example.
-
-DESCRIPTION:
-Exercise 1
-
-Implement a function
-
-exM :: Integer -> Integer -> Integer -> Integer
-
-that does modular exponentiation of xy in polynomial time, by repeatedly squaring modulo N.
-
-E.g., x33 mod5 can be computed by means of
-
-x^33(mod5)=x^32(mod5) * x(mod5).
-
-x^32(modN) is computed in five steps by means of repeatedly squaring modulo N:
-
-x(modN)→x^2(modN)→x^4(modN)→…→x^32(modN).
-
-If this explanation is too concise, look up relevant literature
-
--}
-
-
--- Modular exponentiation of b to the power of e by repeatedly squaring modulo m.
-exM :: Integer -> Integer -> Integer -> Integer
-exM b e m | isPowerOfTwo(e) = exMr b e m
-          | otherwise = exMl intermediate b m (e-npt)
-                             where npt          = (findNearestPowerOfTwo e)
-                                   intermediate = (exMr b npt m)
--- (e-npt) is the difference between the actual goal exponent and the nearest power-of-two exponent,
--- in other words the number of multiplications that remain to be done.
-
-
--- Recursively square modulos until exponent e == 1
-exMr :: Integer -> Integer -> Integer -> Integer
-exMr b e m | (e == 1) = b
-           | (e > 1)  = exMr (multM (b `mod` m) (b `mod` m) m) (e `div` 2) m
-           | (e < 1)  = undefined
-
--- exmL: Multiply value v by base b modulo m, for n times. Apply final modulo on v for answer.
-exMl :: Integer -> Integer -> Integer -> Integer -> Integer
-exMl v b m n = if n == 0 then v `mod` m else exMl (v * (b `mod` m)) b m (n-1)
-
-isPowerOfTwo :: Integer -> Bool
-isPowerOfTwo n = if (odd n) then (n == 1) else isPowerOfTwo (n `div` 2)
-
-findNearestPowerOfTwo :: Integer -> Integer
-findNearestPowerOfTwo n = if (isPowerOfTwo n) then n else findNearestPowerOfTwo (n-1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
----LECTURE 6---------------------------------
+import Data.Bits
 
 factorsNaive :: Integer -> [Integer]
-factorsNaive n0 = factors' n0 2 where
+factorsNaive n0 = factors' n0 2 where 
   factors' 1 _ = []
-  factors' n m
+  factors' n m 
     | n `mod` m == 0 = m : factors' (n `div` m) m
     | otherwise      =     factors' n (m+1)
 
 factors :: Integer -> [Integer]
 factors n0 = let
    ps0 = takeWhile (\ m -> m^2 <= n0) primes
- in factors' n0 ps0 where
+ in factors' n0 ps0 where 
    factors' 1 _  = []
    factors' n [] = [n]
-   factors' n (p:ps)
+   factors' n (p:ps) 
     | n `mod` p == 0 = p: factors' (n `div` p) (p:ps)
     | otherwise      =    factors' n ps
+
+-- Included these in this file for ease of use
+carmichael :: [Integer]
+carmichael = [ (6*k+1)*(12*k+1)*(18*k+1) | 
+      k <- [2..], 
+      prime (6*k+1), 
+      prime (12*k+1),
+      prime (18*k+1) ]
 
 prime :: Integer -> Bool
 prime n = factors n == [n]
@@ -128,38 +54,34 @@ bin2int = bin . reverse where
   bin (1:bs) = 2 * bin bs + 1
   bin _      = error "not a binary digit list"
 
-addM :: Integer -> Integer -> Integer -> Integer
+addM, multM:: Integer -> Integer -> Integer -> Integer
 addM x y = rem (x+y)
-
-multM :: Integer -> Integer -> Integer -> Integer
-multM x y = rem (x*y)
+multM x y = rem (x*y) 
 
 invM :: Integer -> Integer -> Integer
-invM x n = let
+invM x n = let 
    (u,v) = fctGcd x n
    copr  = x*u + v*n == 1
-   i     = if signum u == 1 then u else u + n
- in
+   i     = if signum u == 1 then u else u + n  
+ in 
    if copr then i else error "no inverse"
 
 fGcd :: Integer -> Integer -> Integer
 fGcd a b = if b == 0 then a
                      else fGcd b (rem a b)
 
-fctGcd :: Integer -> Integer -> (Integer,Integer)
-fctGcd a b =
-  if b == 0
-  then (1,0)
-  else
-     let
+fctGcd :: Integer -> Integer -> (Integer,Integer) 
+fctGcd a b = 
+  if b == 0 
+  then (1,0) 
+  else 
+     let 
        (q,r) = quotRem a b
-       (s,t) = fctGcd b r
+       (s,t) = fctGcd b r 
      in (t, s - q*t)
 
-coprime :: Integer -> Integer -> Bool
+coprime, coprime' :: Integer -> Integer -> Bool
 coprime n m = fGcd n m == 1
-
-coprime' :: Integer -> Integer -> Bool
 coprime' n m = let (x,y) = fctGcd n m
                in x*n + y*m == 1
 
@@ -175,7 +97,7 @@ takeT 0 (T x _) = T x []
 takeT n (T x ts) = T x (map (takeT (n-1)) ts)
 
 coprimeT :: Tree (Integer,Integer)
-coprimeT = grow f (1,1)
+coprimeT = grow f (1,1) 
 
 f :: (Integer,Integer) -> [(Integer,Integer)]
 f (n,m) = [(n+m,m),(n,n+m)]
@@ -189,11 +111,15 @@ coprimes = filter (uncurry coprime) pairs
 expM ::  Integer -> Integer -> Integer -> Integer
 expM x y = rem (x^y)
 
---exM :: Integer -> Integer -> Integer -> Integer
---exM = expM -- to be replaced by a fast version
+-- Exc3 Implemented, explained in Exercises.hs
+exM :: Integer -> Integer -> Integer -> Integer
+exM _ 0 _ = 1
+exM x y n = let z | testBit y 0 = mod x n 
+                   | otherwise = 1 
+             in mod (z * (exM (mod (x^2) n) (shiftR y 1) n)) n
 
 primeTestF :: Integer -> IO Bool
-primeTestF n = do
+primeTestF n = do 
    a <- randomRIO (2, n-1) :: IO Integer
    return (exM a (n-1) n == 1)
 
@@ -209,44 +135,45 @@ decomp n0 = decomp' (0,n0) where
 mrComposite :: Integer -> Integer -> Bool
 mrComposite x n = let
     (r,s) = decomp (n-1)
-    fs     = takeWhile (/= 1)
-       (map (\ j -> exM x (2^j*s) n)  [0..r])
-  in
+    fs     = takeWhile (/= 1) (map (\ j -> exM x (2^j*s) n)  [0..r])
+  in 
     exM x s n /= 1 && last fs /= (n-1)
 
 primeMR :: Int -> Integer -> IO Bool
 primeMR _ 2 = return True
 primeMR 0 _ = return True
-primeMR k n = do
+primeMR k n = do 
     a <- randomRIO (2, n-1) :: IO Integer
     if exM a (n-1) n /= 1 || mrComposite a n
-    then return False else primeMR (k-1) n
+    then return False 
+    else primeMR (k-1) n
 
+-- Exc3 Implemented
 composites :: [Integer]
-composites = error "not yet implemented"
+composites = filter (not.prime) [2..]
 
 encodeDH :: Integer -> Integer -> Integer -> Integer
 encodeDH p k m = m*k `mod` p
 
 decodeDH :: Integer -> Integer -> Integer -> Integer -> Integer
-decodeDH p ga b c = let
-    gab' = exM ga ((p-1)-b) p
-  in
+decodeDH p ga b c = let 
+    gab' = exM ga ((p-1)-b) p 
+  in 
     rem (c*gab') p
 
 encode :: Integer -> Integer -> Integer -> Integer
-encode p k m = let
+encode p k m = let 
    p' = p-1
    e  = head [ x | x <- [k..], gcd x p' == 1 ]
- in
+ in 
    exM m e p
 
 decode :: Integer -> Integer -> Integer -> Integer
-decode p k m = let
+decode p k m = let 
    p' = p-1
    e  = head [ x | x <- [k..], gcd x p' == 1 ]
-   d  = invM e p'
- in
+   d  = invM e p' 
+ in 
    exM m d p
 
 cipher :: Integer -> Integer
@@ -263,7 +190,7 @@ phi p q = (p - 1) * (q - 1)
 
 select :: Integer -> Integer -> Integer
 select p q = let
-   t = phi p q
+   t = phi p q 
  in
    head [ x | x <- [3..], gcd x t == 1 ]
 
@@ -274,24 +201,18 @@ rsaPublic p q = let
     (e,p*q)
 
 rsaPrivate ::  Integer -> Integer -> (Integer,Integer)
-rsaPrivate p q = let
+rsaPrivate p q = let 
    e = select p q
-   t = phi p q
+   t = phi p q 
    d = invM e t
-  in
+  in 
    (d,p*q)
 
-rsaEncode :: (Integer,Integer) -> Integer -> Integer
+rsaEncode, rsaDecode, trapdoor:: (Integer,Integer) -> Integer -> Integer 
 rsaEncode (e,n) m =  exM m e n
-
-rsaDecode :: (Integer,Integer) -> Integer -> Integer
 rsaDecode = rsaEncode
-
-trapdoor :: (Integer,Integer) -> Integer -> Integer
 trapdoor = rsaEncode
 
 secret, bound :: Integer
 secret = mers 18
 bound  = 131
-
-
