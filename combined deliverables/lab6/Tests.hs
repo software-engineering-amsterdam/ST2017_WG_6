@@ -5,11 +5,14 @@ import Test.QuickCheck
 -- Exercises 2
 propEqual (Positive a, Positive b, Positive c) = exM a b c == expM a b c 
 testEx2 = quickCheck propEqual
--- Using profiler expM and exM with large number showed us that exM is considerably faster than expM
+-- Running profiler on expM and exM with a large number showed us that exM is 
+-- considerably faster than expM
 -- exM 12345678 123456789 13
 -- gave us an average of 0.01 secs with an allocation of 116,512 bytes
 -- expM 12345678 123456789 13
 -- gave us an average of 40.22 secs with an allocation of 1,018,580,672 bytes
+-- In fact running expM with an even larger number (expM 1234567812345678 12345678912345678 13) 
+-- resulted in no post. While for the same number exM stayed near 0.01 with a slight increase in memory
 
 
 -- Execution of tests of exercise 4, 5 and 6
