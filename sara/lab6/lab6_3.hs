@@ -42,12 +42,92 @@ composites = 4 : filter (not . prime) [6..]
 composites' :: [Integer]
 composites' = 4 : filter (not . primeLec1) [6..]
 
+-- Using extra fast implementation
+compositesX :: [Integer]
+compositesX = 4 : filter (not . prime') [6..]
+
+
+
 main = do
- putStrLn "Comparing prime methods Lecture 1 vs Lecture 6"
+ putStrLn "Comparing prime methods Lecture 1 vs Lecture 6 vs Extra fast implementation"
  putStrLn "Using lecture 1: "
  timeIt $ putStrLn (show (composites' !! 50000))
  putStrLn "Using lecture 6: "
  timeIt $ putStrLn (show (composites !! 50000))
+ putStrLn "Using extra fast: "
+ timeIt $ putStrLn (show (compositesX !! 50000))
+
+
+--BETTER------------
+primesTest = do
+ putStrLn "Comparing prime methods Lecture 1 vs Lecture 6 vs Extra fast implementation"
+ putStrLn "Using lecture 1: "
+ timeIt $ putStrLn (show (primesLec1 !! 20000))
+ putStrLn "Using lecture 6: "
+ timeIt $ putStrLn (show (primes !! 20000))
+ putStrLn "Using extra fast: "
+ timeIt $ putStrLn (show (primes' !! 20000))
+
+
+
+ -- some outputs with varying inputs--------
+{-
+*Lab6_3> primesTest
+Comparing prime methods Lecture 1 vs Lecture 6 vs Extra fast implementation
+Using lecture 1:
+48619
+CPU time:   0.30s
+Using lecture 6:
+48619
+CPU time:   0.46s
+Using extra fast:
+48619
+CPU time:   0.22s
+
+
+
+*Lab6_3> primesTest
+Comparing prime methods Lecture 1 vs Lecture 6 vs Extra fast implementation
+Using lecture 1:
+104743
+CPU time:   0.74s
+Using lecture 6:
+104743
+CPU time:   1.16s
+Using extra fast:
+104743
+CPU time:   0.60s
+
+
+
+
+*Lab6_3> primesTest
+Comparing prime methods Lecture 1 vs Lecture 6 vs Extra fast implementation
+Using lecture 1:
+224743
+CPU time:   1.86s
+Using lecture 6:
+224743
+CPU time:   2.95s
+Using extra fast:
+224743
+CPU time:   1.60s
+
+
+
+
+
+
+-}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -83,4 +163,16 @@ primeLec1 n = n > 1 && all (\ x -> rem n x /= 0) xs
 
 
 
+-- Extra fast implementation that Mees added -----------------
+-- Additonal:
+-- 2x faster implemenation of primes function, but the primes function is not
+-- the bottleneck so no measurable speed-up for calculdating mersene primes.
+-- Source: https://www.reddit.com/r/haskell/comments/35vc31/the_real_way_to_generate_a_list_of_primes_in/
+primes' = 2 : 3 : 5 : primes''
+  where
+    isPrime (p:ps) n = p*p > n || n `rem` p /= 0 && isPrime ps n
+    primes'' = 7 : filter (isPrime primes'') (scanl (+) 11 $ cycle [2,4,2,4,6,2,6,4])
 
+prime' :: Integer -> Bool
+prime' n = n > 1 && all (\ x -> rem n x /= 0) xs
+  where xs = takeWhile (\ y -> y^2 <= n) primes'
