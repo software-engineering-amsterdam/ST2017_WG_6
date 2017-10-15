@@ -2,15 +2,21 @@ import Lecture6
 import Exercises
 import Test.QuickCheck
 
--- TODO Exercises 2
+-- Exercises 2
 propEqual (Positive a, Positive b, Positive c) = exM a b c == expM a b c 
 testEx2 = quickCheck propEqual
+-- Using profiler expM and exM with large number showed us that exM is considerably faster than expM
+-- exM 12345678 123456789 13
+-- gave us an average of 0.01 secs with an allocation of 116,512 bytes
+-- expM 12345678 123456789 13
+-- gave us an average of 40.22 secs with an allocation of 1,018,580,672 bytes
+
 
 -- Execution of tests of exercise 4, 5 and 6
 testEx4, testEx5, testEx6 :: Int -> Int -> [Char]-> IO ()
-testEx4 nt n msg = testPrime nt (take n composites) primeTestsF msg
-testEx5 nt n msg = testPrime nt (take n carmichael) primeTestsF msg
-testEx6 nt n msg = testPrime nt (take n carmichael) primeMR msg
+testEx4 nt n = testPrime nt (take n composites) primeTestsF
+testEx5 nt n = testPrime nt (take n carmichael) primeTestsF
+testEx6 nt n = testPrime nt (take n carmichael) primeMR
 
 -- Exercise 4
 -- The Fermat Primality check is probabilistic test, relient on a random 
@@ -22,6 +28,7 @@ ex4 = do
   testEx4 1 1000 "Ex4: 1 test\n\n" --(average 16 of 1000 primes are wrongly estimated)
   testEx4 2 1000 "Ex4: 2 tests\n\n"--(average  2 of 1000 primes are wrongly estimated)
   testEx4 3 1000 "Ex4: 3 tests\n"  --(average  1 of 1000 primes are wrongly estimated)
+  testEx4 30 1000 "Ex4: 3 tests\n"  --(average 0 of 1000 primes are wrongly estimated)
 
 -- Exercise 5
 -- Carmicheal numbers are composite numbers which statifies a relation
