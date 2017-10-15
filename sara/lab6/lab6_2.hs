@@ -31,18 +31,19 @@ import System.TimeIt
 
 
 main = do
- timeIt $ putStrLn ("expM: " ++ show (expM 123 3456789 123))
  timeIt $ putStrLn ("exM: " ++ show (exM 123 3456789 123))
-
-
-
-
-
-
-
-
-
-
+ timeIt $ putStrLn ("expM: " ++ show (expM 123 3456789 123))
+ putStrLn "---------------------------------"
+--
+-- timeIt $ putStrLn ("exM: " ++ show (exM 312 65432 123))
+-- timeIt $ putStrLn ("expM: " ++ show (expM 312 65432 123))
+-- putStrLn "---------------------------------"
+--
+-- timeIt $ putStrLn ("exM: " ++ show (exM 4444 33333 555))
+-- timeIt $ putStrLn ("expM: " ++ show (expM 4444 33333 555))
+-- putStrLn "---------------------------------"
+--
+--
 
 
 

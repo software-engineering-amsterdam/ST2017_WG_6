@@ -23,14 +23,9 @@ What happens if you increase k?
 --recursively check n++ until find false
 -- then for k2, 3, etc
 
-findFermatError = [testFermatsCheck (fromInteger n) 1 | n <- composites']
 
 
-
-testFermatsCheck :: Int -> Integer -> IO Int
+--testFermatsCheck :: Int -> Integer -> IO Int
 testFermatsCheck n k = do
  fermat <- (primeTestsF n k)
- if (fermat == (primeLec1 (toInteger n))) then testFermatsCheck (n+1) k else return n
-
-
-testpls = do print findFermatError
+ if (fermat == (primeLec1 (toInteger n))) then testFermatsCheck (n+1) k else print (show n)

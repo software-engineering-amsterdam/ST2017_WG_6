@@ -1,11 +1,14 @@
 {-
-Ex1 - 1 hours
-Ex2 - 1 hours
-Ex3 - 0.01 hours
-Ex4 - 1,5 hours
-Ex5 - 0.5 hours
-Ex6 - 0.6 hours
-Ex6 - 1,5 hours
+Ex1 - 1 hours    - Mees
+Ex2 - 1 hours    - Mees
+Ex3 - 0.01 hours - Tim
+Ex4 - 1,5 hours  - Mees
+Ex5 - 0.5 hours  - Mees
+Ex6 - 0.6 hours  - Mees
+Ex6 - 1,5 hours  - Mees
+
+Though we equally considered all solutions, Mees' solutions are constructed nicely in a way such that
+it all works together smoothly and is very easy to test. They're also overall most compact and efficient.
 -}
 
 module Exercises where
@@ -23,13 +26,15 @@ exM' x y n = let z | testBit y 0 = mod x n
                    | otherwise = 1 
              in mod (z * (exM' (mod (x^2) n) (shiftR y 1) n)) n
 
+-- Ex2 - See Tests.hs
+
 -- Ex3 - Infinite composites list
 -- Primes are only devisable by 1 and itself and resulting in another natural 
 -- number. Composites are a positive integer that has at least one divisor other
 -- than 1 and itself, meaning all positive numbers which are not primes
 -- are composites.
 composites' :: [Integer]
-composites' = filter (not.prime) [2..]
+composites' = filter (not . prime) [2..]
 
 -- Test function for excersize 4, 5 and 6
 -- Given a numner of test 'nt', a list of numbers we want to test 'x:xs' and a
