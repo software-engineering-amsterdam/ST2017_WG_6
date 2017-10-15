@@ -109,8 +109,14 @@ coprimes = filter (uncurry coprime) pairs
 expM ::  Integer -> Integer -> Integer -> Integer
 expM x y = rem (x^y)
 
+-- exM :: Integer -> Integer -> Integer -> Integer
+-- exM = expM -- to be replaced by a fast version
+
 exM :: Integer -> Integer -> Integer -> Integer
-exM = expM -- to be replaced by a fast version
+exM b 0 m = 1
+exM b e m
+    | odd e  = (rem ((exM b (div (e-1) 2) m) ^ 2 * b) m)
+    | even e = (rem ((exM b (div e 2)  m) ^ 2) m)
 
 primeTestF :: Integer -> IO Bool
 primeTestF n = do 

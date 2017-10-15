@@ -35,7 +35,7 @@ If this explanation is too concise, look up relevant literature.
 
 
 exFastM :: Integer -> Integer -> Integer -> Integer
-exFastM b 0 m = 1
+exFastM b 1 m = rem b m
 exFastM b e m
     | odd e  = (rem ((exFastM b (div (e-1) 2) m) ^ 2 * b) m)
     | even e = (rem ((exFastM b (div e 2)  m) ^ 2) m)
